@@ -1,0 +1,61 @@
+/* styles/fonts.css */
+
+/* Bridge Font - Regular */
+@font-face {
+  font-family: "Bridge";
+  src:
+    url("/fonts/Bridge-Regular.woff2") format("woff2"),
+    url("/fonts/Bridge-Regular.woff") format("woff"),
+    url("/fonts/Bridge-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Bridge Font - Medium */
+@font-face {
+  font-family: "Bridge";
+  src:
+    url("/fonts/Bridge-Medium.woff2") format("woff2"),
+    url("/fonts/Bridge-Medium.woff") format("woff"),
+    url("/fonts/Bridge-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Bridge Font - Bold */
+@font-face {
+  font-family: "Bridge";
+  src:
+    url("/fonts/Bridge-Bold.woff2") format("woff2"),
+    url("/fonts/Bridge-Bold.woff") format("woff"),
+    url("/fonts/Bridge-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Bridge Font - Extra Bold */
+@font-face {
+  font-family: "Bridge";
+  src:
+    url("/fonts/Bridge-ExtraBold.woff2") format("woff2"),
+    url("/fonts/Bridge-ExtraBold.woff") format("woff"),
+    url("/fonts/Bridge-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Prosa GT";
+  src:
+    local("Prosa GT Bold"),
+    local("Prosa-GT-Bold"),
+    url("ProsaGT-Bold.woff2") format("woff2"),
+    url("ProsaGT-Bold.woff") format("woff"),
+    url("ProsaGT-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
