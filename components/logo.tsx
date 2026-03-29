@@ -1,32 +1,27 @@
-import Link from "next/link";
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 interface LogoProps {
   className?: string;
-  linkClassName?: string;
-  href?: string;
-  width?: number;
-  height?: number;
+  size?: "sm" | "md" | "lg" | "xl";
 }
 
-export function Logo({
-  linkClassName,
-  href = "/",
-  width = 120,
-  height = 40,
-}: LogoProps) {
+export function Logo({ className, size = "md" }: LogoProps) {
+  const sizes = {
+    sm: "text-2xl",
+    md: "text-3xl",
+    lg: "text-5xl",
+    xl: "text-6xl",
+  };
+
   return (
-    <Link href={href} className={cn("flex items-center", linkClassName)}>
-      <Image
-        src="/logo.png"
-        alt="Cresci.AI"
-        width={width}
-        height={height}
-        priority
-        quality={100}
-        className="object-contain"
-      />
-    </Link>
+    <span
+      className={cn(
+        "select-none leading-none tracking-[0.08em] font-[family-name:var(--font-bebas)]",
+        sizes[size],
+        className,
+      )}
+    >
+      CR<span className="text-[#C8F135]">3</span>SCE
+    </span>
   );
 }

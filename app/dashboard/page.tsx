@@ -1,11 +1,12 @@
-import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { DashboardHome } from "@/components/dashboard/dashboard-home";
+import { createClient } from "@/lib/supabase/server";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
-
-  // Pega usuário logado
+  const now = new Date();
+  const currentMonth = now.getMonth() + 1;
+  const currentYear = now.getFullYear();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -14,30 +15,28 @@ export default async function DashboardPage() {
     redirect("/auth/login");
   }
 
-  // Pega perfil
   const { data: profile } = await supabase
     .from("profiles")
     .select("full_name")
     .eq("id", user.id)
     .maybeSingle();
 
-  // Pega business do usuário
   const { data: business } = await supabase
     .from("businesses")
     .select("*")
     .eq("user_id", user.id)
     .maybeSingle();
 
-  // Se não tiver business, redireciona para onboarding
   if (!business) {
     redirect("/onboarding");
   }
 
-  // Pega a estratégia mais recente COM os dias
   const { data: strategies } = await supabase
     .from("strategies")
     .select("*, strategy_days(*)")
     .eq("business_id", business.id)
+    .eq("month", currentMonth)
+    .eq("year", currentYear)
     .order("created_at", { ascending: false })
     .limit(1);
 
@@ -48,6 +47,7 @@ export default async function DashboardPage() {
       profile={profile}
       business={business}
       latestStrategy={latestStrategy}
+      userId={user.id}
     />
   );
 }

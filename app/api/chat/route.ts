@@ -8,101 +8,211 @@ const groq = createGroq({
   apiKey: process.env.GROQ_API_KEY || "",
 });
 
-export async function POST(req: Request) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+const MODELS = [
+  "llama-3.3-70b-versatile",
+  "llama-3.1-8b-instant",
+  "gemma2-9b-it",
+];
 
-  if (!user) {
-    return new Response("Unauthorized", { status: 401 });
+function describeMainGoal(goal: string) {
+  if (goal === "visualizacao") {
+    return "Aumentar visualizacao significa priorizar alcance, descoberta, ganchos fortes e conteudos com potencial viral.";
   }
 
-  const { messages } = await req.json();
-
-  // Fetch business context
-  const { data: business } = await supabase
-    .from("businesses")
-    .select("*")
-    .eq("user_id", user.id)
-    .single();
-
-  // Buscar dados de evolução
-  const { data: evolutionData } = await supabase
-    .from("evolution_data")
-    .select("*")
-    .eq("user_id", user.id)
-    .order("created_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-
-  const { data: completedLevels } = await supabase
-    .from("evolution_levels")
-    .select("title, type")
-    .eq("user_id", user.id)
-    .eq("status", "completed");
-
-  // Buscar estratégia atual
-  const { data: strategies } = await supabase
-    .from("strategies")
-    .select("*, strategy_days(*)")
-    .eq("business_id", business?.id)
-    .order("created_at", { ascending: false })
-    .limit(1);
-
-  const strategy = strategies?.[0];
-  let completedPosts = 0;
-
-  if (strategy?.strategy_days) {
-    strategy.strategy_days.forEach((day: any) => {
-      if (day.posts) {
-        completedPosts += day.posts.filter((p: any) => p.completed).length;
-      }
-    });
+  if (goal === "identidade") {
+    return "Construir identidade significa falar com um publico mais qualificado, reforcar posicionamento e aumentar a chance de venda.";
   }
 
-  const systemPrompt = `Você é a Cresci.IA, uma assistente de marketing digital altamente especializada. 
-Você ajuda empreendedores brasileiros a crescerem seus negócios nas redes sociais.
-Sempre responda em português brasileiro. Seja prática, direta e amigável.
-
-${
-  business
-    ? `CONTEXTO COMPLETO DO NEGÓCIO:
-- Nome: ${business.business_name}
-- Nicho: ${business.niche}
-- Público-alvo: ${business.target_audience}
-- Objetivo: ${business.main_goal}
-- Plataformas: ${business.platforms}
-- Estilo de comunicação: ${business.communication_style}
-- Velocidade de crescimento: ${business.growth_speed || "moderado"}
-- Descrição da marca: ${business.brand_description}
-- Diferencial: ${business.unique_value || "não informado"}
-- Instagram: ${business.instagram_handle || "não informado"}
-- Responsável: ${business.responsible_name || "não informado"}
-
-DADOS DE EVOLUÇÃO:
-- Seguidores atuais: ${evolutionData?.current_followers || "não informado"}
-- Views médias Stories: ${evolutionData?.current_stories_views || "não informado"}
-- Investimento mensal: R$ ${evolutionData?.monthly_investment || "não informado"}
-- Níveis conquistados: ${completedLevels?.map((l) => l.title).join(", ") || "nenhum ainda"}
-
-ESTRATÉGIA ATUAL:
-${
-  strategy
-    ? `- Mês: ${strategy.month}/${strategy.year}
-- Missões concluídas: ${completedPosts}`
-    : "- Nenhuma estratégia ativa ainda"
+  return goal || "Nao informado";
 }
 
-Use TODO esse contexto para personalizar suas respostas e sugestões de marketing.`
-    : "O usuário ainda não configurou seu negócio."
-}`;
+function describeCommunicationStyle(style: string) {
+  if (style === "humoristico") {
+    return "Use humor, leveza e espontaneidade de forma clara nas respostas e conteudos.";
+  }
 
-  const result = await streamText({
-    model: groq("llama-3.3-70b-versatile"),
-    system: systemPrompt,
-    messages,
-  });
+  if (style === "educativo") {
+    return "Use tom educativo, didatico e de especialista acessivel.";
+  }
 
-  return result.toDataStreamResponse();
+  if (style === "casual") {
+    return "Use tom casual, humano e proximo.";
+  }
+
+  return style || "Nao informado";
+}
+
+function formatUpcomingPosts(strategyDays: any[] | undefined) {
+  if (!strategyDays?.length) return "Nenhum post futuro encontrado.";
+
+  const today = new Date().getDate();
+  const upcoming = strategyDays
+    .filter((day) => Number(day.day_number) >= today)
+    .sort((a, b) => Number(a.day_number) - Number(b.day_number))
+    .slice(0, 5);
+
+  if (!upcoming.length) return "Nenhum post futuro encontrado.";
+
+  return upcoming
+    .map((day) => {
+      const posts = Array.isArray(day.posts) ? day.posts : [];
+      const items = posts
+        .slice(0, 4)
+        .map(
+          (post: any) =>
+            `Dia ${day.day_number} | ${post.content_type} | ${post.time} | ${post.topic}`,
+        )
+        .join("\n");
+
+      return items;
+    })
+    .filter(Boolean)
+    .join("\n");
+}
+
+function countCompletedPosts(strategyDays: any[] | undefined) {
+  if (!strategyDays?.length) return 0;
+
+  return strategyDays.reduce((total, day) => {
+    const posts = Array.isArray(day.posts) ? day.posts : [];
+    return total + posts.filter((post: any) => post.completed).length;
+  }, 0);
+}
+
+export async function POST(req: Request) {
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    const body = await req.json();
+    const messages = body.messages ?? [];
+    const systemOverride = body.systemOverride as string | undefined;
+
+    if (!messages.length) {
+      return new Response(JSON.stringify({ error: "No messages" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    const { data: business } = await supabase
+      .from("businesses")
+      .select("*")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentYear = currentDate.getFullYear();
+
+    const { data: strategyRows } = await supabase
+      .from("strategies")
+      .select("*, strategy_days(*)")
+      .eq("user_id", user.id)
+      .eq("month", currentMonth)
+      .eq("year", currentYear)
+      .order("created_at", { ascending: false })
+      .limit(1);
+
+    const strategy = strategyRows?.[0] || null;
+    const completedPosts = countCompletedPosts(strategy?.strategy_days);
+    const upcomingPosts = formatUpcomingPosts(strategy?.strategy_days);
+
+    const systemPrompt = business
+      ? `
+Voce e o assistente pessoal de marketing digital do CR3SCE para ${business.business_name}.
+
+PERFIL DO CLIENTE:
+- Nome do negocio: ${business.business_name}
+- Responsavel: ${business.responsible_name}
+- Nicho: ${business.niche}
+- Publico-alvo: ${business.target_audience}
+- Objetivo principal: ${business.main_goal}
+- Objetivo explicado: ${describeMainGoal(business.main_goal)}
+- Estilo de comunicacao: ${business.communication_style}
+- Estilo explicado: ${describeCommunicationStyle(business.communication_style)}
+- Descricao da marca: ${business.brand_description}
+- Instagram: @${business.instagram_handle || "nao informado"}
+- Velocidade de crescimento: ${business.growth_speed}
+- Cores da marca: ${business.brand_colors?.join(", ") || "nao definidas"}
+- Plataformas: ${business.platforms || "instagram"}
+
+ESTRATEGIA DO MES:
+${
+  strategy
+    ? `Titulo: ${strategy.title}
+Resumo: ${strategy.summary}
+Posts concluidos: ${completedPosts}
+Proximos posts:
+${upcomingPosts}`
+    : "Nenhuma estrategia gerada ainda para este mes."
+}
+
+INSTRUCOES:
+- Responda SEMPRE em portugues brasileiro, de forma direta e pratica
+- Seja especifico para o nicho "${business.niche}" e para o negocio "${business.business_name}"
+- Nunca entregue resposta generica ou aplicavel a qualquer nicho
+- Quando sugerir conteudo, de exemplos reais de titulo, gancho, legenda ou CTA
+- Use o perfil acima em todas as respostas
+- Seja objetivo: maximo 3 ou 4 paragrafos por resposta
+- Se a pergunta pedir ideia de conteudo, priorize o contexto do calendario atual e o objetivo principal do negocio
+`.trim()
+      : `
+Voce e o assistente pessoal de marketing digital do CR3SCE.
+Responda sempre em portugues brasileiro, de forma objetiva e pratica.
+`.trim();
+
+    let lastError: unknown = null;
+
+    for (const modelId of MODELS) {
+      try {
+        const result = await streamText({
+          model: groq(modelId),
+          system: systemOverride || systemPrompt,
+          messages,
+          maxOutputTokens: 1024,
+        });
+
+        return result.toUIMessageStreamResponse({
+          headers: {
+            "Content-Type": "text/plain; charset=utf-8",
+          },
+        });
+      } catch (modelError) {
+        console.error(`Modelo ${modelId} falhou:`, modelError);
+        lastError = modelError;
+      }
+    }
+
+    console.error("Todos os modelos Groq falharam:", lastError);
+
+    return new Response(
+      JSON.stringify({
+        error: "Servico de IA temporariamente indisponivel. Tente novamente em instantes.",
+      }),
+      {
+        status: 503,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
+  } catch (error) {
+    console.error("Erro geral no chat:", error);
+
+    return new Response(
+      JSON.stringify({ error: "Erro interno. Tente novamente." }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
+  }
 }

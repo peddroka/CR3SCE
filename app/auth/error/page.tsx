@@ -1,18 +1,18 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Logo } from "@/components/logo"
-import { AlertTriangle } from "lucide-react"
-import Link from "next/link"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Logo } from "@/components/logo";
+import { AlertTriangle } from "lucide-react";
+import Link from "next/link";
 
 export default async function AuthErrorPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error: string }>
+  searchParams: Promise<{ error: string }>;
 }) {
-  const params = await searchParams
+  const params = await searchParams;
 
   return (
     <div className="flex min-h-svh w-full flex-col items-center justify-center gap-8 px-6">
-      <Logo />
+      <Logo className="text-4xl" />
       <div className="w-full max-w-sm">
         <Card className="border-border/50">
           <CardHeader className="text-center">
@@ -23,9 +23,7 @@ export default async function AuthErrorPage({
           </CardHeader>
           <CardContent className="text-center">
             {params?.error ? (
-              <p className="text-sm text-muted-foreground">
-                Erro: {params.error}
-              </p>
+              <p className="text-sm text-muted-foreground">Erro: {params.error}</p>
             ) : (
               <p className="text-sm text-muted-foreground">
                 Ocorreu um erro inesperado. Tente novamente.
@@ -43,5 +41,5 @@ export default async function AuthErrorPage({
         </Card>
       </div>
     </div>
-  )
+  );
 }

@@ -1,17 +1,10 @@
-import { generateObject } from "ai";
 import { createGroq } from "@ai-sdk/groq";
-import { z } from "zod";
+import { generateText } from "ai";
 
 export const maxDuration = 30;
 
 const groq = createGroq({
   apiKey: process.env.GROQ_API_KEY || "",
-});
-
-const audienceSchema = z.object({
-  audience: z
-    .string()
-    .describe("Descrição detalhada do público-alvo em português"),
 });
 
 export async function POST(req: Request) {
@@ -32,34 +25,18 @@ Negócio: ${business_name}
 Nicho: ${niche}
 
 REGRAS:
-1. A descrição deve ser COMPLETA e incluir:
-   - Idade ou faixa etária
-   - Gênero (quando relevante)
-   - Localização/região
-   - Classe social ou poder aquisitivo
-   - Interesses específicos relacionados ao nicho
-   - Comportamentos de compra
-   - Dores ou necessidades
-   - Estilo de vida
-
+1. A descrição deve incluir: faixa etária, gênero (quando relevante), localização, classe social, interesses específicos, comportamentos de compra, dores e estilo de vida.
 2. Seja ESPECÍFICO para o nicho ${niche}
 3. A descrição deve ter entre 100 e 200 palavras
-4. Use linguagem profissional mas acessível
-5. Responda APENAS com a descrição do público-alvo, sem explicações adicionais
+4. Responda APENAS com a descrição do público-alvo, sem títulos, sem explicações adicionais, sem aspas.`;
 
-Exemplo de boa descrição para "moda plus size":
-"Mulheres de 25 a 45 anos, classes B e C, residentes em grandes centros urbanos do Brasil. São profissionais que trabalham em escritórios ou home office, valorizam a autoestima e buscam roupas que aliem conforto, estilo e boa modelagem para corpos reais. Interessadas em moda sustentável, seguem influenciadoras plus size no Instagram e TikTok, compram online com frequência (2-3 vezes por mês) e pesquisam avaliações antes de comprar. Dores principais: dificuldade em encontrar roupas modernas que vistam bem, tecidos que não marcam e lojas com variedade de tamanhos (do 44 ao 60). Buscam marcas que as representem e celebrem a diversidade corporal."
-
-Agora crie uma descrição similar para ${business_name} no nicho de ${niche}.`;
-
-    const result = await generateObject({
+    const { text } = await generateText({
       model: groq("llama-3.3-70b-versatile"),
-      schema: audienceSchema,
       prompt,
       temperature: 0.7,
     });
 
-    return new Response(JSON.stringify({ audience: result.object.audience }), {
+    return new Response(JSON.stringify({ audience: text.trim() }), {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error: any) {

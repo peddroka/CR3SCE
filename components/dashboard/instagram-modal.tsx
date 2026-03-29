@@ -110,7 +110,7 @@ export function InstagramModal({
             <Button
               onClick={handleSave}
               disabled={saving}
-              className="bg-linear-to-r from-primary to-purple-600 rounded-md"
+              className="rounded-md bg-primary hover:bg-primary/90"
             >
               {saving ? (
                 <>

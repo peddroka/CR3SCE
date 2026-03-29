@@ -1,34 +1,27 @@
-"use client";
+﻿"use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { createClient, getUserSafely } from "@/lib/supabase/client";
 import { motion } from "framer-motion";
 import {
-  Save,
+  AlertCircle,
+  CreditCard,
+  Info,
+  Instagram,
   Loader2,
-  User,
+  Lock,
+  Save,
+  Settings,
+  Sparkles,
   Store,
   Target,
-  Globe,
-  Users,
-  Sparkles,
-  Instagram,
-  AlertCircle,
-  Settings,
+  User,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
@@ -52,45 +45,44 @@ export default function SettingsPage() {
   });
 
   useEffect(() => {
-    loadData();
-  }, []);
+    const loadData = async () => {
+      try {
+        const { user } = await getUserSafely(supabase);
 
-  const loadData = async () => {
-    try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) {
-        router.push("/auth/login");
-        return;
+        if (!user) {
+          router.push("/auth/login");
+          return;
+        }
+
+        const { data: business } = await supabase
+          .from("businesses")
+          .select("*")
+          .eq("user_id", user.id)
+          .single();
+
+        if (business) {
+          setFormData({
+            responsible_name: business.responsible_name || "",
+            business_name: business.business_name || "",
+            niche: business.niche || "",
+            target_audience: business.target_audience || "",
+            main_goal: business.main_goal || "",
+            platforms: business.platforms || "",
+            communication_style: business.communication_style || "",
+            growth_speed: business.growth_speed || "moderado",
+            brand_description: business.brand_description || "",
+            instagram_handle: business.instagram_handle || "",
+          });
+        }
+      } catch (err) {
+        console.error("Erro ao carregar dados:", err);
+      } finally {
+        setLoading(false);
       }
+    };
 
-      const { data: business } = await supabase
-        .from("businesses")
-        .select("*")
-        .eq("user_id", user.id)
-        .single();
-
-      if (business) {
-        setFormData({
-          responsible_name: business.responsible_name || "",
-          business_name: business.business_name || "",
-          niche: business.niche || "",
-          target_audience: business.target_audience || "",
-          main_goal: business.main_goal || "",
-          platforms: business.platforms || "",
-          communication_style: business.communication_style || "",
-          growth_speed: business.growth_speed || "moderado",
-          brand_description: business.brand_description || "",
-          instagram_handle: business.instagram_handle || "",
-        });
-      }
-    } catch (error) {
-      console.error("Erro ao carregar dados:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    void loadData();
+  }, [router, supabase]);
 
   const handleSave = async () => {
     setSaving(true);
@@ -98,41 +90,69 @@ export default function SettingsPage() {
     setSuccess(false);
 
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) throw new Error("Usuário não autenticado");
+      const { user } = await getUserSafely(supabase);
 
-      const { error } = await supabase
+      if (!user) {
+        throw new Error("Usuario nao autenticado");
+      }
+
+      const { error: updateError } = await supabase
         .from("businesses")
         .update({
           responsible_name: formData.responsible_name,
-          business_name: formData.business_name,
-          niche: formData.niche,
-          target_audience: formData.target_audience,
-          main_goal: formData.main_goal,
-          platforms: formData.platforms,
-          communication_style: formData.communication_style,
-          growth_speed: formData.growth_speed,
-          brand_description: formData.brand_description,
           instagram_handle: formData.instagram_handle.replace("@", ""),
         })
         .eq("user_id", user.id);
 
-      if (error) throw error;
+      if (updateError) {
+        throw updateError;
+      }
 
       setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
-    } catch (err: any) {
-      setError(err.message);
+      window.setTimeout(() => setSuccess(false), 3000);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Nao foi possivel salvar as alteracoes.");
+      }
     } finally {
       setSaving(false);
     }
   };
 
+  const goalLabels: Record<string, string> = {
+    visualizacao: "📣 Aumentar visualizacao",
+    identidade: "🧭 Construir identidade",
+    engajamento: "🔥 Aumentar engajamento",
+    seguidores: "📈 Ganhar seguidores",
+    vendas: "💰 Aumentar vendas",
+    autoridade: "👑 Construir autoridade",
+    leads: "🎯 Gerar leads",
+  };
+
+  const platformLabels: Record<string, string> = {
+    instagram: "📱 Instagram",
+    todas: "🌐 Todas as redes",
+  };
+
+  const speedLabels: Record<string, string> = {
+    rapido: "🚀 Explosivo (stories, feed, reels e viral no fim de semana)",
+    moderado: "⚡ Moderado (stories diarios, feed diario e reels semanais)",
+    leve: "🌱 Crescimento leve (1-2x semana)",
+  };
+
+  const styleLabels: Record<string, string> = {
+    humoristico: "😂 Humoristico",
+    educativo: "📚 Educativo",
+    casual: "😊 Casual",
+    formal: "👔 Formal",
+    inspirador: "✨ Inspirador",
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center">
         <Loader2 className="size-8 animate-spin text-primary" />
       </div>
     );
@@ -144,33 +164,47 @@ export default function SettingsPage() {
       animate={{ opacity: 1, y: 0 }}
       className="flex flex-col gap-6 pb-12"
     >
-      {/* Header */}
       <div className="flex items-center gap-3">
-        <div className="p-2 bg-primary/10 rounded-lg">
-          <Settings className="size-6 md:size-7 text-primary" />
+        <div className="rounded-lg bg-primary/10 p-2">
+          <Settings className="size-6 text-primary md:size-7" />
         </div>
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-            Configurações
+          <h1 className="text-2xl font-bold text-foreground md:text-3xl">
+            Configuracoes
           </h1>
           <p className="text-sm text-muted-foreground">
-            Gerencie as informações do seu negócio
+            Gerencie as informacoes do seu negocio
           </p>
         </div>
       </div>
 
-      {/* Formulário */}
-      <Card className="border-2 border-primary/20 bg-card/50 rounded-md">
-        <CardContent className="p-6 space-y-8">
-          {/* Seção 1: Informações Pessoais */}
+      <div className="flex items-start gap-3 rounded-xl border border-[#C8F135]/20 bg-[#C8F135]/5 p-4">
+        <Info className="mt-0.5 size-4 shrink-0 text-[#C8F135]" />
+        <div>
+          <p className="text-sm font-medium text-[#C8F135]">
+            Campos do negocio bloqueados
+          </p>
+          <p className="mt-1 text-xs leading-relaxed text-[#888]">
+            As informacoes do negocio so podem ser alteradas uma vez por mes, no
+            periodo de renovacao da assinatura. Voce pode alterar livremente seu
+            nome e Instagram a qualquer momento.
+          </p>
+        </div>
+      </div>
+
+      <Card className="rounded-xl border border-border bg-card">
+        <CardContent className="space-y-8 p-6">
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold flex items-center gap-2 border-b border-primary/10 pb-2">
-              <User className="size-4 text-primary" />
-              Informações Pessoais
+            <h2 className="flex items-center gap-2 border-b border-border pb-2 text-lg font-semibold">
+              <User className="size-4 text-[#C8F135]" />
+              Informacoes Pessoais
+              <span className="ml-auto rounded-full border border-[#C8F135]/20 bg-[#C8F135]/10 px-2 py-0.5 text-[11px] font-normal text-[#C8F135]">
+                Editavel
+              </span>
             </h2>
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="responsible_name">Nome do responsável</Label>
+                <Label htmlFor="responsible_name">Nome do responsavel</Label>
                 <Input
                   id="responsible_name"
                   value={formData.responsible_name}
@@ -208,197 +242,145 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          {/* Seção 2: Sobre o Negócio */}
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold flex items-center gap-2 border-b border-primary/10 pb-2">
-              <Store className="size-4 text-primary" />
-              Sobre o Negócio
-            </h2>
-            <div className="grid gap-4">
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="business_name">Nome do negócio</Label>
-                  <Input
-                    id="business_name"
-                    value={formData.business_name}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        business_name: e.target.value,
-                      })
-                    }
-                    className="rounded-md"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="niche">Nicho / Segmento</Label>
-                  <Input
-                    id="niche"
-                    value={formData.niche}
-                    onChange={(e) =>
-                      setFormData({ ...formData, niche: e.target.value })
-                    }
-                    className="rounded-md"
-                    placeholder="Ex: Moda plus size feminina"
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="target_audience">Público-alvo</Label>
-                <Textarea
-                  id="target_audience"
-                  rows={3}
-                  value={formData.target_audience}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      target_audience: e.target.value,
-                    })
-                  }
-                  className="rounded-md resize-none"
-                  placeholder="Descreva seu cliente ideal (idade, gênero, interesses, comportamentos...)"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Seção 3: Objetivos e Estratégia */}
-          <div className="space-y-4">
-            <h2 className="text-lg font-semibold flex items-center gap-2 border-b border-primary/10 pb-2">
-              <Target className="size-4 text-primary" />
-              Objetivos e Estratégia
+            <h2 className="flex items-center gap-2 border-b border-border pb-2 text-lg font-semibold">
+              <Store className="size-4 text-[#888]" />
+              Sobre o Negocio
+              <span className="ml-auto flex items-center gap-1 rounded-full border border-border bg-white/5 px-2 py-0.5 text-[11px] font-normal text-[#555]">
+                <Lock className="size-2.5" />
+                Bloqueado
+              </span>
             </h2>
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="main_goal">Objetivo principal</Label>
-                <Select
-                  value={formData.main_goal}
-                  onValueChange={(val) =>
-                    setFormData({ ...formData, main_goal: val })
-                  }
-                >
-                  <SelectTrigger id="main_goal" className="rounded-md">
-                    <SelectValue placeholder="Selecione" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="engajamento">
-                      🔥 Aumentar engajamento
-                    </SelectItem>
-                    <SelectItem value="seguidores">
-                      📈 Ganhar seguidores
-                    </SelectItem>
-                    <SelectItem value="vendas">💰 Aumentar vendas</SelectItem>
-                    <SelectItem value="autoridade">
-                      👑 Construir autoridade
-                    </SelectItem>
-                    <SelectItem value="leads">🎯 Gerar leads</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label className="text-[#888]">Nome do negocio</Label>
+                <div className="rounded-md border border-border bg-white/5 px-3 py-2.5 text-sm text-[#666] opacity-60">
+                  {formData.business_name || "Nao informado"}
+                </div>
               </div>
-
               <div className="space-y-2">
-                <Label htmlFor="platforms">Plataformas</Label>
-                <Select
-                  value={formData.platforms}
-                  onValueChange={(val) =>
-                    setFormData({ ...formData, platforms: val })
-                  }
-                >
-                  <SelectTrigger id="platforms" className="rounded-md">
-                    <SelectValue placeholder="Selecione" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="instagram">📱 Instagram</SelectItem>
-                    <SelectItem value="tiktok">🎵 TikTok</SelectItem>
-                    <SelectItem value="instagram_tiktok">📱 + 🎵</SelectItem>
-                    <SelectItem value="todas">🌐 Todas</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label className="text-[#888]">Nicho / Segmento</Label>
+                <div className="rounded-md border border-border bg-white/5 px-3 py-2.5 text-sm text-[#666] opacity-60">
+                  {formData.niche || "Nao informado"}
+                </div>
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="growth_speed">Velocidade de crescimento</Label>
-                <Select
-                  value={formData.growth_speed}
-                  onValueChange={(val) =>
-                    setFormData({ ...formData, growth_speed: val })
-                  }
-                >
-                  <SelectTrigger id="growth_speed" className="rounded-md">
-                    <SelectValue placeholder="Selecione" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="rapido">
-                      🚀 Crescimento rápido (posto todo dia)
-                    </SelectItem>
-                    <SelectItem value="moderado">
-                      ⚡ Crescimento moderado (3-4x semana)
-                    </SelectItem>
-                    <SelectItem value="leve">
-                      🌱 Crescimento leve (1-2x semana)
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="communication_style">
-                  Estilo de comunicação
-                </Label>
-                <Select
-                  value={formData.communication_style}
-                  onValueChange={(val) =>
-                    setFormData({ ...formData, communication_style: val })
-                  }
-                >
-                  <SelectTrigger
-                    id="communication_style"
-                    className="rounded-md"
-                  >
-                    <SelectValue placeholder="Selecione" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="formal">👔 Formal</SelectItem>
-                    <SelectItem value="casual">😊 Casual</SelectItem>
-                    <SelectItem value="inspirador">✨ Inspirador</SelectItem>
-                    <SelectItem value="educativo">📚 Educativo</SelectItem>
-                    <SelectItem value="humoristico">😂 Humorístico</SelectItem>
-                  </SelectContent>
-                </Select>
+            </div>
+            <div className="space-y-2">
+              <Label className="text-[#888]">Publico-alvo</Label>
+              <div className="rounded-md border border-border bg-white/5 px-3 py-2.5 text-sm text-[#666] opacity-60">
+                {formData.target_audience || "Nao informado"}
               </div>
             </div>
           </div>
 
-          {/* Seção 4: Marca e Diferenciais */}
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold flex items-center gap-2 border-b border-primary/10 pb-2">
-              <Sparkles className="size-4 text-primary" />
+            <h2 className="flex items-center gap-2 border-b border-border pb-2 text-lg font-semibold">
+              <Target className="size-4 text-[#888]" />
+              Objetivos e Estrategia
+              <span className="ml-auto flex items-center gap-1 rounded-full border border-border bg-white/5 px-2 py-0.5 text-[11px] font-normal text-[#555]">
+                <Lock className="size-2.5" />
+                Bloqueado
+              </span>
+            </h2>
+            <div className="grid gap-4 md:grid-cols-2">
+              {[
+                {
+                  label: "Objetivo principal",
+                  value: goalLabels[formData.main_goal] || formData.main_goal,
+                },
+                {
+                  label: "Plataformas",
+                  value:
+                    platformLabels[formData.platforms] || formData.platforms,
+                },
+                {
+                  label: "Velocidade de crescimento",
+                  value:
+                    speedLabels[formData.growth_speed] ||
+                    formData.growth_speed,
+                },
+                {
+                  label: "Estilo de comunicacao",
+                  value:
+                    styleLabels[formData.communication_style] ||
+                    formData.communication_style,
+                },
+              ].map((field) => (
+                <div key={field.label} className="space-y-2">
+                  <Label className="text-[#888]">{field.label}</Label>
+                  <div className="rounded-md border border-border bg-white/5 px-3 py-2.5 text-sm text-[#666] opacity-60">
+                    {field.value || "Nao informado"}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <h2 className="flex items-center gap-2 border-b border-border pb-2 text-lg font-semibold">
+              <Sparkles className="size-4 text-[#888]" />
               Marca e Diferenciais
+              <span className="ml-auto flex items-center gap-1 rounded-full border border-border bg-white/5 px-2 py-0.5 text-[11px] font-normal text-[#555]">
+                <Lock className="size-2.5" />
+                Bloqueado
+              </span>
             </h2>
             <div className="space-y-2">
-              <Label htmlFor="brand_description">Descrição da marca</Label>
-              <Textarea
-                id="brand_description"
-                rows={4}
-                value={formData.brand_description}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    brand_description: e.target.value,
-                  })
-                }
-                className="rounded-md resize-none"
-                placeholder="Descreva a personalidade, valores e missão da sua marca..."
-              />
+              <Label className="text-[#888]">Descricao da marca</Label>
+              <div className="min-h-[80px] rounded-md border border-border bg-white/5 px-3 py-2.5 text-sm text-[#666] opacity-60">
+                {formData.brand_description || "Nao informado"}
+              </div>
             </div>
           </div>
 
-          {/* Mensagens de erro/sucesso */}
+          <div className="space-y-4">
+            <h2 className="flex items-center gap-2 border-b border-border pb-2 text-lg font-semibold">
+              <CreditCard className="size-4 text-[#C8F135]" />
+              Pagamento
+            </h2>
+            <div className="flex flex-col gap-4 rounded-xl border border-border bg-white/5 p-5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-white">
+                    Plano CR3SCE Pro
+                  </p>
+                  <p className="text-xs text-[#666]">
+                    R$79,90/mes - Renovacao automatica
+                  </p>
+                </div>
+                <span className="rounded-full border border-[#C8F135]/30 bg-[#C8F135]/10 px-3 py-1 text-xs font-medium text-[#C8F135]">
+                  Ativo
+                </span>
+              </div>
+              <div className="h-px bg-border" />
+              <div className="flex flex-col gap-2 text-xs text-[#666]">
+                {[
+                  "Calendario de 30 dias todo mes",
+                  "Chat IA ilimitado",
+                  "Suporte via WhatsApp",
+                  "Cancele quando quiser",
+                ].map((item) => (
+                  <p key={item} className="flex items-center gap-2">
+                    <span className="text-[#C8F135]">✓</span> {item}
+                  </p>
+                ))}
+              </div>
+              <a
+                href="https://pay.cakto.com.br/34v8jnh_813702"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-center text-xs text-[#555] transition-colors hover:text-[#C8F135]"
+              >
+                Gerenciar assinatura ↗
+              </a>
+            </div>
+          </div>
+
           {error && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex items-center gap-2 text-destructive text-sm bg-destructive/10 p-3 rounded-md"
+              className="flex items-center gap-2 rounded-md bg-destructive/10 p-3 text-sm text-destructive"
             >
               <AlertCircle className="size-4 shrink-0" />
               {error}
@@ -409,19 +391,18 @@ export default function SettingsPage() {
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex items-center gap-2 text-green-500 text-sm bg-green-500/10 p-3 rounded-md"
+              className="flex items-center gap-2 rounded-md bg-green-500/10 p-3 text-sm text-green-500"
             >
               <Sparkles className="size-4 shrink-0" />
-              Dados salvos com sucesso!
+              Nome e Instagram salvos com sucesso!
             </motion.div>
           )}
 
-          {/* Botão salvar */}
-          <div className="flex justify-end pt-4 border-t border-primary/10">
+          <div className="flex justify-end border-t border-border pt-4">
             <Button
               onClick={handleSave}
               disabled={saving}
-              className="gap-2 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 px-6 rounded-md"
+              className="gap-2 rounded-md bg-[#C8F135] px-6 font-semibold text-[#111] hover:bg-[#a8d020]"
             >
               {saving ? (
                 <>
@@ -431,22 +412,16 @@ export default function SettingsPage() {
               ) : (
                 <>
                   <Save className="size-4" />
-                  Salvar alterações
+                  Salvar nome e Instagram
                 </>
               )}
             </Button>
           </div>
         </CardContent>
       </Card>
-
-      {/* Dica */}
-      <div className="bg-primary/5 border border-primary/10 rounded-md p-4 text-sm text-muted-foreground">
-        <p className="flex items-center gap-2">
-          <Sparkles className="size-4 text-primary" />
-          Quanto mais detalhadas suas informações, melhores serão as estratégias
-          geradas pela IA!
-        </p>
-      </div>
     </motion.div>
   );
 }
+
+
+

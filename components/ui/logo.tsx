@@ -3,32 +3,30 @@ import { cn } from "@/lib/utils";
 
 interface LogoProps {
   className?: string;
-  width?: number;
-  height?: number;
+  size?: "sm" | "md" | "lg" | "xl";
   showText?: boolean;
 }
 
-export function Logo({
-  className,
-  width = 120,
-  height = 40,
-  showText = true,
-}: LogoProps) {
-  return (
-    <Link href="/" className={cn("flex items-center gap-1", className)}>
-      {/* Ícone/Logo Mark */}
-      <div
-        className="flex items-center justify-center bg-gradient-to-br from-primary to-purple-600 rounded-md"
-        style={{ width: height, height: height }}
-      >
-        <span className="text-white font-bold text-lg">C</span>
-      </div>
+export function Logo({ className, size = "md", showText = true }: LogoProps) {
+  const sizes = {
+    sm: { box: 28, text: "text-lg" },
+    md: { box: 32, text: "text-xl" },
+    lg: { box: 36, text: "text-2xl" },
+    xl: { box: 44, text: "text-3xl" },
+  };
 
-      {/* Texto do Logo (opcional, para versões simplificadas) */}
+  const s = sizes[size];
+
+  return (
+    <Link href="/" className={cn("flex items-center gap-2", className)}>
       {showText && (
-        <span className="font-bold text-xl">
-          <span className="text-primary">Cresci.</span>
-          <span className="text-purple-600">IA</span>
+        <span
+          className={cn("font-bebas leading-none tracking-normal", s.text)}
+          style={{ letterSpacing: "0.02em" }}
+        >
+          <span className="text-foreground">CR</span>
+          <span className="text-primary">3</span>
+          <span className="text-foreground">SCE</span>
         </span>
       )}
     </Link>

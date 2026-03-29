@@ -1,15 +1,24 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
+import { Inter, Bebas_Neue } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
+import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const bebasNeue = Bebas_Neue({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-bebas",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  title: "Cresci.IA - Marketing Digital com IA",
-  description:
-    "Sua assistente pessoal de marketing digital com inteligência artificial",
+  title: "CR3SCE - Planejamento de Conteudo para Instagram",
+  description: "R$79,90/mes. 30 dias de conteudo planejado para o Instagram.",
 };
 
 export default function RootLayout({
@@ -18,17 +27,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" suppressHydrationWarning>
-      <body className={`${inter.className} antialiased min-h-screen`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-          <Toaster />
-        </ThemeProvider>
+    <html
+      lang="pt-BR"
+      className={`dark ${inter.variable} ${bebasNeue.variable}`}
+      suppressHydrationWarning
+    >
+      <body className="min-h-screen bg-background text-foreground antialiased">
+        {children}
+        <Toaster />
       </body>
     </html>
   );

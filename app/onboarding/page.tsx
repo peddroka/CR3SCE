@@ -3,8 +3,8 @@ import { OnboardingQuestionnaire } from "@/components/dashboard/onboarding-quest
 import { redirect } from "next/navigation";
 
 export const metadata = {
-  title: "Onboarding | Cresci.ai",
-  description: "Configure seu negócio para começar a usar a Cresci.ai",
+  title: "Onboarding | CR3SCE",
+  description: "Configure seu negócio para começar a usar a CR3SCE",
 };
 
 export default async function OnboardingPage() {
@@ -14,30 +14,22 @@ export default async function OnboardingPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  console.log("ONBOARDING - User:", user?.id);
-
   if (!user) {
     redirect("/auth/login");
   }
 
-  const { data: businesses, error } = await supabase
+  const { data: businesses } = await supabase
     .from("businesses")
     .select("id")
     .eq("user_id", user.id)
     .order("created_at", { ascending: false })
     .limit(1);
 
-  console.log("ONBOARDING - Businesses:", businesses);
-  console.log("ONBOARDING - Error:", error);
-
   const business = businesses?.[0] ?? null;
 
   if (business) {
-    console.log("ONBOARDING - Tem business, redirecionando pro dashboard");
     redirect("/dashboard");
   }
-
-  console.log("ONBOARDING - Sem business, mostrando questionário");
 
   return <OnboardingQuestionnaire />;
 }

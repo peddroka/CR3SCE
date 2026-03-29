@@ -1,78 +1,71 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import { AnimatePresence, motion } from "framer-motion";
+import confetti from "canvas-confetti";
+import { createClient, getUserSafely } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import {
-  Lock,
-  CheckCircle2,
-  Sparkles,
-  X,
+  DollarSign,
   Loader2,
   Rocket,
-  Target,
-  Zap,
-  Camera,
-  DollarSign,
-  ExternalLink,
-  Trophy,
-  HelpCircle,
+  Sparkles,
   TrendingUp,
-  Award,
-  ChevronRight,
-  ChevronLeft,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import confetti from "canvas-confetti";
-import { cn } from "@/lib/utils";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
-interface Level {
-  id: string;
-  level_number: number;
-  title: string;
-  type: "equipment" | "goal" | "action";
-  description: string;
-  tip: string;
-  estimated_cost: number;
-  expected_result: string;
-  status: "locked" | "available" | "completed";
+const EvolutionMap = dynamic(
+  () =>
+    import("@/components/dashboard/evolution-map").then((module) => ({
+      default: module.EvolutionMap,
+    })),
+  { ssr: false },
+);
+
+function getLevelsCacheKey(userId: string, month: number, year: number) {
+  return `evo_levels_${userId}_${month}_${year}`;
 }
 
 export default function EvolutionPage() {
   const [showInitialModal, setShowInitialModal] = useState(true);
   const [investment, setInvestment] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [levels, setLevels] = useState<Level[]>([]);
-  const [selectedLevel, setSelectedLevel] = useState<Level | null>(null);
-  const [updatingLevel, setUpdatingLevel] = useState<string | null>(null);
+  const [levels, setLevels] = useState<any[]>([]);
   const [business, setBusiness] = useState<any>(null);
   const [evolutionData, setEvolutionData] = useState<any>(null);
+  const [completedChoices, setCompletedChoices] = useState<Record<string, string>>(
+    {},
+  );
   const [loading, setLoading] = useState(true);
-  const [showInfo, setShowInfo] = useState(false);
+  const [insufficientBudget, setInsufficientBudget] = useState(false);
+  const [supabase] = useState(() => createClient());
   const router = useRouter();
-  const supabase = createClient();
 
   useEffect(() => {
-    loadData();
+    void loadData();
   }, []);
+
+  useEffect(() => {
+    const loadChoices = async () => {
+      try {
+        const { user } = await getUserSafely(supabase);
+        if (!user) return;
+        const key = `evo_choices_${user.id}`;
+        const saved = localStorage.getItem(key);
+        if (saved) setCompletedChoices(JSON.parse(saved));
+      } catch {}
+    };
+    void loadChoices();
+  }, [supabase]);
 
   const loadData = async () => {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const { user } = await getUserSafely(supabase);
+
       if (!user) {
         router.push("/auth/login");
         return;
@@ -87,12 +80,15 @@ export default function EvolutionPage() {
       setBusiness(businessData);
 
       const now = new Date();
+      const month = now.getMonth() + 1;
+      const year = now.getFullYear();
+
       const { data: evolution } = await supabase
         .from("evolution_data")
         .select("*")
         .eq("user_id", user.id)
-        .eq("month", now.getMonth() + 1)
-        .eq("year", now.getFullYear())
+        .eq("month", month)
+        .eq("year", year)
         .maybeSingle();
 
       setEvolutionData(evolution);
@@ -102,12 +98,32 @@ export default function EvolutionPage() {
           .from("evolution_levels")
           .select("*")
           .eq("user_id", user.id)
-          .eq("month", now.getMonth() + 1)
-          .eq("year", now.getFullYear())
+          .eq("month", month)
+          .eq("year", year)
           .order("level_number", { ascending: true });
 
         if (levelsData && levelsData.length > 0) {
-          setLevels(levelsData);
+          let mergedLevels = levelsData;
+
+          try {
+            const cachedRaw = localStorage.getItem(
+              getLevelsCacheKey(user.id, month, year),
+            );
+
+            if (cachedRaw) {
+              const cachedLevels = JSON.parse(cachedRaw) as any[];
+              mergedLevels = levelsData.map((level) => {
+                const cached = cachedLevels.find(
+                  (item) => item.level_number === level.level_number,
+                );
+                return cached?.options
+                  ? { ...level, options: cached.options }
+                  : level;
+              });
+            }
+          } catch {}
+
+          setLevels(mergedLevels);
           setShowInitialModal(false);
         }
       }
@@ -119,34 +135,47 @@ export default function EvolutionPage() {
   };
 
   const handleGenerateLevels = async () => {
-    if (!investment || Number(investment) <= 0) return;
+    if (!investment || !business) return;
+
+    const value = Number(investment.toString().replace(",", "."));
+
+    if (value < 50) {
+      setShowInitialModal(false);
+      setInsufficientBudget(true);
+      return;
+    }
 
     setIsGenerating(true);
+
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) throw new Error("Usuário não autenticado");
+      const { user } = await getUserSafely(supabase);
+
+      if (!user) {
+        throw new Error("Usuario nao autenticado");
+      }
 
       const now = new Date();
       const month = now.getMonth() + 1;
       const year = now.getFullYear();
 
-      await supabase.from("evolution_data").upsert({
+      const nextEvolutionData = {
         user_id: user.id,
         business_id: business.id,
         current_followers: evolutionData?.current_followers || 0,
         current_stories_views: evolutionData?.current_stories_views || 0,
-        monthly_investment: Number(investment),
+        monthly_investment: value,
         month,
         year,
-      });
+      };
+
+      await supabase.from("evolution_data").upsert(nextEvolutionData);
+      setEvolutionData(nextEvolutionData);
 
       const res = await fetch("/api/generate-levels", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          investment_amount: Number(investment),
+          investment_amount: value,
           business,
           month_number: 1,
           current_followers: evolutionData?.current_followers || 0,
@@ -154,549 +183,239 @@ export default function EvolutionPage() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
+      if (!res.ok) {
+        throw new Error(data.error);
+      }
 
-      setLevels(data.levels);
+      setLevels(data.levels || []);
       setShowInitialModal(false);
+      setInsufficientBudget(false);
+
+      try {
+        localStorage.setItem(
+          getLevelsCacheKey(user.id, month, year),
+          JSON.stringify(data.levels || []),
+        );
+      } catch {}
 
       confetti({
         particleCount: 100,
         spread: 70,
         origin: { y: 0.6 },
-        colors: ["#8B5CF6", "#D946EF", "#F97316"],
+        colors: ["#C8F135", "#ffffff"],
       });
-    } catch (error: any) {
-      console.error("Erro ao gerar níveis:", error);
+    } catch (error) {
+      console.error("Erro ao gerar niveis:", error);
     } finally {
       setIsGenerating(false);
     }
   };
 
-  const handleCompleteLevel = async (level: Level) => {
-    setUpdatingLevel(level.id);
-
+  async function handleCompleteLevel(levelId: string, chosenOptionId: string) {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) throw new Error("Usuário não autenticado");
+      const { user } = await getUserSafely(supabase);
+      if (!user) return;
 
-      await supabase
-        .from("evolution_levels")
-        .update({
-          status: "completed",
-          completed_at: new Date().toISOString(),
-        })
-        .eq("id", level.id);
-
-      setLevels((prev) =>
-        prev.map((l) =>
-          l.id === level.id ? { ...l, status: "completed" } : l,
-        ),
-      );
-
-      // Desbloquear próximo nível
-      const nextLevel = levels.find(
-        (l) => l.level_number === level.level_number + 1,
-      );
-      if (nextLevel) {
-        await supabase
-          .from("evolution_levels")
-          .update({ status: "available" })
-          .eq("id", nextLevel.id);
-
-        setLevels((prev) =>
-          prev.map((l) =>
-            l.id === nextLevel.id ? { ...l, status: "available" } : l,
-          ),
-        );
-      }
-
-      // Confetti de conquista
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: ["#8B5CF6", "#10B981", "#FBBF24"],
+      setCompletedChoices((prev) => {
+        const updated = { ...prev, [levelId]: chosenOptionId };
+        try {
+          localStorage.setItem(`evo_choices_${user.id}`, JSON.stringify(updated));
+        } catch {}
+        return updated;
       });
-
-      setSelectedLevel(null);
-    } catch (error) {
-      console.error("Erro ao completar nível:", error);
-    } finally {
-      setUpdatingLevel(null);
+    } catch (err) {
+      console.error("Erro ao salvar escolha:", err);
     }
-  };
-
-  const handleSearchProduct = (title: string, type: string) => {
-    let searchQuery = title;
-
-    if (type === "equipment") {
-      if (title.toLowerCase().includes("softbox")) {
-        searchQuery = "softbox quadrado mini para fotografia de produtos";
-      } else if (title.toLowerCase().includes("câmera")) {
-        searchQuery = "câmera para fotografia de produtos";
-      } else if (title.toLowerCase().includes("microfone")) {
-        searchQuery = "microfone lapela para vídeos";
-      } else if (title.toLowerCase().includes("iluminação")) {
-        searchQuery = "kit iluminação para fotografia de produtos";
-      }
-    }
-
-    window.open(
-      `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`,
-      "_blank",
-    );
-  };
-
-  const completedCount = levels.filter((l) => l.status === "completed").length;
-  const totalCount = levels.length;
-  const progress = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
-
-  const getLevelIcon = (type: string) => {
-    switch (type) {
-      case "equipment":
-        return <Camera className="size-5" />;
-      case "goal":
-        return <Target className="size-5" />;
-      case "action":
-        return <Zap className="size-5" />;
-      default:
-        return <Trophy className="size-5" />;
-    }
-  };
-
-  // LINHA RETA VERTICAL - Posições centralizadas
-  const generateVerticalPositions = (count: number) => {
-    const positions = [];
-    const centerX = 50; // Centralizado (50%)
-    const startY = 15; // Começa em 15%
-    const stepY = 12; // Espaçamento entre níveis
-
-    for (let i = 0; i < count; i++) {
-      positions.push({
-        x: centerX,
-        y: startY + i * stepY,
-      });
-    }
-
-    return positions;
-  };
-
-  // Função para criar linha reta vertical
-  const createVerticalPath = (positions: { x: number; y: number }[]) => {
-    if (positions.length < 2) return "";
-
-    let path = `M ${positions[0].x},${positions[0].y}`;
-
-    for (let i = 1; i < positions.length; i++) {
-      path += ` L ${positions[i].x},${positions[i].y}`;
-    }
-
-    return path;
-  };
-
-  // Gerar posições verticais
-  const levelPositions = generateVerticalPositions(levels.length);
-  const pathD = createVerticalPath(levelPositions);
+  }
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center">
         <Loader2 className="size-8 animate-spin text-primary" />
       </div>
     );
   }
 
-  return (
-    <TooltipProvider>
-      <div className="flex flex-col gap-6 pb-12">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-              Jornada de Evolução
-            </h1>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="rounded-full h-8 w-8"
-                  onClick={() => setShowInfo(!showInfo)}
-                >
-                  <HelpCircle className="size-4 text-primary" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent className="max-w-xs">
-                <p>
-                  Complete os níveis em ordem para evoluir! Cada nível concluído
-                  desbloqueia o próximo.
-                </p>
-              </TooltipContent>
-            </Tooltip>
+  if (insufficientBudget) {
+    return (
+      <div className="mx-auto flex max-w-3xl flex-col gap-6 pb-12">
+        <div>
+          <h1 className="flex items-center gap-2 text-2xl font-bold text-white md:text-3xl">
+            <TrendingUp className="size-7 text-primary" />
+            Jornada de Evolucao
+          </h1>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="rounded-2xl border border-border bg-card p-8 text-center"
+        >
+          <div className="mx-auto mb-6 flex size-20 items-center justify-center rounded-full border border-[#C8F135]/20 bg-[#C8F135]/10 text-4xl">
+            💰
+          </div>
+          <h2 className="mb-3 text-xl font-bold text-white">
+            Orcamento insuficiente por enquanto
+          </h2>
+          <p className="mx-auto mb-6 max-w-sm text-sm leading-relaxed text-[#888]">
+            Com menos de R$50 disponivel, nao conseguimos montar uma jornada de
+            evolucao relevante para o seu negocio. Quando voce tiver um valor
+            maior disponivel este mes, volte aqui e libere sua jornada!
+          </p>
+
+          <div className="mb-6 rounded-xl border border-[#C8F135]/20 bg-[#C8F135]/5 p-4 text-left">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#C8F135]">
+              O que voce pode fazer agora
+            </p>
+            <ul className="space-y-2 text-sm text-[#888]">
+              <li className="flex gap-2">
+                <span className="shrink-0 text-[#C8F135]">1.</span>
+                Foque no calendario de conteudo - postar consistentemente ja gera
+                crescimento
+              </li>
+              <li className="flex gap-2">
+                <span className="shrink-0 text-[#C8F135]">2.</span>
+                Quando tiver um valor disponivel, volte aqui e clique em
+                "Liberar minha jornada"
+              </li>
+              <li className="flex gap-2">
+                <span className="shrink-0 text-[#C8F135]">3.</span>
+                Mesmo R$100-200 ja permite comecar com equipamentos basicos
+              </li>
+            </ul>
           </div>
 
-          {/* Progress Card */}
-          <Card className="border-2 border-primary/20 bg-gradient-to-r from-primary/10 to-purple-600/10 rounded-xl">
-            <CardContent className="py-3 px-5">
-              <div className="flex items-center gap-4">
-                <div className="relative">
-                  <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-bold text-lg">
-                    {completedCount}
-                  </div>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Progresso</p>
-                  <div className="flex items-center gap-2">
-                    <Progress value={progress} className="w-24 h-2" />
-                    <span className="text-sm font-medium">
-                      {Math.round(progress)}%
-                    </span>
-                  </div>
-                </div>
+          <button
+            onClick={() => {
+              setInsufficientBudget(false);
+              setShowInitialModal(true);
+              setInvestment("");
+            }}
+            className="w-full rounded-xl bg-[#C8F135] py-3 text-sm font-semibold text-[#111] transition-colors hover:bg-[#a8d020]"
+          >
+            Liberar minha jornada
+          </button>
+        </motion.div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mx-auto flex max-w-3xl flex-col gap-6 pb-12">
+      <div>
+        <h1 className="flex items-center gap-2 text-2xl font-bold text-white md:text-3xl">
+          <TrendingUp className="size-7 text-primary" />
+          Jornada de Evolucao
+        </h1>
+        <p className="mt-1 text-sm text-[#888888]">
+          Complete os niveis em ordem para evoluir sua presenca digital.
+        </p>
+      </div>
+
+      {levels.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          <Card className="overflow-hidden rounded-2xl border border-border bg-card">
+            <CardContent className="p-5">
+              <div className="mb-4 flex items-center gap-2">
+                <span className="text-lg">🗺️</span>
+                <h2 className="font-bebas text-xl tracking-wide text-white">
+                  Mapa de Evolucao
+                </h2>
               </div>
+              <EvolutionMap
+                levels={levels}
+                investment={Number(evolutionData?.monthly_investment || 0)}
+                completedChoices={completedChoices}
+                onCompleteLevel={handleCompleteLevel}
+              />
             </CardContent>
           </Card>
-        </div>
+        </motion.div>
+      )}
 
-        {/* Info panel */}
-        <AnimatePresence>
-          {showInfo && (
+      <AnimatePresence>
+        {showInitialModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="bg-primary/10 border border-primary/30 rounded-xl p-4 text-sm"
-            >
-              <p className="text-foreground">
-                <span className="font-bold text-primary">Como funciona:</span>{" "}
-                Siga a linha vertical para completar sua jornada! Nível 1
-                disponível, complete para desbloquear o próximo.
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Mapa de evolução - LINHA RETA VERTICAL */}
-        <div className="relative w-full min-h-[600px] bg-gradient-to-br from-primary/5 to-transparent rounded-2xl border border-primary/10 p-8">
-          {/* Container SVG para a linha reta vertical */}
-          <svg
-            className="absolute top-0 left-0 w-full h-full pointer-events-none"
-            style={{ zIndex: 0 }}
-            viewBox="0 0 100 100"
-            preserveAspectRatio="none"
-          >
-            <path
-              d={pathD}
-              stroke="#8B5CF6"
-              strokeWidth="2"
-              fill="none"
-              strokeDasharray="4 4"
-              strokeLinecap="round"
-              className="opacity-70"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/80 backdrop-blur-md"
             />
-          </svg>
 
-          {/* Níveis em linha reta vertical */}
-          {levels.map((level, index) => {
-            const pos = levelPositions[index];
-            if (!pos) return null;
-
-            const isCompleted = level.status === "completed";
-            const isAvailable = level.status === "available";
-            const isFirst = index === 0;
-            const canClick = isFirst ? true : isAvailable;
-
-            // Determinar cor baseada no status
-            let borderColor = "border-gray-600";
-            let bgColor = "bg-gray-800";
-            let textColor = "text-gray-400";
-
-            if (isCompleted) {
-              borderColor = "border-white";
-              bgColor = "bg-primary";
-              textColor = "text-white";
-            } else if (isAvailable || isFirst) {
-              borderColor = "border-white";
-              bgColor = "bg-primary";
-              textColor = "text-white";
-            }
-
-            return (
-              <motion.div
-                key={level.id}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.1 }}
-                className="absolute"
-                style={{
-                  left: `${pos.x}%`,
-                  top: `${pos.y}%`,
-                  transform: "translate(-50%, -50%)",
-                }}
-              >
-                {/* Bolinha do nível */}
-                <motion.button
-                  whileHover={canClick ? { scale: 1.15 } : {}}
-                  whileTap={canClick ? { scale: 0.95 } : {}}
-                  onClick={() => canClick && setSelectedLevel(level)}
-                  disabled={!canClick}
-                  className={cn(
-                    "relative w-16 h-16 rounded-full border-4 flex items-center justify-center text-xl font-bold transition-all shadow-lg",
-                    borderColor,
-                    bgColor,
-                    textColor,
-                    !canClick &&
-                      !isCompleted &&
-                      "cursor-not-allowed opacity-70",
-                  )}
-                >
-                  {level.level_number}
-                  {isCompleted && (
-                    <div className="absolute -top-1 -right-1">
-                      <CheckCircle2 className="size-5 text-green-500 bg-white rounded-full" />
-                    </div>
-                  )}
-                  {!isCompleted && !isAvailable && !isFirst && (
-                    <Lock className="absolute size-4 text-gray-400" />
-                  )}
-                </motion.button>
-
-                {/* Título do nível */}
-                <div className="absolute left-full ml-4 top-1/2 transform -translate-y-1/2 whitespace-nowrap">
-                  <p
-                    className={cn(
-                      "text-sm font-medium",
-                      isCompleted ? "text-primary" : "text-muted-foreground",
-                    )}
-                  >
-                    {level.title}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {level.type === "equipment" && "📷 Equipamento"}
-                    {level.type === "goal" && "🎯 Meta"}
-                    {level.type === "action" && "⚡ Ação"}
-                  </p>
-                </div>
-              </motion.div>
-            );
-          })}
-
-          {/* Mensagem se não houver níveis */}
-          {levels.length === 0 && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <p className="text-muted-foreground">
-                Nenhum nível disponível. Gere sua jornada!
-              </p>
-            </div>
-          )}
-        </div>
-
-        {/* Modal de desbloqueio */}
-        <AnimatePresence>
-          {showInitialModal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="absolute inset-0 bg-black/80 backdrop-blur-md"
-              />
-
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0, y: 20 }}
-                animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                className="relative z-10 w-full max-w-md rounded-2xl bg-card border-2 border-primary/20 p-6 shadow-2xl"
-              >
-                <div className="text-center mb-6">
-                  <motion.div
-                    animate={{ scale: [1, 1.1, 1] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="inline-block mb-4"
-                  >
-                    <Rocket className="size-16 text-primary" />
-                  </motion.div>
-
-                  <h2 className="text-2xl font-bold text-primary mb-2">
-                    Inicie sua Jornada!
-                  </h2>
-                  <p className="text-sm text-muted-foreground">
-                    Defina seu investimento mensal para desbloquear equipamentos
-                    e missões
-                  </p>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="investment">Investimento mensal (R$)</Label>
-                    <div className="relative">
-                      <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-                      <Input
-                        id="investment"
-                        type="number"
-                        placeholder="500"
-                        value={investment}
-                        onChange={(e) => setInvestment(e.target.value)}
-                        className="pl-10"
-                      />
-                    </div>
-                  </div>
-
-                  <Button
-                    onClick={handleGenerateLevels}
-                    disabled={!investment || isGenerating}
-                    className="w-full h-11 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 gap-2"
-                  >
-                    {isGenerating ? (
-                      <>
-                        <Loader2 className="size-4 animate-spin" />
-                        Gerando...
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles className="size-4" />
-                        Começar Jornada
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </motion.div>
-            </div>
-          )}
-        </AnimatePresence>
-
-        {/* Modal de detalhes do nível */}
-        <AnimatePresence>
-          {selectedLevel && (
-            <div
-              className="fixed inset-0 z-50 flex items-center justify-center p-4"
-              onClick={() => setSelectedLevel(null)}
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="relative z-10 w-full max-w-md rounded-2xl border border-border bg-card p-8 shadow-2xl"
             >
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="absolute inset-0 bg-black/70 backdrop-blur-md"
-              />
+              <div className="mb-8 text-center">
+                <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10">
+                  <Rocket className="size-10 text-primary" />
+                </div>
+                <h2 className="mb-2 text-2xl font-bold text-white">
+                  Inicie sua Jornada!
+                </h2>
+                <p className="text-sm leading-relaxed text-[#888888]">
+                  Defina seu investimento mensal e a IA vai montar uma jornada
+                  personalizada para o seu negocio.
+                </p>
+              </div>
 
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0, y: 20 }}
-                animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                className="relative z-10 w-full max-w-lg rounded-xl bg-card border-2 border-primary/20 p-6 shadow-2xl"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={cn(
-                        "p-3 rounded-xl",
-                        selectedLevel.status === "completed"
-                          ? "bg-primary/20"
-                          : "bg-primary/10",
-                      )}
-                    >
-                      {getLevelIcon(selectedLevel.type)}
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold">
-                        {selectedLevel.title}
-                      </h3>
-                      <Badge variant="outline" className="mt-1">
-                        Nível {selectedLevel.level_number}
-                      </Badge>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => setSelectedLevel(null)}
-                    className="text-muted-foreground hover:text-foreground"
+              <div className="space-y-5">
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="investment"
+                    className="text-sm font-medium text-[#c0c0c0]"
                   >
-                    <X className="size-5" />
-                  </button>
-                </div>
-
-                <div className="space-y-4">
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {selectedLevel.description}
+                    Investimento mensal disponivel (R$)
+                  </Label>
+                  <div className="relative">
+                    <DollarSign className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#888888]" />
+                    <Input
+                      id="investment"
+                      type="text"
+                      inputMode="decimal"
+                      placeholder="Ex: 500"
+                      value={investment}
+                      onChange={(e) =>
+                        setInvestment(e.target.value.replace(/[^0-9,.]/g, ""))
+                      }
+                      className="h-12 border-border bg-white/5 pl-10 text-white placeholder:text-[#555] focus-visible:border-primary"
+                    />
+                  </div>
+                  <p className="text-xs text-[#555]">
+                    Este valor define quais equipamentos e acoes serao sugeridos
+                    na sua jornada.
                   </p>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <Card className="border-primary/10">
-                      <CardContent className="p-3 text-center">
-                        <DollarSign className="size-4 text-primary mx-auto mb-1" />
-                        <p className="text-xs text-muted-foreground">Custo</p>
-                        <p className="font-medium">
-                          R$ {selectedLevel.estimated_cost}
-                        </p>
-                      </CardContent>
-                    </Card>
-                    <Card className="border-primary/10">
-                      <CardContent className="p-3 text-center">
-                        <Target className="size-4 text-primary mx-auto mb-1" />
-                        <p className="text-xs text-muted-foreground">
-                          Resultado
-                        </p>
-                        <p className="text-xs font-medium">
-                          {selectedLevel.expected_result}
-                        </p>
-                      </CardContent>
-                    </Card>
-                  </div>
-
-                  <div className="bg-primary/10 p-4 rounded-lg">
-                    <p className="text-xs font-medium text-primary mb-2 flex items-center gap-1">
-                      <Sparkles className="size-3" />
-                      Dica da IA
-                    </p>
-                    <p className="text-sm">{selectedLevel.tip}</p>
-                  </div>
-
-                  <div className="flex gap-3 pt-2">
-                    <Button
-                      onClick={() => handleCompleteLevel(selectedLevel)}
-                      disabled={
-                        updatingLevel === selectedLevel.id ||
-                        selectedLevel.status === "completed"
-                      }
-                      className="flex-1 gap-2 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700"
-                    >
-                      {updatingLevel === selectedLevel.id ? (
-                        <Loader2 className="size-4 animate-spin" />
-                      ) : selectedLevel.status === "completed" ? (
-                        <>
-                          <CheckCircle2 className="size-4" />
-                          Concluído
-                        </>
-                      ) : (
-                        <>
-                          <CheckCircle2 className="size-4" />
-                          Concluir Missão
-                        </>
-                      )}
-                    </Button>
-
-                    <Button
-                      variant="outline"
-                      onClick={() =>
-                        handleSearchProduct(
-                          selectedLevel.title,
-                          selectedLevel.type,
-                        )
-                      }
-                      className="gap-2 border-primary/30 hover:bg-primary/10"
-                    >
-                      <ExternalLink className="size-4" />
-                      Ver opções
-                    </Button>
-                  </div>
                 </div>
-              </motion.div>
-            </div>
-          )}
-        </AnimatePresence>
-      </div>
-    </TooltipProvider>
+
+                <Button
+                  onClick={handleGenerateLevels}
+                  disabled={!investment || isGenerating}
+                  className="h-12 w-full gap-2 bg-primary text-base font-semibold text-primary-foreground hover:bg-primary/90"
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="size-4 animate-spin" />
+                      Gerando sua jornada...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="size-4" />
+                      Comecar Jornada
+                    </>
+                  )}
+                </Button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }

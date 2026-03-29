@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import { createClient, getUserSafely } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -38,14 +38,12 @@ export default function InitialSurveyPage() {
   const supabase = createClient();
 
   useEffect(() => {
-    loadBusinessData();
+    void loadBusinessData();
   }, []);
 
   const loadBusinessData = async () => {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const { user } = await getUserSafely(supabase);
       if (!user) {
         router.push("/auth/login");
         return;
@@ -61,7 +59,7 @@ export default function InitialSurveyPage() {
         setBusinessId(business.id);
       }
     } catch (error) {
-      console.error("Erro ao carregar negócio:", error);
+      console.error("Erro ao carregar negocio:", error);
     } finally {
       setLoadingData(false);
     }
@@ -72,10 +70,8 @@ export default function InitialSurveyPage() {
 
     setLoading(true);
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) throw new Error("Usuário não autenticado");
+      const { user } = await getUserSafely(supabase);
+      if (!user) throw new Error("Usuario nao autenticado");
 
       const now = new Date();
       const month = now.getMonth() + 1;
@@ -111,7 +107,6 @@ export default function InitialSurveyPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/20 flex items-center justify-center p-4">
-      {/* Background blurs */}
       <div className="fixed inset-0 pointer-events-none">
         <motion.div
           animate={{ x: [0, 100, 0], y: [0, 50, 0] }}
@@ -152,7 +147,6 @@ export default function InitialSurveyPage() {
 
           <CardContent className="space-y-6 px-6 pb-6">
             <div className="space-y-4">
-              {/* Seguidores */}
               <div className="space-y-2">
                 <Label
                   htmlFor="followers"
@@ -171,7 +165,6 @@ export default function InitialSurveyPage() {
                 />
               </div>
 
-              {/* Visualizações Stories */}
               <div className="space-y-2">
                 <Label
                   htmlFor="stories"
@@ -190,7 +183,6 @@ export default function InitialSurveyPage() {
                 />
               </div>
 
-              {/* Equipamentos */}
               <div className="space-y-3">
                 <Label className="text-sm font-medium">
                   O que você já tem?
@@ -275,7 +267,6 @@ export default function InitialSurveyPage() {
                 </div>
               </div>
 
-              {/* Investimento */}
               <div className="space-y-2">
                 <Label
                   htmlFor="investment"

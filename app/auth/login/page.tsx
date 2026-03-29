@@ -1,22 +1,30 @@
 "use client";
 
-import { createClient } from "@/lib/supabase/client";
+import { createClient, resetSupabaseBrowserSession } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Image from "next/image";
+import { Logo } from "@/components/logo";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Sparkles, Mail, Lock, ArrowRight } from "lucide-react";
+
+const ONBOARDING_DRAFT_PREFIX = "cr3sce_onboarding_draft";
+
+function clearOnboardingDrafts() {
+  if (typeof window === "undefined") return;
+
+  try {
+    for (let index = window.localStorage.length - 1; index >= 0; index -= 1) {
+      const key = window.localStorage.key(index);
+      if (key?.startsWith(ONBOARDING_DRAFT_PREFIX)) {
+        window.localStorage.removeItem(key);
+      }
+    }
+  } catch {}
+}
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -27,16 +35,21 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const supabase = createClient();
     setIsLoading(true);
     setError(null);
+    let shouldResetLoading = true;
 
     try {
+      clearOnboardingDrafts();
+      await resetSupabaseBrowserSession();
+      const supabase = createClient();
+
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
       if (error) throw error;
+      shouldResetLoading = false;
       router.push("/dashboard");
     } catch (error: unknown) {
       setError(
@@ -45,53 +58,78 @@ export default function LoginPage() {
           : "Ocorreu um erro ao fazer login.",
       );
     } finally {
-      setIsLoading(false);
+      if (shouldResetLoading) {
+        setIsLoading(false);
+      }
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-8 bg-background">
+        <div className="flex items-center gap-0">
+          {["C", "R", "3", "S", "C", "E"].map((letter, i) => (
+            <motion.span
+              key={i}
+              className={`font-bebas text-[72px] leading-none ${letter === "3" ? "text-[#C8F135]" : "text-white"}`}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.15, duration: 0.4 }}
+            >
+              {letter}
+            </motion.span>
+          ))}
+        </div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.0 }}
+          className="flex flex-col items-center gap-3"
+        >
+          <div className="flex gap-1.5">
+            {[0, 1, 2].map((i) => (
+              <motion.div
+                key={i}
+                className="size-2 rounded-full bg-[#C8F135]"
+                animate={{ opacity: [0.3, 1, 0.3] }}
+                transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.2 }}
+              />
+            ))}
+          </div>
+          <p className="text-sm text-muted-foreground">Entrando...</p>
+        </motion.div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/20 flex items-center justify-center p-4">
-      {/* Background decoration */}
+    <div className="relative flex min-h-screen items-center justify-center bg-background p-4">
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
-          animate={{
-            x: [0, 100, 0],
-            y: [0, 50, 0],
-          }}
+          animate={{ x: [0, 100, 0], y: [0, 50, 0] }}
           transition={{ duration: 20, repeat: Infinity }}
-          className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-primary/30 blur-3xl"
+          className="absolute -right-40 -top-40 h-80 w-80 rounded-full bg-primary/20 blur-3xl"
         />
         <motion.div
-          animate={{
-            x: [0, -100, 0],
-            y: [0, -50, 0],
-          }}
+          animate={{ x: [0, -100, 0], y: [0, -50, 0] }}
           transition={{ duration: 20, repeat: Infinity }}
-          className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-purple-600/30 blur-3xl"
+          className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-primary/20 blur-3xl"
         />
       </div>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md relative z-10"
+        className="relative z-10 w-full max-w-md"
       >
-        {/* Logo grande e centralizado - usando logo-login.png */}
         <motion.div
-          className="text-center mb-8"
+          className="mb-8 flex justify-center"
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
         >
           <Link href="/" className="inline-block">
-            <Image
-              src="/logo-login.png"
-              alt="Cresci.IA"
-              width={220}
-              height={72}
-              className="h-auto w-auto"
-              priority
-            />
+            <Logo size="xl" />
           </Link>
         </motion.div>
 
@@ -99,14 +137,11 @@ export default function LoginPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-card/50 backdrop-blur-xl border-2 border-primary/20 rounded-2xl p-8 shadow-2xl"
+          className="rounded-2xl border border-border bg-card/50 p-8 shadow-2xl backdrop-blur-xl"
         >
-          <div className="text-center mb-8">
+          <div className="mb-8 text-center">
             <motion.div
-              animate={{
-                scale: [1, 1.1, 1],
-                rotate: [0, 5, -5, 0],
-              }}
+              animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
               transition={{
                 duration: 2,
                 repeat: Infinity,
@@ -114,14 +149,12 @@ export default function LoginPage() {
               }}
               className="inline-block"
             >
-              <Sparkles className="size-8 text-primary mb-2 mx-auto" />
+              <Sparkles className="mx-auto mb-2 size-8 text-[#C8F135]" />
             </motion.div>
             <h1 className="text-2xl font-bold text-foreground">
               Bem-vindo de volta!
             </h1>
-            <p className="text-muted-foreground mt-1">
-              Faça login para continuar
-            </p>
+            <p className="mt-1 text-muted-foreground">Faça login para continuar</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
@@ -135,14 +168,14 @@ export default function LoginPage() {
                 E-mail
               </Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                <Mail className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   id="email"
                   type="email"
                   placeholder="seu@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10 h-12 bg-background/50 border-primary/20 focus:border-primary"
+                  className="h-12 border-border bg-background/50 pl-10 focus-visible:border-primary"
                   required
                 />
               </div>
@@ -158,14 +191,14 @@ export default function LoginPage() {
                 Senha
               </Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                <Lock className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   id="password"
                   type="password"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10 h-12 bg-background/50 border-primary/20 focus:border-primary"
+                  className="h-12 border-border bg-background/50 pl-10 focus-visible:border-primary"
                   required
                 />
               </div>
@@ -175,7 +208,7 @@ export default function LoginPage() {
               <motion.p
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-sm text-destructive bg-destructive/10 p-3 rounded-lg"
+                className="rounded-lg bg-destructive/10 p-3 text-sm text-destructive"
               >
                 {error}
               </motion.p>
@@ -189,7 +222,7 @@ export default function LoginPage() {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full h-12 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-primary-foreground text-lg gap-2"
+                className="h-12 w-full gap-2 bg-[#C8F135] text-lg font-semibold text-[#111] hover:bg-[#a8d020]"
               >
                 {isLoading ? (
                   <>
@@ -200,7 +233,7 @@ export default function LoginPage() {
                         repeat: Infinity,
                         ease: "linear",
                       }}
-                      className="size-5 border-2 border-primary-foreground border-t-transparent rounded-full"
+                      className="size-5 rounded-full border-2 border-primary-foreground border-t-transparent"
                     />
                     Entrando...
                   </>
@@ -223,8 +256,8 @@ export default function LoginPage() {
             <p className="text-muted-foreground">
               Não tem uma conta?{" "}
               <Link
-                href="/auth/register"
-                className="text-primary hover:underline font-medium"
+                href="/auth/sign-up"
+                className="font-medium text-primary hover:underline"
               >
                 Criar conta
               </Link>

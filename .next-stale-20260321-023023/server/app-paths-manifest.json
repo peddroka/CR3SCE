@@ -1,0 +1,7 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/payment-status/route": "app/api/payment-status/route.js",
+  "/aguardando-pagamento/page": "app/aguardando-pagamento/page.js",
+  "/page": "app/page.js",
+  "/auth/login/page": "app/auth/login/page.js"
+}

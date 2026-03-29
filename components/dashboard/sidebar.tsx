@@ -1,32 +1,34 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Logo } from "@/components/logo";
 import {
   LayoutDashboard,
   CalendarDays,
-  MessageSquare,
   Settings,
   LogOut,
   Menu,
   X,
   TrendingUp,
+  Zap,
+  Trophy,
+  Star,
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
+import { resetSupabaseBrowserSession } from "@/lib/supabase/client";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
+
+const ONBOARDING_DRAFT_PREFIX = "cr3sce_onboarding_draft";
 
 export function DashboardSidebar({ className }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const supabase = createClient();
 
   useEffect(() => {
     setIsOpen(false);
@@ -35,137 +37,162 @@ export function DashboardSidebar({ className }: SidebarProps) {
   const navItems = [
     {
       href: "/dashboard",
-      label: "Início",
+      label: "Inicio",
       icon: LayoutDashboard,
+      id: "nav-inicio",
     },
     {
       href: "/dashboard/calendar",
-      label: "Calendário",
+      label: "Calendario",
       icon: CalendarDays,
-    },
-    {
-      href: "/dashboard/chat",
-      label: "Chat IA",
-      icon: MessageSquare,
+      id: "nav-calendario",
     },
     {
       href: "/dashboard/evolution",
-      label: "Evolução",
+      label: "Jornada",
       icon: TrendingUp,
+      id: "nav-evolucao",
+    },
+    {
+      href: "/dashboard/trends",
+      label: "Modo Tendencia",
+      icon: Zap,
+      id: "nav-tendencia",
+    },
+    {
+      href: "/dashboard/achievements",
+      label: "Conquistas",
+      icon: Trophy,
+      id: "nav-conquistas",
+    },
+    {
+      href: "/dashboard/score",
+      label: "Score do Perfil",
+      icon: Star,
+      id: "nav-score",
     },
     {
       href: "/dashboard/settings",
-      label: "Configurações",
+      label: "Configuracoes",
       icon: Settings,
+      id: "nav-configuracoes",
     },
   ];
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    if (typeof window !== "undefined") {
+      try {
+        for (let index = window.localStorage.length - 1; index >= 0; index -= 1) {
+          const key = window.localStorage.key(index);
+          if (key?.startsWith(ONBOARDING_DRAFT_PREFIX)) {
+            window.localStorage.removeItem(key);
+          }
+        }
+      } catch {}
+    }
+
+    await resetSupabaseBrowserSession();
     router.push("/");
   };
 
   return (
     <>
-      {/* Mobile/Tablet header */}
-      <div
-        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between border-b border-primary/20 px-4 py-3 md:hidden"
-        style={{ backgroundColor: "#07070B" }}
-      >
-        <Link href="/dashboard" className="flex items-center">
-          <Image
-            src="/logo-sidebar.png"
-            alt="Cresci.IA"
-            width={120}
-            height={40}
-            priority
-            quality={100}
-            className="object-contain"
-          />
+      <div className="fixed left-0 right-0 top-0 z-50 flex items-center justify-between border-b border-border bg-background px-5 py-4 md:hidden">
+        <Link href="/dashboard">
+          <Logo size="md" />
         </Link>
         <Button
           variant="ghost"
           size="icon"
           onClick={() => setIsOpen(!isOpen)}
-          className="hover:bg-primary/10"
+          className="text-[#c0c0c0] hover:bg-white/5"
         >
           {isOpen ? <X className="size-5" /> : <Menu className="size-5" />}
         </Button>
       </div>
 
-      {/* Overlay */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm md:hidden"
-          onClick={() => setIsOpen(false)}
-        />
-      )}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
+            onClick={() => setIsOpen(false)}
+          />
+        )}
+      </AnimatePresence>
 
-      {/* Sidebar */}
       <div
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-64 transform border-r border-primary/10 transition-transform duration-300 ease-in-out md:translate-x-0",
+          "fixed inset-y-0 left-0 z-50 w-64 transform border-r border-border bg-background transition-transform duration-300 ease-in-out md:translate-x-0",
           isOpen ? "translate-x-0" : "-translate-x-full",
           className,
         )}
-        style={{ backgroundColor: "#07070B" }}
       >
-        <ScrollArea className="h-full py-6">
-          <div className="px-4">
-            {/* Logo - visível apenas quando sidebar está aberta no mobile/tablet */}
+        <div className="flex h-full flex-col">
+          <div className="flex-1 overflow-y-auto px-4 py-6">
             <Link
               href="/dashboard"
-              className="flex items-center justify-center mb-8 mt-12 md:mt-0"
+              className="mb-10 mt-12 flex items-center justify-center md:mt-0"
               onClick={() => setIsOpen(false)}
             >
-              <Image
-                src="/logo-sidebar.png"
-                alt="Cresci.IA"
-                width={160}
-                height={53}
-                priority
-                quality={100}
-                className="object-contain"
-              />
+              <Logo size="lg" />
             </Link>
 
-            {/* Navigation */}
-            <div className="space-y-1">
+            <nav className="flex flex-col gap-1">
               {navItems.map((item) => {
                 const isActive = pathname === item.href;
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
+                    id={item.id}
                     onClick={() => setIsOpen(false)}
                   >
-                    <Button
-                      variant="ghost"
+                    <div
                       className={cn(
-                        "w-full justify-start gap-3 text-sm font-normal hover:bg-primary/10",
-                        isActive && "bg-primary/10 text-primary",
+                        "flex items-center gap-3 rounded-xl border px-4 py-3.5 text-base font-medium transition-all duration-200",
+                        isActive
+                          ? "border-border bg-white/10 text-lime"
+                          : "border-transparent text-[#c0c0c0] hover:bg-white/5 hover:text-white",
                       )}
                     >
-                      <item.icon className="size-4" />
-                      {item.label}
-                    </Button>
+                      <item.icon
+                        className={cn(
+                          "size-5 shrink-0",
+                          isActive ? "text-lime" : "text-[#888888]",
+                        )}
+                      />
+                      <span>{item.label}</span>
+                      {isActive && (
+                        <div className="ml-auto h-1.5 w-1.5 rounded-full bg-lime" />
+                      )}
+                    </div>
                   </Link>
                 );
               })}
+            </nav>
+          </div>
+
+          <div className="shrink-0 border-t border-border px-4 py-4">
+            <div className="mb-3 rounded-xl border border-border bg-white/5 px-4 py-3">
+              <p className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-[#555]">
+                Plano Ativo
+              </p>
+              <p className="text-xs font-medium text-[#c0c0c0]">CR3SCE Pro</p>
+              <p className="mt-0.5 text-[11px] text-[#555]">R$79,90/mes</p>
             </div>
 
-            {/* Sign out */}
-            <div className="absolute bottom-6 left-4 right-4">
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-muted-foreground border border-primary/10 hover:border-primary/30 hover:bg-primary/5 hover:text-foreground transition-all"
-              >
-                <LogOut className="size-4" />
-                Sair da conta
-              </button>
-            </div>
+            <button
+              onClick={handleLogout}
+              className="flex w-full items-center gap-3 rounded-xl border border-border px-4 py-3 text-sm font-medium text-[#666] transition-all hover:border-destructive/30 hover:bg-destructive/5 hover:text-destructive"
+            >
+              <LogOut className="size-4" />
+              Sair da conta
+            </button>
           </div>
-        </ScrollArea>
+        </div>
       </div>
     </>
   );

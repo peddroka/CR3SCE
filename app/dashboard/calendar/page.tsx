@@ -1,9 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { StrategyCalendar } from "@/components/dashboard/strategy-calendar";
+import { StrategyCalendarDynamic } from "@/components/dashboard/strategy-calendar-dynamic";
 
 export default async function CalendarPage() {
   const supabase = await createClient();
+  const now = new Date();
+  const currentMonth = now.getMonth() + 1;
+  const currentYear = now.getFullYear();
 
   // Pega usuário logado
   const {
@@ -40,6 +43,8 @@ export default async function CalendarPage() {
     `,
     )
     .eq("business_id", business.id)
+    .eq("month", currentMonth)
+    .eq("year", currentYear)
     .order("created_at", { ascending: false })
     .limit(1);
 
@@ -47,7 +52,13 @@ export default async function CalendarPage() {
 
   return (
     <div className="flex flex-col gap-6 pb-12">
-      <StrategyCalendar strategy={latestStrategy} />
+      <StrategyCalendarDynamic
+        strategy={latestStrategy}
+        businessCreatedAt={business.created_at ?? null}
+        businessNiche={business.niche ?? null}
+        businessObjective={business.main_goal ?? null}
+        businessTone={business.communication_style ?? null}
+      />
     </div>
   );
 }
