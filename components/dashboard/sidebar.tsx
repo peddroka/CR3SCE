@@ -16,6 +16,7 @@ import {
   Zap,
   Trophy,
   Star,
+  Clapperboard,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { resetSupabaseBrowserSession } from "@/lib/supabase/client";
@@ -70,6 +71,12 @@ export function DashboardSidebar({ className }: SidebarProps) {
       label: "Score do Perfil",
       icon: Star,
       id: "nav-score",
+    },
+    {
+      href: "/dashboard/video-editor",
+      label: "Editar Vídeo",
+      icon: Clapperboard,
+      id: "nav-editar-video",
     },
     {
       href: "/dashboard/settings",

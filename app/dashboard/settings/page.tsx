@@ -326,7 +326,9 @@ export default function SettingsPage() {
               </span>
             </h2>
             <div className="space-y-2">
-              <Label className="text-[#888]">Descricao da marca</Label>
+              <Label className="text-[#888]">
+                O que voce quer conquistar usando o CR3SCE
+              </Label>
               <div className="min-h-[80px] rounded-md border border-border bg-white/5 px-3 py-2.5 text-sm text-[#666] opacity-60">
                 {formData.brand_description || "Nao informado"}
               </div>

@@ -3,7 +3,18 @@
 import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import {
+  CalendarDays,
+  ChevronLeft,
+  ChevronRight,
+  Gauge,
+  Home,
+  Medal,
+  Settings,
+  Target,
+  TrendingUp,
+  X,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const TOUR_KEY = "cr3sce_tour_done";
@@ -109,6 +120,63 @@ const TOUR_STEPS: TourStep[] = [
     modalSide: "left",
   },
 ];
+
+const MOBILE_SIDEBAR_ITEMS = [
+  { id: "nav-inicio", label: "Inicio", icon: Home },
+  { id: "nav-calendario", label: "Calendario", icon: CalendarDays },
+  { id: "nav-evolucao", label: "Jornada", icon: Target },
+  { id: "nav-tendencia", label: "Tendencia", icon: TrendingUp },
+  { id: "nav-conquistas", label: "Conquistas", icon: Medal },
+  { id: "nav-score", label: "Score", icon: Gauge },
+  { id: "nav-configuracoes", label: "Ajustes", icon: Settings },
+] as const;
+
+function MobileSidebarPreview({ activeId }: { activeId: string }) {
+  return (
+    <div className="relative mx-auto flex w-full max-w-[260px] items-start gap-3">
+      <div className="w-[86px] rounded-[24px] border border-white/10 bg-[#101010] p-2 shadow-[0_20px_50px_rgba(0,0,0,0.35)]">
+        <div className="mb-2 rounded-2xl border border-white/5 bg-white/5 px-2 py-2 text-center text-[9px] font-semibold uppercase tracking-[0.2em] text-[#C8F135]">
+          Menu
+        </div>
+        <div className="space-y-1.5">
+          {MOBILE_SIDEBAR_ITEMS.map((item) => {
+            const Icon = item.icon;
+            const active = item.id === activeId;
+
+            return (
+              <div
+                key={item.id}
+                className={`flex items-center gap-2 rounded-2xl px-2 py-2 transition-all ${
+                  active
+                    ? "border border-[#C8F135]/40 bg-[#C8F135]/14 text-[#C8F135]"
+                    : "border border-transparent bg-white/[0.03] text-white/70"
+                }`}
+              >
+                <Icon className="size-3.5 shrink-0" />
+                <span className="text-[10px] font-medium">{item.label}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="flex-1 pt-4">
+        <div className="rounded-2xl border border-[#C8F135]/20 bg-[#C8F135]/10 p-3 text-left">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#C8F135]">
+            Toque aqui
+          </p>
+          <p className="mt-1 text-xs font-medium text-white">
+            {MOBILE_SIDEBAR_ITEMS.find((item) => item.id === activeId)?.label}
+          </p>
+          <p className="mt-1 text-[11px] leading-relaxed text-[#b9b9b9]">
+            Esse icone leva voce para esta area.
+          </p>
+        </div>
+        <div className="ml-2 mt-2 h-10 w-10 rotate-[18deg] rounded-full border-l-2 border-t-2 border-[#C8F135]" />
+      </div>
+    </div>
+  );
+}
 
 function FloatingArrow({
   dir,
@@ -224,6 +292,7 @@ export function OnboardingTour() {
   const [step, setStep] = useState(0);
   const [checked, setChecked] = useState(false);
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const checkTour = async () => {
@@ -244,6 +313,17 @@ export function OnboardingTour() {
       }
     };
     void checkTour();
+  }, []);
+
+  useEffect(() => {
+    const syncViewport = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    syncViewport();
+    window.addEventListener("resize", syncViewport);
+
+    return () => window.removeEventListener("resize", syncViewport);
   }, []);
 
   useEffect(() => {
@@ -311,6 +391,16 @@ export function OnboardingTour() {
   };
 
   const getModalStyle = (): CSSProperties => {
+    if (isMobile) {
+      return {
+        position: "fixed",
+        top: 16,
+        left: 16,
+        right: 16,
+        bottom: 16,
+      };
+    }
+
     if (!targetRect || current.modalSide === "center") {
       return { position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
     }
@@ -389,7 +479,7 @@ export function OnboardingTour() {
             />
           )}
 
-          <FloatingArrow dir={current.arrowDir} targetRect={targetRect} />
+          {!isMobile && <FloatingArrow dir={current.arrowDir} targetRect={targetRect} />}
 
           <motion.div
             key={`modal-${step}`}
@@ -397,8 +487,14 @@ export function OnboardingTour() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ type: "spring", stiffness: 320, damping: 28 }}
-            style={{ ...getModalStyle(), zIndex: 302, width: 340 }}
-            className="overflow-hidden rounded-2xl border border-border bg-card shadow-2xl"
+            style={{
+              ...getModalStyle(),
+              zIndex: 302,
+              width: isMobile ? undefined : 340,
+            }}
+            className={`overflow-hidden border border-border bg-card shadow-2xl ${
+              isMobile ? "rounded-[28px]" : "rounded-2xl"
+            }`}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="h-1 bg-border">
@@ -409,13 +505,15 @@ export function OnboardingTour() {
               />
             </div>
 
-            <div className="p-5">
+            <div className={`flex h-full flex-col ${isMobile ? "p-4" : "p-5"}`}>
               <div className="mb-4 flex items-center gap-3">
                 <motion.div
                   initial={{ scale: 0.5, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ delay: 0.1, type: "spring", stiffness: 400 }}
-                  className="flex size-14 shrink-0 items-center justify-center rounded-2xl border border-[#C8F135]/20 bg-[#C8F135]/10 text-3xl"
+                  className={`flex shrink-0 items-center justify-center rounded-2xl border border-[#C8F135]/20 bg-[#C8F135]/10 text-3xl ${
+                    isMobile ? "size-12" : "size-14"
+                  }`}
                 >
                   {current.emoji}
                 </motion.div>
@@ -425,7 +523,18 @@ export function OnboardingTour() {
                 {step + 1} / {TOUR_STEPS.length}
               </p>
               <h2 className="mb-2 text-lg font-bold text-white">{current.title}</h2>
-              <p className="mb-5 text-sm leading-relaxed text-[#888]">{current.description}</p>
+              <p className={`text-[#888] ${isMobile ? "mb-4 text-[13px] leading-5" : "mb-5 text-sm leading-relaxed"}`}>
+                {current.description}
+              </p>
+
+              {isMobile && current.targetId.startsWith("nav-") && (
+                <div className="mb-5 flex-1 rounded-[24px] border border-white/5 bg-[#0d0d0d] p-4">
+                  <p className="mb-3 text-center text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6d6d6d]">
+                    Menu lateral no celular
+                  </p>
+                  <MobileSidebarPreview activeId={current.targetId} />
+                </div>
+              )}
 
               <div className="mb-5 flex items-center justify-center gap-1.5">
                 {TOUR_STEPS.map((_, i) => (
@@ -439,13 +548,15 @@ export function OnboardingTour() {
                 ))}
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className={`flex ${isMobile ? "mt-auto flex-col gap-2" : "items-center gap-2"}`}>
                 {step > 0 && (
                   <Button
                     variant="outline"
                     onClick={prev}
                     size="sm"
-                    className="border-border bg-white/5 text-[#888] hover:text-white"
+                    className={`border-border bg-white/5 text-[#888] hover:text-white ${
+                      isMobile ? "w-full" : ""
+                    }`}
                   >
                     <ChevronLeft className="mr-1 size-3.5" />
                     Voltar
@@ -454,7 +565,9 @@ export function OnboardingTour() {
                 <Button
                   onClick={next}
                   size="sm"
-                  className="flex-1 bg-[#C8F135] font-semibold text-[#111] hover:bg-[#a8d020]"
+                  className={`bg-[#C8F135] font-semibold text-[#111] hover:bg-[#a8d020] ${
+                    isMobile ? "w-full" : "flex-1"
+                  }`}
                 >
                   {isLast ? "Começar agora!" : "Próximo"}
                   {!isLast && <ChevronRight className="ml-1 size-3.5" />}

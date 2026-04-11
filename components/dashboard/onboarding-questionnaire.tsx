@@ -713,7 +713,7 @@ export function OnboardingQuestionnaire() {
             <CardTitle className="text-xl font-bold text-foreground sm:text-2xl">
               {step === 1 && "Vamos decolar!"}
               {step === 2 && "Defina sua estrategia"}
-              {step === 3 && "A voz da sua marca"}
+              {step === 3 && "Seu objetivo no CR3SCE"}
               {step === 4 && "Seu perfil do Instagram"}
             </CardTitle>
             <CardDescription className="mt-0.5 text-xs text-muted-foreground sm:text-sm">
@@ -1033,11 +1033,16 @@ export function OnboardingQuestionnaire() {
 
                     <div className="space-y-1.5">
                       <Label className="text-sm font-medium">
-                        Descricao da marca *
+                        O que voce quer conquistar usando o CR3SCE? *
                       </Label>
+                      <p className="text-xs leading-relaxed text-[#888]">
+                        Exemplos: ganhar mais seguidores, vender mais, aumentar
+                        visualizacoes, lancar um produto, viralizar ou educar
+                        sua audiencia.
+                      </p>
                       <div className="relative">
                         <Textarea
-                          placeholder="Ex: Marca jovem que valoriza qualidade e atendimento"
+                          placeholder="Explique com suas palavras o que voce quer conquistar. Quanto mais contexto voce der, mais estrategico o calendario fica."
                           value={formData.brand_description}
                           onChange={(e) =>
                             updateField("brand_description", e.target.value)
@@ -1066,6 +1071,10 @@ export function OnboardingQuestionnaire() {
                           Ouvindo... Fale agora
                         </p>
                       )}
+                      <p className="text-xs leading-relaxed text-[#666]">
+                        Dica: ative o microfone e fale. Quanto mais voce
+                        explicar, melhor o CR3SCE vai trabalhar pra voce.
+                      </p>
                       {hasError("brand_description") && (
                         <p className="text-xs text-destructive">
                           Campo obrigatorio

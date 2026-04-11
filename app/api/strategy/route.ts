@@ -9,12 +9,14 @@ const groq = createGroq({
 });
 
 const CONTENT_GENERATION_SYSTEM_PROMPT = [
-  "Voce e um assistente de criacao de conteudo para Instagram.",
+  "Voce e o nucleo de inteligencia do CR3SCE, um gestor de midias sociais profissional para pequenos negocios e criadores de conteudo brasileiros.",
+  "Sua missao e gerar estrategias de conteudo reais, criativas e que convertem. Nunca gere conteudo genérico, vazio ou com cara de template.",
   "Nunca use asteriscos.",
   "Nunca use aspas para destacar palavras.",
   "Use apenas numeracao simples para listas.",
   "Texto limpo, sem caracteres especiais de formatacao.",
   "Escreva sempre em portugu\u00EAs do Brasil com acentua\u00E7\u00E3o correta e completa. Nunca omita acentos. Exemplos: a\u00E7\u00E3o, tamb\u00E9m, cria\u00E7\u00E3o, est\u00E1, in\u00EDcio, informa\u00E7\u00E3o.",
+  "Explique sempre de forma simples, visual e direta, como se estivesse guiando alguem que nunca trabalhou com redes sociais.",
   "Aplique isso em Stories, Carrossel, Post Estatico e Reels.",
   "Nos Stories, se o primeiro slot do dia acontecer antes das 10h, STORY 1 deve ser sempre um bom dia natural com o rosto do responsavel, sem caixinha ou enquete.",
   "Caixinha e enquete entram a partir do segundo Story do dia. Quando houver H04, H05, H06 ou H07, STORY 2 avisa que vai responder no proximo story. STORY 3 responde a primeira pergunta recebida de forma natural. A partir dali, use o rotulo DICAS - Continuacao.",
@@ -25,6 +27,10 @@ const CONTENT_GENERATION_SYSTEM_PROMPT = [
   "No STORY 3, instrua assim: Responda a primeira pergunta recebida na caixinha. Seja direto, use exemplos reais.",
   "No STORY 4 em diante, instrua assim: Continue respondendo as perguntas recebidas, uma por uma. Seja natural, sem roteiro fixo. Se receber poucas perguntas, aprofunde mais cada resposta.",
   "Nunca use o nome do tema_base literalmente dentro da fala do responsavel. Transforme o tema em contexto real de conversa.",
+  "Cada conteudo precisa servir ao objetivo declarado pelo usuario. Se nao servir, refaca antes de responder.",
+  "Dentro do mesmo dia, cada postagem deve cumprir uma funcao diferente na jornada do seguidor: manha para ativacao, curiosidade ou conexao emocional; meio-dia para aprofundamento, resposta ou bastidor; tarde e noite para conversao, reflexao ou CTA forte.",
+  "Nunca repita o mesmo formato no mesmo dia sem um motivo claro. Se houver enquete cedo, o proximo conteudo deve responder, aprofundar ou mostrar o resultado dessa enquete, e nao abrir outra igual.",
+  "O tema do dia e ponto de partida, nao prisao. Use o gancho cultural ou emocional para falar do nicho e do objetivo do cliente.",
   "No Carrossel, use de 3 a 5 slides. O slide 1 deve ser capa com Passe para o lado no rodape. Os slides seguintes devem ser diretos e o ultimo slide precisa ter CTA claro.",
   "No Post Estatico, entregue legenda pronta para copiar e colar, entre 150 e 250 caracteres, com CTA no final e descricao da imagem ideal alinhada ao nicho.",
   "No Reel, o roteiro entra dentro de cada etapa e nao existe area de roteiro separada.",
@@ -75,6 +81,19 @@ interface BusinessProfile {
   responsible_name?: string | null;
   instagram_handle?: string | null;
   brand_colors?: string[] | null;
+  unique_value?: string | null;
+  competitors?: string | null;
+}
+
+type HolidayPriority = "primary" | "secondary";
+type HolidayPhase = "anticipacao" | "dia" | "encerramento";
+
+interface HolidayMoment {
+  day_number: number;
+  title: string;
+  priority: HolidayPriority;
+  phase: HolidayPhase;
+  guidance: string;
 }
 
 interface PlannedPostSeed {
@@ -100,6 +119,10 @@ interface PlannedDay {
   primary_subtype: EditorialSubtype;
   posting_window: PostingWindow;
   story_interaction: "caixinha" | "enquete";
+  holiday_title?: string | null;
+  holiday_priority?: HolidayPriority | null;
+  holiday_phase?: HolidayPhase | null;
+  holiday_guidance?: string | null;
 }
 
 interface GeneratedPost {
@@ -356,6 +379,53 @@ function slugify(value: string) {
 
 function uniqueStrings(values: string[]) {
   return Array.from(new Set(values.filter(Boolean)));
+}
+
+function shiftDate(date: Date, days: number) {
+  const shifted = new Date(date);
+  shifted.setDate(shifted.getDate() + days);
+  return shifted;
+}
+
+function getEasterDate(year: number) {
+  const a = year % 19;
+  const b = Math.floor(year / 100);
+  const c = year % 100;
+  const d = Math.floor(b / 4);
+  const e = b % 4;
+  const f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3);
+  const h = (19 * a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4);
+  const k = c % 4;
+  const l = (32 + 2 * e + 2 * i - h - k) % 7;
+  const m = Math.floor((a + 11 * h + 22 * l) / 451);
+  const month = Math.floor((h + l - 7 * m + 114) / 31);
+  const day = ((h + l - 7 * m + 114) % 31) + 1;
+
+  return new Date(year, month - 1, day);
+}
+
+function getNthWeekdayOfMonth(
+  year: number,
+  month: number,
+  weekday: number,
+  nth: number,
+) {
+  const firstDay = new Date(year, month - 1, 1);
+  const firstWeekday = firstDay.getDay();
+  const offset = (weekday - firstWeekday + 7) % 7;
+  return 1 + offset + (nth - 1) * 7;
+}
+
+function getLastWeekdayOfMonth(year: number, month: number, weekday: number) {
+  const lastDay = new Date(year, month, 0);
+  const offset = (lastDay.getDay() - weekday + 7) % 7;
+  return lastDay.getDate() - offset;
+}
+
+function dateMatchesMonth(date: Date, year: number, month: number) {
+  return date.getFullYear() === year && date.getMonth() + 1 === month;
 }
 
 function getShortAudience(targetAudience: string) {
@@ -808,12 +878,428 @@ function buildThemeBank(
   return uniqueStrings(genericThemes);
 }
 
+function buildHolidayMoments(
+  business: BusinessProfile,
+  year: number,
+  month: number,
+  daysInMonth: number,
+) {
+  const niche = normalizeText(business.niche).toLowerCase();
+  const isFoodBusiness =
+    /restaurante|bar|caf[eé]|padaria|confeitaria|hamburg|pizz|acai|sorvet|doceria|mercado|feira/.test(
+      niche,
+    );
+  const isRetailBusiness =
+    /loja|moda|roupa|vestuario|calcado|acessorio|e-commerce|ecommerce|presente|otica|joia|joalheria/.test(
+      niche,
+    );
+  const isHealthBusiness =
+    /clinica|odonto|odont|medic|fisi|psico|nutri|saude|estetica|dermato/.test(
+      niche,
+    );
+  const isBeautyBusiness =
+    /salao|barbear|beleza|maqui|esmal|cilios|sobrancelha|estetica/.test(niche);
+  const isEcoRelevant =
+    isFoodBusiness ||
+    isRetailBusiness ||
+    /arquitet|engenh|decor|moveis|turismo|hotel|pousada|pet|veterin/.test(
+      niche,
+    );
+
+  const primaryMoments: HolidayMoment[] = [];
+  const secondaryMoments: HolidayMoment[] = [];
+
+  const addMoment = (
+    date: Date,
+    title: string,
+    priority: HolidayPriority,
+    phase: HolidayPhase,
+    guidance: string,
+  ) => {
+    if (!dateMatchesMonth(date, year, month)) return;
+
+    const dayNumber = date.getDate();
+    if (dayNumber < 1 || dayNumber > daysInMonth) return;
+
+    const moment: HolidayMoment = {
+      day_number: dayNumber,
+      title,
+      priority,
+      phase,
+      guidance,
+    };
+
+    if (priority === "primary") {
+      primaryMoments.push(moment);
+      return;
+    }
+
+    secondaryMoments.push(moment);
+  };
+
+  const addPrimarySequence = (
+    date: Date,
+    title: string,
+    anticipationGuidance: string,
+    dayGuidance: string,
+    followUpGuidance: string,
+  ) => {
+    addMoment(
+      shiftDate(date, -4),
+      title,
+      "primary",
+      "anticipacao",
+      anticipationGuidance,
+    );
+    addMoment(date, title, "primary", "dia", dayGuidance);
+    addMoment(
+      shiftDate(date, 1),
+      title,
+      "primary",
+      "encerramento",
+      followUpGuidance,
+    );
+  };
+
+  const easter = getEasterDate(year);
+  const goodFriday = shiftDate(easter, -2);
+  const carnivalTuesday = shiftDate(easter, -47);
+  const carnivalSaturday = shiftDate(carnivalTuesday, -3);
+  const corpusChristi = shiftDate(easter, 60);
+  const mothersDay = new Date(year, 4, getNthWeekdayOfMonth(year, 5, 0, 2));
+  const fathersDay = new Date(year, 7, getNthWeekdayOfMonth(year, 8, 0, 2));
+  const blackFriday = new Date(year, 10, getLastWeekdayOfMonth(year, 11, 5));
+  const valentinesDay = new Date(year, 5, 12);
+  const christmas = new Date(year, 11, 25);
+  const newYearsEve = new Date(year, 11, 31);
+
+  addPrimarySequence(
+    easter,
+    "Pascoa",
+    isFoodBusiness
+      ? "Antecipe a data com apetite e clima de reuniao em familia, conectando cardapio, reserva ou encomenda ao momento."
+      : "Antecipe a Pascoa com um gancho emocional de familia, cuidado e presente, conectando a data ao valor do negocio de forma organica.",
+    isFoodBusiness
+      ? "No dia da Pascoa, coloque o negocio como parte da experiencia da familia, com convite claro para pedido, reserva ou visita."
+      : "No dia da Pascoa, traga conexao, carinho e um convite natural para conhecer, comprar ou agendar.",
+    "No dia seguinte, feche o ciclo com gratidao, bastidor ou prova social do que a data movimentou no negocio.",
+  );
+
+  addPrimarySequence(
+    mothersDay,
+    "Dia das Maes",
+    isBeautyBusiness || isRetailBusiness
+      ? "Crie antecipacao com presente, autocuidado ou experiencia memoravel para maes e filhas, sempre conectado ao que a marca entrega."
+      : "Crie antecipacao com emocao, carinho e uma ideia pratica de como o negocio pode participar desse momento especial.",
+    "No proprio Dia das Maes, priorize emocao, homenagem real e um CTA suave para compra, reserva ou mensagem.",
+    "Depois da data, agradeca quem comprou, visitou ou participou e mostre como foi esse movimento no negocio.",
+  );
+
+  addPrimarySequence(
+    valentinesDay,
+    "Dia dos Namorados",
+    isFoodBusiness
+      ? "Aqueça a audiencia falando de experiencia a dois, reserva, cardapio ou momento especial para a data."
+      : "Aqueça a audiencia com desejo, conexao e preparacao para impressionar, sempre adaptando a data ao nicho da empresa.",
+    "No dia, use um gancho emocional de relacionamento e leve o publico para agendar, comprar ou chamar no direct.",
+    "No encerramento, agradeca o movimento da data, repostando bastidores, entregas ou clima que marcou o negocio.",
+  );
+
+  addPrimarySequence(
+    blackFriday,
+    "Black Friday",
+    "Comece a antecipacao com urgencia inteligente, oferta real e expectativa. Nada de desconto vazio ou generico.",
+    "No dia da Black Friday, seja direto, claro e orientado para conversao, com CTA forte para compra ou mensagem.",
+    "No dia seguinte, use escassez final, agradecimento ou ultima chamada para capturar quem quase comprou.",
+  );
+
+  addPrimarySequence(
+    christmas,
+    "Natal",
+    isRetailBusiness || isFoodBusiness
+      ? "Entre alguns dias antes com presente, ceia, encomenda ou preparacao de fim de ano conectada ao negocio."
+      : "Entre alguns dias antes com clima de presente, gratidao e conexao, encaixando o negocio com naturalidade na rotina de Natal.",
+    "No Natal, priorize gratidao, familia e presenca da marca de forma humana, sem parecer promocional demais.",
+    "No dia seguinte, feche com agradecimento, bastidor ou saldo afetivo do que a data representou para a empresa.",
+  );
+
+  if (month === 12) {
+    addMoment(
+      newYearsEve,
+      "Reveillon",
+      "secondary",
+      "dia",
+      "Feche o ano com gratidao, bastidores, equipe, aprendizados e um convite leve para o novo ciclo.",
+    );
+  }
+
+  if (month === 2 && dateMatchesMonth(carnivalSaturday, year, month)) {
+    addMoment(
+      carnivalSaturday,
+      "Carnaval",
+      "secondary",
+      "dia",
+      "Use clima de Carnaval com energia, cor e leveza, mas sempre fazendo o nicho ser o protagonista do post.",
+    );
+  }
+
+  if (month === 3) {
+    addMoment(
+      new Date(year, 2, 8),
+      "Dia Internacional da Mulher",
+      "secondary",
+      "dia",
+      isHealthBusiness || isBeautyBusiness
+        ? "Traga homenagem real, autoestima, cuidado e um convite organico para avaliacao, atendimento ou presente."
+        : "Traga reconhecimento, historia e valor para mulheres do seu publico, conectando o negocio a esse cuidado.",
+    );
+    addMoment(
+      new Date(year, 2, 15),
+      "Semana do Consumidor",
+      "secondary",
+      "dia",
+      "Use a data para reforcar valor percebido, oferta honesta, condicao especial ou beneficio claro para quem compra.",
+    );
+    addMoment(
+      new Date(year, 2, 20),
+      "Inicio do Outono",
+      "secondary",
+      "dia",
+      "Conecte a mudanca de estacao ao consumo, rotina ou cuidado relacionado ao seu nicho.",
+    );
+  }
+
+  if (month === 4) {
+    addMoment(
+      new Date(year, 3, 1),
+      "Dia da Mentira",
+      "secondary",
+      "dia",
+      "Use humor leve e uma brincadeira inteligente ligada a erros, mitos ou promessas vazias do nicho.",
+    );
+    addMoment(
+      goodFriday,
+      "Sexta-Feira Santa",
+      "secondary",
+      "dia",
+      "Mantenha um tom mais sobrio, respeitoso e humano. Se vender, venda com suavidade.",
+    );
+    addMoment(
+      new Date(year, 3, 21),
+      "Tiradentes",
+      "secondary",
+      "dia",
+      "Use o feriado para humanizar a marca, mostrar bastidor da equipe, pausa consciente ou rotina real do negocio.",
+    );
+    if (isEcoRelevant) {
+      addMoment(
+        new Date(year, 3, 22),
+        "Dia da Terra",
+        "secondary",
+        "dia",
+        "Conecte sustentabilidade, materia-prima, descarte, durabilidade ou proposito a partir da realidade do negocio.",
+      );
+    }
+  }
+
+  if (month === 5) {
+    addMoment(
+      new Date(year, 4, 1),
+      "Dia do Trabalho",
+      "secondary",
+      "dia",
+      "Valorize a equipe, o bastidor e o trabalho bem feito por tras da marca. Humanizacao vem antes da venda.",
+    );
+  }
+
+  if (month === 6) {
+    addMoment(
+      new Date(year, 5, 5),
+      "Dia Mundial do Meio Ambiente",
+      "secondary",
+      "dia",
+      "Mostre atitudes sustentaveis ou escolhas conscientes que facam sentido para a rotina da empresa.",
+    );
+    addMoment(
+      corpusChristi,
+      "Corpus Christi",
+      "secondary",
+      "dia",
+      "Use o feriado para ajustar horario, humanizar a equipe ou sugerir uma rotina mais leve conectada ao negocio.",
+    );
+    addMoment(
+      new Date(year, 5, 24),
+      "Festas Juninas",
+      "secondary",
+      "dia",
+      "Aproveite o clima junino com repertorio brasileiro, humor e adaptacao real ao nicho, sem perder a cara da marca.",
+    );
+    addMoment(
+      new Date(year, 5, 29),
+      "Sao Pedro",
+      "secondary",
+      "dia",
+      "Feche o ciclo junino com agradecimento, bastidor ou oferta final adaptada ao clima da data.",
+    );
+  }
+
+  if (month === 7) {
+    addMoment(
+      new Date(year, 6, 15),
+      "Ferias Escolares",
+      "secondary",
+      "dia",
+      "Conecte o negocio a familia, lazer, praticidade ou rotina das ferias, de um jeito especifico para seu publico.",
+    );
+  }
+
+  if (month === 8) {
+    addPrimarySequence(
+      fathersDay,
+      "Dia dos Pais",
+      isRetailBusiness || isFoodBusiness
+        ? "Antecipe com presente, experiencia ou programa especial para pais e filhos."
+        : "Antecipe com memoria, homenagem e um jeito real de o negocio participar da data.",
+      "No dia, use emocao, presenca e um CTA leve para compra, reserva ou conversa.",
+      "Depois da data, agradeca o movimento e mostre bastidores, clientes ou equipe celebrando.",
+    );
+  }
+
+  if (month === 9) {
+    addMoment(
+      new Date(year, 8, 7),
+      "Independencia do Brasil",
+      "secondary",
+      "dia",
+      "Use o feriado para humanizar a marca, mostrar orgulho do negocio local e reforcar identidade brasileira sem soar forcado.",
+    );
+    addMoment(
+      new Date(year, 8, 15),
+      "Dia do Cliente",
+      "secondary",
+      "dia",
+      "Coloque o cliente no centro com agradecimento, beneficio, historia real ou condicao especial.",
+    );
+    addMoment(
+      new Date(year, 8, 21),
+      "Dia da Arvore",
+      "secondary",
+      "dia",
+      "Se fizer sentido para o nicho, conecte natureza, materia-prima, cuidado ou sustentabilidade de forma concreta.",
+    );
+    addMoment(
+      new Date(year, 8, 22),
+      "Inicio da Primavera",
+      "secondary",
+      "dia",
+      "Aproveite a virada de estacao para renovar repertorio, vitrine, servico ou linguagem visual do negocio.",
+    );
+  }
+
+  if (month === 10) {
+    addMoment(
+      new Date(year, 9, 12),
+      "Dia das Criancas",
+      "secondary",
+      "dia",
+      "Se o nicho tocar familia, presente, passeio ou experiencia, conecte a data a algo divertido e util.",
+    );
+    addMoment(
+      new Date(year, 9, 31),
+      "Halloween",
+      "secondary",
+      "dia",
+      "Use humor, fantasia ou suspense de forma leve e adaptada ao nicho. Tendencia sim, mas com cara de marca real.",
+    );
+  }
+
+  if (month === 11) {
+    addMoment(
+      new Date(year, 10, 2),
+      "Finados",
+      "secondary",
+      "dia",
+      "Mantenha um tom respeitoso e sensivel. Evite promocao agressiva.",
+    );
+    addMoment(
+      new Date(year, 10, 15),
+      "Proclamacao da Republica",
+      "secondary",
+      "dia",
+      "Use o feriado para humanizar a marca, equipe e rotina de forma leve.",
+    );
+    addMoment(
+      new Date(year, 10, 20),
+      "Dia da Consciencia Negra",
+      "secondary",
+      "dia",
+      "Aborde a data com respeito, repertorio e responsabilidade. Priorize representatividade, historia e contribuicao real.",
+    );
+  }
+
+  if (month === 1) {
+    addMoment(
+      new Date(year, 0, 1),
+      "Ano Novo",
+      "secondary",
+      "dia",
+      "Comece o ano com gratidao, recomeço, metas e um convite natural para o cliente fazer parte desse novo ciclo.",
+    );
+  }
+
+  if (month === 2) {
+    addMoment(
+      new Date(year, 1, 14),
+      "Dia de Sao Valentim",
+      "secondary",
+      "dia",
+      "Use o clima de relacionamento como gancho de engajamento, sem confundir com o Dia dos Namorados brasileiro.",
+    );
+  }
+
+  if (month === 5 && isRetailBusiness) {
+    addMoment(
+      new Date(year, 4, 15),
+      "Dia do Comerciante",
+      "secondary",
+      "dia",
+      "Valorize o pequeno negocio, atendimento e rotina de quem vive o comercio na pratica.",
+    );
+  }
+
+  if (month === 1 && isFoodBusiness) {
+    addMoment(
+      new Date(year, 0, getLastWeekdayOfMonth(year, 1, 6)),
+      "Dia do Feirante",
+      "secondary",
+      "dia",
+      "Conecte frescor, fornecedores, ingredientes e bastidores do abastecimento ao valor da marca.",
+    );
+  }
+
+  const deduped = new Map<number, HolidayMoment>();
+  [...primaryMoments, ...secondaryMoments]
+    .sort((a, b) => a.day_number - b.day_number)
+    .forEach((moment) => {
+      const current = deduped.get(moment.day_number);
+      if (!current || current.priority === "secondary") {
+        deduped.set(moment.day_number, moment);
+      }
+    });
+
+  return Array.from(deduped.values()).sort((a, b) => a.day_number - b.day_number);
+}
+
 function buildDayStrategies(
   activeDays: number[],
   business: BusinessProfile,
   year: number,
+  holidayMoments: HolidayMoment[],
 ) {
   const themeBank = buildThemeBank(business, year);
+  const holidayMap = new Map(
+    holidayMoments.map((moment) => [moment.day_number, moment]),
+  );
   const plannedDays: Array<Omit<PlannedDay, "posts">> = [];
   const recentThemes: string[] = [];
   const recentPrimarySubtypes: EditorialSubtype[] = [];
@@ -836,15 +1322,37 @@ function buildDayStrategies(
           plannedDays[plannedDays.length - 1]?.primary_format !== item.primary_format,
       ) ||
       DAY_STRATEGY_ROTATION[(index + dayNumber) % DAY_STRATEGY_ROTATION.length];
+    const holidayMoment = holidayMap.get(dayNumber);
 
     plannedDays.push({
       day_number: dayNumber,
-      focus_theme: themeCandidate,
-      content_pillar: strategyCandidate.content_pillar,
-      primary_format: strategyCandidate.primary_format,
-      primary_subtype: strategyCandidate.primary_subtype,
-      posting_window: strategyCandidate.posting_window,
-      story_interaction: strategyCandidate.story_interaction,
+      focus_theme:
+        holidayMoment?.phase === "anticipacao"
+          ? `${holidayMoment.title} chegando: como conectar a data ao seu nicho sem soar genérico`
+          : holidayMoment?.phase === "encerramento"
+            ? `${holidayMoment.title}: o que ficou da data e como aproveitar esse movimento`
+            : holidayMoment
+              ? `${holidayMoment.title}: o negocio como protagonista da conversa`
+              : themeCandidate,
+      content_pillar:
+        holidayMoment?.priority === "primary"
+          ? "Campanha sazonal conectada ao negocio"
+          : holidayMoment
+            ? "Gancho de data comemorativa com contexto real"
+            : strategyCandidate.content_pillar,
+      primary_format:
+        holidayMoment?.priority === "primary" ? "Reels" : strategyCandidate.primary_format,
+      primary_subtype:
+        holidayMoment?.priority === "primary"
+          ? "REELS_RAPIDO"
+          : strategyCandidate.primary_subtype,
+      posting_window:
+        holidayMoment?.priority === "primary" ? "evening" : strategyCandidate.posting_window,
+      story_interaction: holidayMoment ? "caixinha" : strategyCandidate.story_interaction,
+      holiday_title: holidayMoment?.title || null,
+      holiday_priority: holidayMoment?.priority || null,
+      holiday_phase: holidayMoment?.phase || null,
+      holiday_guidance: holidayMoment?.guidance || null,
     });
 
     recentThemes.push(normalizeText(themeCandidate).toLowerCase());
@@ -878,6 +1386,16 @@ function ensureDayStrategyVariety(
 
     const previousDay = adjustedStrategies[adjustedStrategies.length - 1];
     let nextDay = { ...dayStrategy };
+
+    if (nextDay.holiday_title) {
+      adjustedStrategies.push(nextDay);
+      return;
+    }
+
+    if (previousDay.holiday_title) {
+      adjustedStrategies.push(nextDay);
+      return;
+    }
 
     if (normalizeText(nextDay.focus_theme) === normalizeText(previousDay.focus_theme)) {
       const replacementTheme =
@@ -1323,7 +1841,8 @@ function buildPlanForMonth(
   dayWindow?: DayWindow | null,
   planningPreferences?: PlanningPreferences,
 ) {
-  const activeDays = getPostDays(
+  const holidayMoments = buildHolidayMoments(business, year, month, daysInMonth);
+  const baseActiveDays = getPostDays(
     business.growth_speed,
     year,
     month,
@@ -1333,8 +1852,19 @@ function buildPlanForMonth(
     if (!dayWindow) return true;
     return day >= dayWindow.startDay && day <= dayWindow.endDay;
   });
+  const activeDays = Array.from(
+    new Set([
+      ...baseActiveDays,
+      ...holidayMoments
+        .map((moment) => moment.day_number)
+        .filter((day) => {
+          if (!dayWindow) return true;
+          return day >= dayWindow.startDay && day <= dayWindow.endDay;
+        }),
+    ]),
+  ).sort((a, b) => a - b);
   const dayStrategies = ensureDayStrategyVariety(
-    buildDayStrategies(activeDays, business, year),
+    buildDayStrategies(activeDays, business, year, holidayMoments),
     business,
     year,
   );
@@ -1545,6 +2075,49 @@ function buildVisualPrompt(
   return `${business.niche} branded campaign image about "${topic}". ${emphasis}. Dark premium background, cinematic lighting, ${viralHint}, palette inspired by ${palette}. Ultra realistic, advertising photography, sharp focal subject, subtle depth, designed for Brazilian small business social media.`;
 }
 
+function buildHolidayTopic(
+  business: BusinessProfile,
+  dayPlan: PlannedDay,
+  seed: PlannedPostSeed,
+) {
+  if (!dayPlan.holiday_title) return null;
+
+  const niche = getNicheReference(business);
+  const audience = getStoryAudienceReference(business);
+  const phase = dayPlan.holiday_phase || "dia";
+  const title = dayPlan.holiday_title;
+
+  if (phase === "anticipacao") {
+    if (seed.content_type === "Stories") {
+      return `${title} chegando: como ${business.business_name} entra nessa conversa do jeito certo`;
+    }
+
+    if (seed.content_type === "Reels") {
+      return `${title} chegando: a ideia que faz ${audience} lembrar da ${business.business_name}`;
+    }
+
+    return `${title} chegando: como conectar ${niche} a essa data sem soar forçado`;
+  }
+
+  if (phase === "encerramento") {
+    if (seed.content_type === "Stories") {
+      return `${title}: o que essa data movimentou por aqui`;
+    }
+
+    return `${title}: bastidor, agradecimento e o que ficou dessa campanha`;
+  }
+
+  if (seed.content_type === "Stories") {
+    return `${title}: como isso conversa com quem busca ${niche} hoje`;
+  }
+
+  if (seed.content_type === "Reels") {
+    return `${title}: o gancho certo para transformar a data em conversa e venda`;
+  }
+
+  return `${title}: o negocio como protagonista dessa data`;
+}
+
 function buildTopicFromSeed(
   business: BusinessProfile,
   dayPlan: PlannedDay,
@@ -1558,6 +2131,11 @@ function buildTopicFromSeed(
   const pillar = normalizeText(dayPlan.content_pillar).toLowerCase();
   const niche = getNicheReference(business);
   const storyAudience = getStoryAudienceReference(business);
+  const holidayTopic = buildHolidayTopic(business, dayPlan, seed);
+
+  if (holidayTopic) {
+    return holidayTopic;
+  }
 
   if (seed.is_viral_candidate) {
     return `${baseTheme}: o erro que mais faz ${audience} perder resultado em ${monthReference}`;
@@ -2722,6 +3300,19 @@ function buildWeekPromptV3(
   daysInMonth: number,
   weekDays: PlannedDay[],
 ) {
+  const specialDates = weekDays
+    .filter((day) => day.holiday_title)
+    .map((day) => {
+      const phaseLabel =
+        day.holiday_phase === "anticipacao"
+          ? "antecipacao"
+          : day.holiday_phase === "encerramento"
+            ? "encerramento"
+            : "no dia";
+
+      return `Dia ${day.day_number} | ${day.holiday_title} | fase ${phaseLabel} | prioridade ${day.holiday_priority || "secondary"} | orientacao ${day.holiday_guidance || "Conecte a data ao negocio com naturalidade."}`;
+    })
+    .join("\n");
   const schedule = weekDays
     .map((day) => {
       const slots = day.posts
@@ -2731,7 +3322,7 @@ function buildWeekPromptV3(
         )
         .join("\n");
 
-      return `Dia ${day.day_number} | tema_base ${day.focus_theme} | pilar ${day.content_pillar} | formato_prioritario ${day.primary_format} | subtipo_prioritario ${day.primary_subtype} | janela_prioritaria ${day.posting_window} | story_interacao ${day.story_interaction}:\n${slots}`;
+      return `Dia ${day.day_number} | tema_base ${day.focus_theme} | pilar ${day.content_pillar} | formato_prioritario ${day.primary_format} | subtipo_prioritario ${day.primary_subtype} | janela_prioritaria ${day.posting_window} | story_interacao ${day.story_interaction}${day.holiday_title ? ` | data_especial ${day.holiday_title} | fase_data ${day.holiday_phase} | orientacao_data ${day.holiday_guidance}` : ""}:\n${slots}`;
     })
     .join("\n\n");
 
@@ -2744,13 +3335,19 @@ DADOS DO USUARIO:
 - publico_alvo: ${business.target_audience}
 - objetivo_principal: ${business.main_goal}
 - tom_de_voz: ${business.communication_style}
+- plataformas_ativas: ${business.platforms}
 - mes: ${MONTH_NAMES[month - 1]} de ${year}
 - semana_atual: ${weekIndex + 1}
 - dias_do_mes: ${daysInMonth}
-- contexto_da_marca: ${business.brand_description}
+- o_que_o_cliente_quer_conquistar: ${business.brand_description}
+- diferenciais_da_marca: ${business.unique_value || "nao informado"}
+- concorrentes_ou_referencias: ${business.competitors || "nao informado"}
 
 BANCO DE ESTILOS DISPONIVEIS:
 ${getStyleBankPrompt()}
+
+DATAS ESPECIAIS DESTA SEMANA:
+${specialDates || "Nenhuma data especial nesta semana."}
 
 REGRAS INEGOCIAVEIS:
 1. Use exatamente os slots e horarios do planejamento fixo.
@@ -2765,6 +3362,15 @@ REGRAS INEGOCIAVEIS:
 10. Nunca sugira gravacao no horario de almoco. Almoco pode ser horario de publicacao.
 11. Se houver dica_plataforma no slot, respeite essa orientacao no conteudo.
 12. Nunca use o nome do tema_base literalmente dentro da fala do responsavel no roteiro. Transforme o tema em contexto real de conversa, como alguem real falando, e nunca como um template.
+13. Nunca gere conteudo generico. A data comemorativa e so o gancho. O negocio, o nicho, os produtos, os servicos e os diferenciais da marca precisam ser o protagonista do conteudo.
+14. Se existir data_especial no dia, adapte o conteudo ao nicho do cliente. Nunca escreva parabens generico, mensagem pronta ou texto que serviria para qualquer empresa.
+15. Em datas especiais, o gancho emocional vem primeiro e a oferta vem depois, de forma organica.
+16. Se a data especial for feriado nacional, voce pode humanizar equipe, bastidores, rotina e descanso da marca.
+17. Em datas primarias, trate antecipacao, dia e encerramento como capitulos diferentes da mesma campanha, evitando repetir angulo ou CTA.
+18. Nunca repita o mesmo formato no mesmo dia sem proposito. Se um story anterior abriu enquete ou caixinha, o proximo story deve responder, aprofundar ou mostrar resultado.
+19. Cada post do dia deve cumprir uma funcao diferente na jornada do seguidor: manha para ativacao, curiosidade ou conexao emocional; meio-dia para aprofundamento, resposta ou bastidor; tarde ou noite para conversao, reflexao ou CTA forte.
+20. O objetivo declarado pelo usuario e o motor principal do calendario. Cada conteudo precisa ajudar esse objetivo de forma clara.
+21. Antes de definir cada post, valide mentalmente: isso serve ao objetivo, esta especifico, faz sentido na sequencia do dia e pode gerar resultado real?
 
 REGRAS DE ESTILO E CONEXAO:
 1. Cada slot ja vem com um estilo_id obrigatorio. O conteudo precisa seguir fielmente o estilo descrito no banco.
@@ -3218,9 +3824,19 @@ function buildStrategyMetadata(
   year: number,
   plannedDays: number,
 ) {
+  const holidayMoments = buildHolidayMoments(
+    business,
+    year,
+    month,
+    new Date(year, month, 0).getDate(),
+  );
+  const seasonalSummary = holidayMoments.length
+    ? ` Inclui ${holidayMoments.length} ganchos sazonais relevantes no mes.`
+    : "";
+
   return {
     title: `${MONTH_NAMES[month - 1]} de Conteudo para ${business.business_name}`,
-    summary: `Planejamento personalizado para ${plannedDays} dias ativos, focado em ${getGoalLabel(business.main_goal)} com conteudos especificos para ${business.niche}.`,
+    summary: `Planejamento personalizado para ${plannedDays} dias ativos, focado em ${getGoalLabel(business.main_goal)} com conteudos especificos para ${business.niche}.${seasonalSummary}`,
     month,
     year,
   };
@@ -3314,10 +3930,13 @@ export async function POST(req: Request) {
         business.communication_style ||
         "casual",
       growth_speed: (business.growth_speed || "moderado") as GrowthSpeed,
-      brand_description: business.brand_description || "marca focada em resultado",
+      brand_description:
+        business.brand_description || "conquistar mais resultado com conteudo",
       responsible_name: business.responsible_name,
       instagram_handle: business.instagram_handle,
       brand_colors: business.brand_colors,
+      unique_value: business.unique_value,
+      competitors: business.competitors,
     };
 
     const daysInMonth = new Date(year, month, 0).getDate();
