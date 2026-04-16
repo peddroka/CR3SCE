@@ -4,30 +4,20 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
-  const bypassPaymentGate = process.env.BYPASS_PAYMENT_GATE === "true";
   const pathname = request.nextUrl.pathname;
 
-  const fullyPublicRoutes = [
-    "/",
-    "/auth/login",
-    "/auth/sign-up",
-    "/auth/error",
-    "/auth/sign-up-success",
-    "/aguardando-pagamento",
-    "/admin",
-    "/admin/login",
-  ];
-
-  const isFullyPublic =
-    fullyPublicRoutes.some((route) => pathname === route) ||
+  // Rotas que não precisam de auth — retorna imediatamente sem chamar Supabase
+  if (
+    pathname === "/" ||
+    pathname.startsWith("/auth/") ||
+    pathname === "/aguardando-pagamento" ||
     pathname.startsWith("/admin") ||
-    pathname.startsWith("/api/cakto") ||
-    pathname.startsWith("/api/");
-
-  if (isFullyPublic) {
+    pathname.startsWith("/api/")
+  ) {
     return NextResponse.next({ request });
   }
 
+  // Só cria o client Supabase para rotas protegidas (/dashboard)
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -69,15 +59,15 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user && pathname.startsWith("/dashboard")) {
+  if (!user) {
     return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 
-  if (bypassPaymentGate) {
+  if (process.env.BYPASS_PAYMENT_GATE === "true") {
     return supabaseResponse;
   }
 
-  if (user && pathname.startsWith("/dashboard")) {
+  if (pathname.startsWith("/dashboard")) {
     const { data: profile } = await supabase
       .from("profiles")
       .select("payment_status")
@@ -96,6 +86,11 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|woff|woff2|ttf|otf)$).*)",
+    /*
+     * Match only routes that need protection.
+     * Excludes: _next/static, _next/image, favicon, static assets, public pages
+     */
+    "/dashboard/:path*",
+    "/onboarding/:path*",
   ],
 };
