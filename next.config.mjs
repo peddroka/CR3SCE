@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  compress: true,
+  devIndicators: false,
   experimental: {
     optimizePackageImports: [
       "lucide-react",
@@ -11,8 +13,16 @@ const nextConfig = {
       "@radix-ui/react-dropdown-menu",
       "@radix-ui/react-select",
       "@radix-ui/react-tooltip",
+      "@radix-ui/react-popover",
+      "@radix-ui/react-checkbox",
+      "@radix-ui/react-switch",
+      "@radix-ui/react-toast",
       "recharts",
       "date-fns",
+      "sonner",
+      "cmdk",
+      "react-hook-form",
+      "@hookform/resolvers",
     ],
   },
   typescript: {
@@ -22,7 +32,6 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    unoptimized: true,
     remotePatterns: [
       { protocol: "https", hostname: "wzxwbwharybtbkfhlnsg.supabase.co" },
       { protocol: "http", hostname: "localhost" },

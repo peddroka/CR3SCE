@@ -1,8 +1,5 @@
 import { DashboardSidebar } from "@/components/dashboard/sidebar";
-import { DashboardTip } from "@/components/dashboard/dashboard-tip";
-import { NoticeModal } from "@/components/dashboard/notice-modal";
-import { OnboardingTour } from "@/components/dashboard/onboarding-tour";
-import { SupportButton } from "@/components/dashboard/support-button";
+import { DashboardExtras } from "@/components/dashboard/dashboard-extras";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
@@ -28,10 +25,7 @@ export default async function DashboardLayout({
           {children}
         </div>
       </main>
-      <SupportButton />
-      <DashboardTip />
-      <OnboardingTour />
-      <NoticeModal />
+      <DashboardExtras />
     </div>
   );
 }
