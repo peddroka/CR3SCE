@@ -4,6 +4,14 @@ import { randomUUID } from "node:crypto";
 import { spawn } from "node:child_process";
 
 const VIDEO_EDITOR_ROOT = path.join(process.cwd(), "tmp", "video-editor");
+
+// Caminhos absolutos para ferramentas externas (fallback para PATH)
+const FFMPEG_PATH =
+  process.env.FFMPEG_PATH ||
+  "C:\\Users\\User\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-8.1-full_build\\bin\\ffmpeg.exe";
+const WHISPER_PATH =
+  process.env.WHISPER_PATH ||
+  "C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\whisper.exe";
 const INDEX_PATH = path.join(VIDEO_EDITOR_ROOT, "index.json");
 const BRAZIL_TIMEZONE = "America/Sao_Paulo";
 
@@ -226,24 +234,51 @@ async function processVideo({
   operations: VideoOperation[];
   warnings: string[];
 }) {
-  const ffmpegAvailable = await commandExists("ffmpeg");
-  const whisperAvailable = await commandExists("whisper", ["--help"]);
+  const ffmpegAvailable = await commandExists(FFMPEG_PATH);
+  const whisperAvailable = await commandExists(WHISPER_PATH, ["--help"]);
   const mutableWarnings = [...warnings];
 
-  if (
-    operations.some(
-      (operation) =>
-        operation.type === "transcribe" || operation.type === "burn_subtitles",
-    )
-  ) {
+  const needsSubtitles = operations.some(
+    (operation) =>
+      operation.type === "transcribe" || operation.type === "burn_subtitles",
+  );
+  let srtPath: string | null = null;
+
+  if (needsSubtitles) {
     if (!whisperAvailable) {
       mutableWarnings.push(
         "Legendas automaticas ainda dependem do Whisper instalado no servidor.",
       );
     } else {
-      mutableWarnings.push(
-        "O fluxo de legendas foi reconhecido, mas ainda esta em modo inicial neste ambiente.",
+      // Transcrever áudio com Whisper e gerar .srt
+      const whisperResult = await runCommand(WHISPER_PATH, [
+        inputPath,
+        "--model", "base",
+        "--language", "pt",
+        "--output_format", "srt",
+        "--output_dir", outputDir,
+      ]);
+
+      const expectedSrt = path.join(
+        outputDir,
+        path.basename(inputPath, path.extname(inputPath)) + ".srt",
       );
+
+      try {
+        await fs.access(expectedSrt);
+        srtPath = expectedSrt;
+      } catch {
+        if (whisperResult.code !== 0) {
+          mutableWarnings.push(
+            "Whisper nao conseguiu gerar legendas: " +
+              (whisperResult.stderr || "erro desconhecido").slice(0, 200),
+          );
+        } else {
+          mutableWarnings.push(
+            "O arquivo de legendas nao foi encontrado apos transcricao.",
+          );
+        }
+      }
     }
   }
 
@@ -255,9 +290,9 @@ async function processVideo({
 
   const canUseFfmpegPipeline =
     ffmpegAvailable &&
-    operations.some(
+    (operations.some(
       (operation) => operation.type === "trim" || operation.type === "enhance",
-    );
+    ) || srtPath !== null);
 
   if (!canUseFfmpegPipeline) {
     if (!ffmpegAvailable) {
@@ -302,11 +337,26 @@ async function processVideo({
     ffmpegArgs.push("-to", String(trimOperation.endSecond));
   }
 
+  // Montar filtros de vídeo
+  const videoFilters: string[] = [];
+
   if (enhanceOperation) {
-    ffmpegArgs.push(
-      "-vf",
-      "eq=contrast=1.08:brightness=0.03:saturation=1.08,unsharp=5:5:0.8:3:3:0.4",
+    videoFilters.push(
+      "eq=contrast=1.08:brightness=0.03:saturation=1.08",
+      "unsharp=5:5:0.8:3:3:0.4",
     );
+  }
+
+  if (srtPath) {
+    // Escapar caminho para o filtro subtitles do FFmpeg (Windows)
+    const escapedSrtPath = srtPath.replace(/\\/g, "/").replace(/:/g, "\\:");
+    videoFilters.push(
+      `subtitles='${escapedSrtPath}':force_style='FontSize=22,PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,Outline=2'`,
+    );
+  }
+
+  if (videoFilters.length > 0) {
+    ffmpegArgs.push("-vf", videoFilters.join(","));
   }
 
   const outputPath = path.join(outputDir, "processed.mp4");
@@ -322,7 +372,7 @@ async function processVideo({
     outputPath,
   );
 
-  const result = await runCommand("ffmpeg", ffmpegArgs);
+  const result = await runCommand(FFMPEG_PATH, ffmpegArgs);
 
   if (result.code !== 0) {
     mutableWarnings.push(
