@@ -1,7 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Link from "next/link";
+import { AnimateOnScroll } from "@/components/ui/animate";
 
 const features = [
   "Calendario completo de 30 dias para o Instagram",
@@ -18,12 +18,7 @@ export function PricingSection() {
       id="preco"
       className="mx-auto max-w-6xl px-6 py-20 text-center md:px-12 md:py-32 lg:px-16 lg:py-40"
     >
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="mb-14 md:mb-20"
-      >
+      <AnimateOnScroll className="mb-14 md:mb-20">
         <p className="mb-5 text-xs font-medium uppercase tracking-[0.3em] text-lime md:mb-6">
           Investimento
         </p>
@@ -38,14 +33,11 @@ export function PricingSection() {
           <strong className="text-lime">R$79,90</strong> com o plano anual ou{" "}
           <strong className="text-white">R$99,90</strong> no mensal.
         </p>
-      </motion.div>
+      </AnimateOnScroll>
 
       <div className="mx-auto flex max-w-4xl flex-col items-center gap-6 md:flex-row md:items-end md:justify-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.1 }}
+        <AnimateOnScroll
+          delay={100}
           className="relative w-full overflow-hidden border border-border bg-card p-8 text-left md:w-72 md:self-end"
         >
           <p className="mb-4 text-[10px] font-medium uppercase tracking-[0.3em] text-muted-foreground">
@@ -86,13 +78,10 @@ export function PricingSection() {
           <p className="mt-3 text-center text-[10px] text-muted-foreground">
             Sem fidelidade - Cancele quando quiser
           </p>
-        </motion.div>
+        </AnimateOnScroll>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
+        <AnimateOnScroll
+          delay={200}
           className="relative w-full overflow-hidden border border-lime/50 bg-card p-10 text-left shadow-[0_0_60px_rgba(200,241,53,0.12)] md:w-96"
         >
           <div className="absolute left-0 right-0 top-0 h-0.75 bg-lime" />
@@ -146,19 +135,16 @@ export function PricingSection() {
           <p className="mt-3 text-center text-xs text-muted-foreground">
             Pagamento seguro - Fidelidade anual
           </p>
-        </motion.div>
+        </AnimateOnScroll>
       </div>
 
-      <motion.p
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        className="mt-8 text-xs text-muted-foreground"
-      >
-        * Plano mensal: cancele quando quiser, sem multa. Plano anual:
-        fidelidade de 12 meses. Cancelamento antecipado sujeito a multa
-        proporcional.
-      </motion.p>
+      <AnimateOnScroll className="mt-8 text-xs text-muted-foreground">
+        <p>
+          * Plano mensal: cancele quando quiser, sem multa. Plano anual:
+          fidelidade de 12 meses. Cancelamento antecipado sujeito a multa
+          proporcional.
+        </p>
+      </AnimateOnScroll>
     </section>
   );
 }

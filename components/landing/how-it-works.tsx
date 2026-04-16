@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { AnimateOnScroll } from "@/components/ui/animate";
 
 const steps = [
   {
@@ -29,28 +29,20 @@ export function HowItWorks() {
       id="como"
       className="mx-auto max-w-6xl px-6 py-20 md:px-12 md:py-32 lg:px-16 lg:py-40"
     >
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="mb-14 md:mb-20"
-      >
+      <AnimateOnScroll className="mb-14 md:mb-20">
         <p className="mb-5 text-xs font-medium uppercase tracking-[0.3em] text-lime md:mb-6">
           O Processo
         </p>
         <h2 className="font-bebas text-[clamp(36px,5vw,72px)] leading-tight">
           SIMPLES ASSIM.
         </h2>
-      </motion.div>
+      </AnimateOnScroll>
 
       <div className="grid grid-cols-1 gap-px bg-border md:grid-cols-3">
         {steps.map((step, i) => (
-          <motion.div
+          <AnimateOnScroll
             key={i}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.15 }}
+            delay={i * 150}
             className="relative overflow-hidden bg-background p-12 transition-colors hover:bg-card"
           >
             <span className="absolute right-4 top-2 select-none font-bebas text-[100px] leading-none text-[#C8F135]/5">
@@ -63,7 +55,7 @@ export function HowItWorks() {
             <p className="relative z-10 text-sm leading-relaxed text-muted-foreground">
               {step.desc}
             </p>
-          </motion.div>
+          </AnimateOnScroll>
         ))}
       </div>
     </section>

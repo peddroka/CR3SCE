@@ -1,7 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Link from "next/link";
+import { AnimateOnLoad } from "@/components/ui/animate";
 
 export function HeroSection() {
   return (
@@ -17,54 +17,38 @@ export function HeroSection() {
         CR3SCE
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="relative z-10 mb-10 flex items-center gap-2 rounded-full border border-[rgba(200,241,53,0.3)] bg-[rgba(200,241,53,0.1)] px-4 py-2"
-      >
+      <AnimateOnLoad delay={100} className="relative z-10 mb-10 flex items-center gap-2 rounded-full border border-[rgba(200,241,53,0.3)] bg-[rgba(200,241,53,0.1)] px-4 py-2">
         <span className="bg-lime h-2 w-2 animate-pulse rounded-full" />
         <span className="text-xs font-medium uppercase tracking-widest text-lime">
           Planejamento mensal para Instagram
         </span>
-      </motion.div>
+      </AnimateOnLoad>
 
-      <motion.h1
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-        className="relative z-10 mb-8 font-bebas text-[clamp(56px,10vw,140px)] leading-[0.92] tracking-wide"
-      >
-        SEU NEGÓCIO
-        <br />
-        <span className="text-lime">PRECISA</span>
-        <br />
-        APARECER
-        <span className="mt-4 block font-sans text-[clamp(18px,3vw,44px)] font-light tracking-widest text-muted-foreground">
-          todos os dias. sem desculpa.
-        </span>
-      </motion.h1>
+      <AnimateOnLoad delay={300} className="relative z-10 mb-8">
+        <h1 className="font-bebas text-[clamp(56px,10vw,140px)] leading-[0.92] tracking-wide">
+          SEU NEGÓCIO
+          <br />
+          <span className="text-lime">PRECISA</span>
+          <br />
+          APARECER
+          <span className="mt-4 block font-sans text-[clamp(18px,3vw,44px)] font-light tracking-widest text-muted-foreground">
+            todos os dias. sem desculpa.
+          </span>
+        </h1>
+      </AnimateOnLoad>
 
-      <motion.p
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-        className="relative z-10 mb-10 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg"
-      >
-        O CR3SCE entrega{" "}
-        <strong className="text-foreground">
-          30 dias de conteúdo planejado para o Instagram
-        </strong>{" "}
-        — roteiro, horário e estratégia — pra você focar no que importa:
-        vender.
-      </motion.p>
+      <AnimateOnLoad delay={500} className="relative z-10 mb-10 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
+        <p>
+          O CR3SCE entrega{" "}
+          <strong className="text-foreground">
+            30 dias de conteúdo planejado para o Instagram
+          </strong>{" "}
+          — roteiro, horário e estratégia — pra você focar no que importa:
+          vender.
+        </p>
+      </AnimateOnLoad>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.7 }}
-        className="relative z-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
-      >
+      <AnimateOnLoad delay={700} className="relative z-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
         <Link
           href="/auth/sign-up"
           className="border border-white/10 bg-primary px-10 py-4 text-base font-semibold uppercase tracking-wider text-primary-foreground transition-all hover:-translate-y-0.5 hover:border-white/20 hover:bg-[#333333]"
@@ -77,14 +61,9 @@ export function HeroSection() {
         >
           Como funciona
         </Link>
-      </motion.div>
+      </AnimateOnLoad>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.9 }}
-        className="relative z-10 mt-16 flex flex-wrap items-center justify-center gap-6"
-      >
+      <AnimateOnLoad delay={900} className="relative z-10 mt-16 flex flex-wrap items-center justify-center gap-6">
         <div className="flex items-center gap-3">
           <div className="flex">
             {["#C8F135", "#f1a135", "#35adf1", "#f135a0", "#a835f1"].map(
@@ -109,7 +88,7 @@ export function HeroSection() {
             </p>
           </div>
         </div>
-      </motion.div>
+      </AnimateOnLoad>
     </section>
   );
 }

@@ -1,17 +1,12 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Instagram } from "lucide-react";
+import { AnimateOnScroll } from "@/components/ui/animate";
 
 export function InstagramBanner() {
   return (
     <div className="mx-auto max-w-5xl px-6 pb-8">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="relative flex flex-col items-center justify-between gap-8 overflow-hidden border border-border bg-card p-12 md:flex-row"
-      >
+      <AnimateOnScroll className="relative flex flex-col items-center justify-between gap-8 overflow-hidden border border-border bg-card p-12 md:flex-row">
         <div
           className="absolute left-0 right-0 top-0 h-[3px]"
           style={{
@@ -42,7 +37,7 @@ export function InstagramBanner() {
           <Instagram className="size-5" />
           @cr3sce no Instagram
         </a>
-      </motion.div>
+      </AnimateOnScroll>
     </div>
   );
 }

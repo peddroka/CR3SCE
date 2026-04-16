@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useRef, useEffect } from "react";
 import { Plus } from "lucide-react";
+import { AnimateOnScroll } from "@/components/ui/animate";
 
 const faqs = [
   {
@@ -27,17 +27,51 @@ const faqs = [
   },
 ];
 
+function FaqItem({ faq, isOpen, toggle }: { faq: typeof faqs[0]; isOpen: boolean; toggle: () => void }) {
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    if (contentRef.current) {
+      setHeight(isOpen ? contentRef.current.scrollHeight : 0);
+    }
+  }, [isOpen]);
+
+  return (
+    <div className="border-b border-border">
+      <button
+        onClick={toggle}
+        className="group flex w-full items-center justify-between gap-6 py-7 text-left"
+      >
+        <span className="text-base font-medium transition-colors group-hover:text-lime">
+          {faq.q}
+        </span>
+        <Plus
+          className={`size-5 shrink-0 text-lime transition-transform duration-300 ${
+            isOpen ? "rotate-45" : ""
+          }`}
+        />
+      </button>
+      <div
+        className="overflow-hidden transition-all duration-300 ease-in-out"
+        style={{ height }}
+      >
+        <div ref={contentRef}>
+          <p className="pb-7 text-sm leading-relaxed text-muted-foreground">
+            {faq.a}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function FaqSection() {
   const [open, setOpen] = useState<number | null>(null);
 
   return (
     <section className="mx-auto max-w-2xl px-6 py-20 md:px-12 md:py-32 lg:px-16 lg:py-40">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="mb-14 md:mb-20"
-      >
+      <AnimateOnScroll className="mb-14 md:mb-20">
         <p className="mb-5 text-xs font-medium uppercase tracking-[0.3em] text-lime md:mb-6">
           Dúvidas
         </p>
@@ -46,40 +80,16 @@ export function FaqSection() {
           <br />
           FREQUENTES
         </h2>
-      </motion.div>
+      </AnimateOnScroll>
 
       <div>
         {faqs.map((faq, i) => (
-          <div key={i} className="border-b border-border">
-            <button
-              onClick={() => setOpen(open === i ? null : i)}
-              className="group flex w-full items-center justify-between gap-6 py-7 text-left"
-            >
-              <span className="text-base font-medium transition-colors group-hover:text-lime">
-                {faq.q}
-              </span>
-              <Plus
-                className={`size-5 shrink-0 text-lime transition-transform duration-300 ${
-                  open === i ? "rotate-45" : ""
-                }`}
-              />
-            </button>
-            <AnimatePresence>
-              {open === i && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.25 }}
-                  className="overflow-hidden"
-                >
-                  <p className="pb-7 text-sm leading-relaxed text-muted-foreground">
-                    {faq.a}
-                  </p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+          <FaqItem
+            key={i}
+            faq={faq}
+            isOpen={open === i}
+            toggle={() => setOpen(open === i ? null : i)}
+          />
         ))}
       </div>
     </section>

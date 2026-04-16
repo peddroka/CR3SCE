@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { AnimateOnScroll } from "@/components/ui/animate";
 
 const logos = [
   "PIZZARIA NAPOLI",
@@ -62,12 +62,7 @@ export function TestimonialsSection() {
       id="depoimentos"
       className="mx-auto max-w-6xl px-6 py-20 md:px-12 md:py-32 lg:px-16 lg:py-40"
     >
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="mb-14 md:mb-20"
-      >
+      <AnimateOnScroll className="mb-14 md:mb-20">
         <p className="mb-5 text-xs font-medium uppercase tracking-[0.3em] text-lime md:mb-6">
           Quem já usa
         </p>
@@ -76,7 +71,7 @@ export function TestimonialsSection() {
           <br />
           CRESCER.
         </h2>
-      </motion.div>
+      </AnimateOnScroll>
 
       <div className="mb-8 flex flex-wrap border border-border">
         {logos.map((logo, i) => (
@@ -91,19 +86,16 @@ export function TestimonialsSection() {
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {testimonials.map((t, i) => (
-          <motion.div
+          <AnimateOnScroll
             key={i}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.08 }}
+            delay={i * 80}
             className="border border-border bg-card p-8 transition-all hover:-translate-y-0.5 hover:border-[#C8F135]/20"
           >
             <div className="mb-4 text-xs tracking-[0.3em] text-lime">
               ★★★★★
             </div>
             <p className="mb-6 text-sm italic leading-relaxed text-muted-foreground">
-              "{t.text}"
+              &ldquo;{t.text}&rdquo;
             </p>
             <div className="flex items-center gap-3">
               <div
@@ -117,7 +109,7 @@ export function TestimonialsSection() {
                 <p className="text-xs text-muted-foreground">{t.role}</p>
               </div>
             </div>
-          </motion.div>
+          </AnimateOnScroll>
         ))}
       </div>
     </section>

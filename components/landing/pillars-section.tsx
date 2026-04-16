@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { AnimateOnScroll } from "@/components/ui/animate";
 
 const pillars = [
   {
@@ -29,12 +29,7 @@ export function PillarsSection() {
       id="pilares"
       className="mx-auto max-w-6xl px-6 py-20 md:px-12 md:py-32 lg:px-16 lg:py-40"
     >
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="mb-14 md:mb-20"
-      >
+      <AnimateOnScroll className="mb-14 md:mb-20">
         <p className="mb-5 text-xs font-medium uppercase tracking-[0.3em] text-lime md:mb-6">
           O Metodo
         </p>
@@ -49,16 +44,13 @@ export function PillarsSection() {
           para crescer no Instagram - e que a maioria nunca resolve ao mesmo
           tempo.
         </p>
-      </motion.div>
+      </AnimateOnScroll>
 
       <div className="mt-14 grid grid-cols-1 gap-px bg-border md:grid-cols-3">
         {pillars.map((pillar, index) => (
-          <motion.div
+          <AnimateOnScroll
             key={index}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: index * 0.15 }}
+            delay={index * 150}
             className="relative overflow-hidden bg-background p-12 transition-colors hover:bg-card"
           >
             <span className="absolute right-3 top-0 select-none font-bebas text-[140px] leading-none text-[#C8F135]/5">
@@ -73,16 +65,11 @@ export function PillarsSection() {
             <p className="relative z-10 text-sm leading-relaxed text-muted-foreground">
               {pillar.desc}
             </p>
-          </motion.div>
+          </AnimateOnScroll>
         ))}
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="mt-px flex flex-col items-center gap-10 border-t border-border bg-card p-10 md:flex-row"
-      >
+      <AnimateOnScroll className="mt-px flex flex-col items-center gap-10 border-t border-border bg-card p-10 md:flex-row">
         <span className="shrink-0 font-bebas text-[140px] leading-none text-lime">
           3
         </span>
@@ -103,7 +90,7 @@ export function PillarsSection() {
             mundo entende. Mas quando ve escrito, nunca mais esquece.
           </p>
         </div>
-      </motion.div>
+      </AnimateOnScroll>
     </section>
   );
 }

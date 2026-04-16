@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { Play } from "lucide-react";
+import { AnimateOnScroll } from "@/components/ui/animate";
 
 export function VideoSection() {
   const [playing, setPlaying] = useState(false);
@@ -13,12 +13,7 @@ export function VideoSection() {
 
   return (
     <section className="mx-auto max-w-6xl px-6 py-20 md:px-12 md:py-32 lg:px-16 lg:py-40">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="mb-14 text-center md:mb-20"
-      >
+      <AnimateOnScroll className="mb-14 text-center md:mb-20">
         <p className="mb-5 text-xs font-medium uppercase tracking-[0.3em] text-lime md:mb-6">
           Entenda em 90 segundos
         </p>
@@ -29,13 +24,10 @@ export function VideoSection() {
           Antes de assinar, entenda exatamente quem vai se beneficiar do CR3SCE
           e por que ele existe.
         </p>
-      </motion.div>
+      </AnimateOnScroll>
 
-      <motion.div
-        initial={{ opacity: 0, scale: 0.97 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.15 }}
+      <AnimateOnScroll
+        delay={150}
         className="relative aspect-video overflow-hidden rounded-2xl border border-border bg-card"
       >
         {playing ? (
@@ -66,11 +58,9 @@ export function VideoSection() {
 
             <div className="pointer-events-none absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#C8F135]/10 blur-3xl" />
 
-            <motion.button
-              whileHover={{ scale: 1.08 }}
-              whileTap={{ scale: 0.96 }}
+            <button
               onClick={() => setPlaying(true)}
-              className="relative z-10 flex flex-col items-center gap-4"
+              className="relative z-10 flex flex-col items-center gap-4 transition-transform hover:scale-105 active:scale-95"
             >
               <div className="relative">
                 <div className="absolute inset-0 scale-150 animate-pulse rounded-full bg-[#C8F135]/30 blur-xl" />
@@ -82,18 +72,12 @@ export function VideoSection() {
                 <p className="text-lg font-semibold text-white">Assistir agora</p>
                 <p className="text-sm text-muted-foreground">~90 segundos</p>
               </div>
-            </motion.button>
+            </button>
           </div>
         )}
-      </motion.div>
+      </AnimateOnScroll>
 
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.3 }}
-        className="mt-6 flex flex-wrap justify-center gap-3"
-      >
+      <AnimateOnScroll delay={300} className="mt-6 flex flex-wrap justify-center gap-3">
         {[
           "Donos de restaurante",
           "Donos de comercio",
@@ -109,7 +93,7 @@ export function VideoSection() {
             {tag}
           </span>
         ))}
-      </motion.div>
+      </AnimateOnScroll>
     </section>
   );
 }

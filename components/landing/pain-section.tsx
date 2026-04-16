@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { AnimateOnScroll } from "@/components/ui/animate";
 
 const pains = [
   {
@@ -24,12 +24,7 @@ const pains = [
 export function PainSection() {
   return (
     <section className="mx-auto max-w-6xl px-6 py-20 md:px-12 md:py-32 lg:px-16 lg:py-40">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="mb-14 md:mb-20"
-      >
+      <AnimateOnScroll className="mb-14 md:mb-20">
         <p className="mb-5 text-xs font-medium uppercase tracking-[0.3em] text-lime md:mb-6">
           O Problema
         </p>
@@ -38,16 +33,13 @@ export function PainSection() {
           <br />
           ALGUMA DESSAS?
         </h2>
-      </motion.div>
+      </AnimateOnScroll>
 
       <div className="grid grid-cols-1 gap-px bg-border sm:grid-cols-2">
         {pains.map((pain, i) => (
-          <motion.div
+          <AnimateOnScroll
             key={i}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.1 }}
+            delay={i * 100}
             className="flex items-start gap-6 bg-background p-10 transition-colors hover:bg-card"
           >
             <span className="mt-0.5 shrink-0 font-bebas text-3xl leading-none text-destructive">
@@ -61,7 +53,7 @@ export function PainSection() {
                 {pain.desc}
               </p>
             </div>
-          </motion.div>
+          </AnimateOnScroll>
         ))}
       </div>
     </section>
