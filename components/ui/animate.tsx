@@ -7,7 +7,6 @@ interface AnimateOnScrollProps {
   children: React.ReactNode;
   className?: string;
   delay?: number;
-  as?: keyof HTMLElementTagNameMap;
 }
 
 /**
@@ -18,9 +17,8 @@ export function AnimateOnScroll({
   children,
   className,
   delay = 0,
-  as: Tag = "div",
 }: AnimateOnScrollProps) {
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -42,8 +40,7 @@ export function AnimateOnScroll({
   }, []);
 
   return (
-    // @ts-expect-error dynamic tag
-    <Tag
+    <div
       ref={ref}
       className={cn(
         "transition-all duration-700 ease-out",
@@ -53,7 +50,7 @@ export function AnimateOnScroll({
       style={{ transitionDelay: `${delay}ms` }}
     >
       {children}
-    </Tag>
+    </div>
   );
 }
 
