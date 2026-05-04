@@ -1,0 +1,18 @@
+# Default owners for everything
+* @peddroka
+
+# Frontend (UI/components)
+/components/ @peddroka
+/app/ @peddroka
+/styles/ @peddroka
+
+# Backend / API
+/app/api/ @peddroka
+/lib/ @peddroka
+/middleware.ts @peddroka
+
+# Remotion compositions
+/remotion/ @peddroka
+
+# CI/CD configs
+/.github/ @peddroka
