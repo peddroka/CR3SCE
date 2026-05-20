@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import confetti from "canvas-confetti";
 import { AnimatePresence, motion } from "framer-motion";
 import {
+  AlertTriangle,
   Captions,
   Check,
   Clapperboard,
@@ -501,6 +502,22 @@ export function VideoEditorClient({
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-6 pb-12">
+      {/* Aviso BETA */}
+      <div className="flex items-start gap-3 rounded-xl border border-yellow-500/30 bg-yellow-500/5 p-4 text-sm">
+        <AlertTriangle className="mt-0.5 size-5 shrink-0 text-yellow-400" />
+        <div className="flex-1">
+          <p className="font-semibold text-yellow-300">
+            Funcionalidade em BETA
+          </p>
+          <p className="mt-1 leading-relaxed text-yellow-100/80">
+            O editor de vídeo está em fase de testes. Algumas predefinições podem
+            falhar, processar com lentidão ou gerar resultados inconsistentes.
+            Para conteúdo de produção, recomendamos editar em um app dedicado
+            até o lançamento oficial.
+          </p>
+        </div>
+      </div>
+
       {/* Header */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
@@ -508,8 +525,11 @@ export function VideoEditorClient({
             <Clapperboard className="size-3.5" />
             Studio de edição com IA · {businessName}
           </div>
-          <h1 className="text-3xl font-bold text-white md:text-4xl">
+          <h1 className="flex items-center gap-2 text-3xl font-bold text-white md:text-4xl">
             Editar Vídeo
+            <span className="rounded-full border border-yellow-500/40 bg-yellow-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.2em] text-yellow-400">
+              Beta
+            </span>
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#8d8d8d] md:text-base">
             Anexe seu vídeo, escolha as predefinições ou descreva como quer o
