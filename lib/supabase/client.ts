@@ -211,11 +211,34 @@ export async function getUserSafely(
   }
 }
 
+export function isSupabaseConfigured(): boolean {
+  return Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL &&
+      (process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
+  );
+}
+
+export const SUPABASE_NOT_CONFIGURED_MESSAGE =
+  "O Supabase nao esta configurado. Crie um arquivo .env.local na raiz do projeto com NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY (veja .env.example).";
+
+export class SupabaseNotConfiguredError extends Error {
+  constructor() {
+    super(SUPABASE_NOT_CONFIGURED_MESSAGE);
+    this.name = "SupabaseNotConfiguredError";
+  }
+}
+
 export const createClient = () => {
+  if (!isSupabaseConfigured()) {
+    throw new SupabaseNotConfiguredError();
+  }
+
   if (!browserClient) {
     browserClient = createBrowserClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      (process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)!,
     );
   }
 

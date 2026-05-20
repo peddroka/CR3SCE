@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Bebas_Neue } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
+import { CookieConsentBanner } from "@/components/lgpd/cookie-consent-banner";
 import "./globals.css";
 
 const inter = Inter({
@@ -38,6 +39,7 @@ export default function RootLayout({
       <body className="min-h-screen bg-background text-foreground antialiased">
         {children}
         <Toaster />
+        <CookieConsentBanner />
       </body>
     </html>
   );

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Instagram, Mail, Youtube, Linkedin } from "lucide-react";
 import { Logo } from "@/components/logo";
+import { CookiePreferencesLink } from "@/components/lgpd/cookie-preferences-link";
 
 function TikTokIcon({ className }: { className?: string }) {
   return (
@@ -106,6 +107,32 @@ export function Footer() {
                   {item.label}
                 </a>
               ))}
+            </nav>
+
+            <p className="mt-4 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              Legal
+            </p>
+            <nav className="flex flex-col gap-3">
+              {[
+                {
+                  label: "Politica de Privacidade",
+                  href: "/politica-de-privacidade",
+                },
+                { label: "Termos de Uso", href: "/termos-de-uso" },
+                {
+                  label: "Politica de Cookies",
+                  href: "/politica-de-cookies",
+                },
+              ].map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="w-fit text-sm text-muted-foreground transition-colors hover:text-lime"
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <CookiePreferencesLink />
             </nav>
           </div>
 

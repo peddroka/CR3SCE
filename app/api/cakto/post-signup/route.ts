@@ -9,7 +9,9 @@ const hasValidServiceRoleKey =
 
 const supabaseAdmin = createAdminClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  serviceRoleKey || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  serviceRoleKey ||
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 );
 
 export async function POST(req: Request) {

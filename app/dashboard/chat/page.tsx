@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
+import { AIDisclosureNotice } from "@/components/lgpd/ai-disclosure-notice";
 
 interface ChatMessage {
   id: string;
@@ -129,6 +130,8 @@ export default function ChatPage() {
           <span className="text-xs text-[#888]">online</span>
         </div>
       </div>
+
+      <AIDisclosureNotice />
 
       <Card className="flex flex-1 flex-col overflow-hidden border-border/50">
         <ScrollArea className="flex-1 p-4">

@@ -108,6 +108,17 @@ export default function SettingsPage() {
         throw updateError;
       }
 
+      // Audit log nao bloqueante
+      fetch("/api/lgpd/audit-log", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "profile.update",
+          entityType: "businesses",
+          entityId: user.id,
+        }),
+      }).catch(() => undefined);
+
       setSuccess(true);
       window.setTimeout(() => setSuccess(false), 3000);
     } catch (err) {

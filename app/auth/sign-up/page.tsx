@@ -1,15 +1,21 @@
 "use client";
 
-import { createClient, resetSupabaseBrowserSession } from "@/lib/supabase/client";
+import {
+  createClient,
+  isSupabaseConfigured,
+  resetSupabaseBrowserSession,
+  SupabaseNotConfiguredError,
+} from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Logo } from "@/components/logo";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Mail, Lock, User, ArrowRight } from "lucide-react";
+import { AlertCircle, Mail, Lock, User, ArrowRight } from "lucide-react";
 
 const ONBOARDING_DRAFT_PREFIX = "cr3sce_onboarding_draft";
 
@@ -32,12 +38,25 @@ export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
+  const [acceptedPolicies, setAcceptedPolicies] = useState(false);
+  const [acceptedMarketing, setAcceptedMarketing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [configured, setConfigured] = useState(true);
   const router = useRouter();
+
+  useEffect(() => {
+    setConfigured(isSupabaseConfigured());
+  }, []);
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!isSupabaseConfigured()) {
+      setConfigured(false);
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
     let shouldResetLoading = true;
@@ -52,6 +71,14 @@ export default function SignUpPage() {
 
     if (password.length < 6) {
       setError("A senha deve ter pelo menos 6 caracteres.");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!acceptedPolicies) {
+      setError(
+        "Para continuar, voce precisa aceitar a Politica de Privacidade e os Termos de Uso.",
+      );
       setIsLoading(false);
       return;
     }
@@ -102,13 +129,35 @@ export default function SignUpPage() {
         throw signInError;
       }
 
+      // Registra os consentimentos LGPD ja com sessao ativa.
+      // Falha aqui nao bloqueia o cadastro — o usuario ja aceitou.
+      try {
+        await fetch("/api/lgpd/consent", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            entries: [
+              { type: "privacy_policy", granted: true },
+              { type: "terms_of_use", granted: true },
+              { type: "marketing_emails", granted: acceptedMarketing },
+            ],
+          }),
+        });
+      } catch (consentErr) {
+        console.warn("Falha ao registrar consentimentos LGPD", consentErr);
+      }
+
       await new Promise((resolve) => setTimeout(resolve, 600));
       shouldResetLoading = false;
       router.push("/onboarding");
     } catch (err: unknown) {
-      setError(
-        err instanceof Error ? err.message : "Ocorreu um erro ao criar a conta.",
-      );
+      if (err instanceof SupabaseNotConfiguredError) {
+        setConfigured(false);
+      } else {
+        setError(
+          err instanceof Error ? err.message : "Ocorreu um erro ao criar a conta.",
+        );
+      }
     } finally {
       if (shouldResetLoading) {
         setIsLoading(false);
@@ -247,6 +296,32 @@ export default function SignUpPage() {
             </p>
           </div>
 
+          {!configured && (
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-6 flex items-start gap-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4 text-sm"
+            >
+              <AlertCircle className="mt-0.5 size-5 shrink-0 text-yellow-500" />
+              <div className="flex-1 text-yellow-100">
+                <p className="font-semibold text-yellow-300">
+                  Supabase nao configurado
+                </p>
+                <p className="mt-1 leading-relaxed text-yellow-100/80">
+                  Para criar conta voce precisa criar o arquivo{" "}
+                  <code className="rounded bg-black/30 px-1 py-0.5 text-xs">
+                    .env.local
+                  </code>{" "}
+                  na raiz com as chaves do seu projeto Supabase. Use o{" "}
+                  <code className="rounded bg-black/30 px-1 py-0.5 text-xs">
+                    .env.example
+                  </code>{" "}
+                  como modelo e reinicie o servidor (npm run dev).
+                </p>
+              </div>
+            </motion.div>
+          )}
+
           <form onSubmit={handleSignUp} className="flex flex-col gap-4">
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-2">
@@ -326,6 +401,56 @@ export default function SignUpPage() {
               </div>
             </div>
 
+            <div className="mt-1 flex flex-col gap-3 rounded-lg border border-border bg-background/30 p-3 text-sm">
+              <label className="flex cursor-pointer items-start gap-3">
+                <Checkbox
+                  checked={acceptedPolicies}
+                  onCheckedChange={(checked) =>
+                    setAcceptedPolicies(checked === true)
+                  }
+                  className="mt-0.5"
+                  aria-required="true"
+                />
+                <span className="leading-snug text-muted-foreground">
+                  Li e aceito a{" "}
+                  <Link
+                    href="/politica-de-privacidade"
+                    target="_blank"
+                    className="text-lime hover:underline"
+                  >
+                    Politica de Privacidade
+                  </Link>{" "}
+                  e os{" "}
+                  <Link
+                    href="/termos-de-uso"
+                    target="_blank"
+                    className="text-lime hover:underline"
+                  >
+                    Termos de Uso
+                  </Link>
+                  .{" "}
+                  <span className="text-destructive" aria-hidden="true">
+                    *
+                  </span>
+                </span>
+              </label>
+
+              <label className="flex cursor-pointer items-start gap-3">
+                <Checkbox
+                  checked={acceptedMarketing}
+                  onCheckedChange={(checked) =>
+                    setAcceptedMarketing(checked === true)
+                  }
+                  className="mt-0.5"
+                />
+                <span className="leading-snug text-muted-foreground">
+                  Quero receber novidades, dicas e ofertas por e-mail
+                  (opcional, voce pode revogar a qualquer momento em
+                  Privacidade).
+                </span>
+              </label>
+            </div>
+
             {error && (
               <motion.p
                 initial={{ opacity: 0, y: -8 }}
@@ -338,7 +463,7 @@ export default function SignUpPage() {
 
             <Button
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || !configured}
               className="mt-2 h-12 w-full gap-2 bg-[#C8F135] text-base font-semibold text-[#111] hover:bg-[#a8d020]"
             >
               <>

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { logAudit } from "@/lib/lgpd/audit";
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -7,6 +8,7 @@ const supabaseAdmin = createClient(
 );
 
 export async function POST(req: Request) {
+  const request = req;
   try {
     const body = await req.json();
     console.log("📦 Webhook Cakto recebido:", JSON.stringify(body, null, 2));
@@ -75,6 +77,16 @@ export async function POST(req: Request) {
         { onConflict: "email" },
       );
 
+      await logAudit({
+        supabase: supabaseAdmin,
+        userId: null,
+        action: "payment.confirmed",
+        entityType: "pending_payment",
+        entityId: orderId ?? undefined,
+        metadata: { email, status: "pending_user" },
+        request,
+      });
+
       return NextResponse.json({ received: true }, { status: 200 });
     }
 
@@ -95,6 +107,16 @@ export async function POST(req: Request) {
         { status: 500 },
       );
     }
+
+    await logAudit({
+      supabase: supabaseAdmin,
+      userId: user.id,
+      action: "payment.confirmed",
+      entityType: "profile",
+      entityId: user.id,
+      metadata: { caktoOrderId: orderId, email },
+      request,
+    });
 
     console.log(`🎉 Acesso liberado para: ${email}`);
     return NextResponse.json(

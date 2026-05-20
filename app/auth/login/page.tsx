@@ -1,15 +1,20 @@
 "use client";
 
-import { createClient, resetSupabaseBrowserSession } from "@/lib/supabase/client";
+import {
+  createClient,
+  isSupabaseConfigured,
+  resetSupabaseBrowserSession,
+  SupabaseNotConfiguredError,
+} from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Logo } from "@/components/logo";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Mail, Lock, ArrowRight } from "lucide-react";
+import { AlertCircle, Sparkles, Mail, Lock, ArrowRight } from "lucide-react";
 
 const ONBOARDING_DRAFT_PREFIX = "cr3sce_onboarding_draft";
 
@@ -31,10 +36,21 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [configured, setConfigured] = useState(true);
   const router = useRouter();
+
+  useEffect(() => {
+    setConfigured(isSupabaseConfigured());
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!isSupabaseConfigured()) {
+      setConfigured(false);
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
     let shouldResetLoading = true;
@@ -49,14 +65,26 @@ export default function LoginPage() {
         password,
       });
       if (error) throw error;
+
+      // Audit log nao bloqueante
+      fetch("/api/lgpd/audit-log", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "auth.login" }),
+      }).catch(() => undefined);
+
       shouldResetLoading = false;
       router.push("/dashboard");
     } catch (error: unknown) {
-      setError(
-        error instanceof Error
-          ? error.message
-          : "Ocorreu um erro ao fazer login.",
-      );
+      if (error instanceof SupabaseNotConfiguredError) {
+        setConfigured(false);
+      } else {
+        setError(
+          error instanceof Error
+            ? error.message
+            : "Ocorreu um erro ao fazer login.",
+        );
+      }
     } finally {
       if (shouldResetLoading) {
         setIsLoading(false);
@@ -157,6 +185,32 @@ export default function LoginPage() {
             <p className="mt-1 text-muted-foreground">Faça login para continuar</p>
           </div>
 
+          {!configured && (
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-6 flex items-start gap-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4 text-sm"
+            >
+              <AlertCircle className="mt-0.5 size-5 shrink-0 text-yellow-500" />
+              <div className="flex-1 text-yellow-100">
+                <p className="font-semibold text-yellow-300">
+                  Supabase nao configurado
+                </p>
+                <p className="mt-1 leading-relaxed text-yellow-100/80">
+                  Para fazer login voce precisa criar o arquivo{" "}
+                  <code className="rounded bg-black/30 px-1 py-0.5 text-xs">
+                    .env.local
+                  </code>{" "}
+                  na raiz com as chaves do seu projeto Supabase. Use o{" "}
+                  <code className="rounded bg-black/30 px-1 py-0.5 text-xs">
+                    .env.example
+                  </code>{" "}
+                  como modelo e reinicie o servidor (npm run dev).
+                </p>
+              </div>
+            </motion.div>
+          )}
+
           <form onSubmit={handleLogin} className="space-y-6">
             <motion.div
               className="space-y-2"
@@ -221,7 +275,7 @@ export default function LoginPage() {
             >
               <Button
                 type="submit"
-                disabled={isLoading}
+                disabled={isLoading || !configured}
                 className="h-12 w-full gap-2 bg-[#C8F135] text-lg font-semibold text-[#111] hover:bg-[#a8d020]"
               >
                 {isLoading ? (

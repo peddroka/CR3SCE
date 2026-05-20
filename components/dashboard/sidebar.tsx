@@ -17,6 +17,8 @@ import {
   Trophy,
   Star,
   Clapperboard,
+  ShieldCheck,
+  Wand2,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { resetSupabaseBrowserSession } from "@/lib/supabase/client";
@@ -77,12 +79,25 @@ export function DashboardSidebar({ className }: SidebarProps) {
       label: "Editar Vídeo",
       icon: Clapperboard,
       id: "nav-editar-video",
+      badge: "BETA",
+    },
+    {
+      href: "/dashboard/criar-post",
+      label: "Criar Post",
+      icon: Wand2,
+      id: "nav-criar-post",
     },
     {
       href: "/dashboard/settings",
       label: "Configuracoes",
       icon: Settings,
       id: "nav-configuracoes",
+    },
+    {
+      href: "/dashboard/privacidade",
+      label: "Privacidade",
+      icon: ShieldCheck,
+      id: "nav-privacidade",
     },
   ];
 
@@ -97,6 +112,15 @@ export function DashboardSidebar({ className }: SidebarProps) {
         }
       } catch {}
     }
+
+    // Audit log antes de invalidar a sessao
+    try {
+      await fetch("/api/lgpd/audit-log", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "auth.logout" }),
+      });
+    } catch {}
 
     await resetSupabaseBrowserSession();
     router.push("/");
@@ -172,7 +196,12 @@ export function DashboardSidebar({ className }: SidebarProps) {
                         )}
                       />
                       <span>{item.label}</span>
-                      {isActive && (
+                      {item.badge && (
+                        <span className="ml-auto rounded-full border border-yellow-500/40 bg-yellow-500/10 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-widest text-yellow-400">
+                          {item.badge}
+                        </span>
+                      )}
+                      {isActive && !item.badge && (
                         <div className="ml-auto h-1.5 w-1.5 rounded-full bg-lime" />
                       )}
                     </div>
