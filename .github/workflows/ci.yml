@@ -149,8 +149,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run npm audit (high+critical only)
-        run: npm audit --audit-level=high
+      - name: Run pnpm audit (high+critical only)
+        run: pnpm audit --audit-level=high
         continue-on-error: true
 
   api-routes-check:

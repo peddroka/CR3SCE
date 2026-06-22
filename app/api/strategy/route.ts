@@ -439,7 +439,7 @@ function getBrandPaletteDescription(colors?: string[] | null) {
   return colors.join(", ");
 }
 
-function getPostingWindowFromTime(time: string): PostingWindow {
+function _getPostingWindowFromTime(time: string): PostingWindow {
   const [hourRaw] = time.split(":");
   const hour = Number(hourRaw);
 
@@ -736,7 +736,7 @@ function assignStylesToDay(
   }, []);
 }
 
-function mapSubtypeToLegacyContentType(subtype: EditorialSubtype) {
+function _mapSubtypeToLegacyContentType(subtype: EditorialSubtype) {
   if (subtype.startsWith("HISTORY_")) return "Stories";
   if (subtype === "FEED_CARROSSEL") return "Carrossel";
   if (subtype === "FEED_FOTO") return "Post Estatico";
@@ -1620,7 +1620,7 @@ function getContentTypeForSlot(
   return feedType;
 }
 
-function getStrategicTime(
+function _getStrategicTime(
   contentType: string,
   slotIndex: number,
   dayNumber: number,
@@ -1882,7 +1882,7 @@ function buildPlanForMonth(
 
   const viralDays = new Set<number>();
   const styleHistory = new Map<string, number>();
-  Array.from(weekGroups.entries()).forEach(([weekIndex, days]) => {
+  Array.from(weekGroups.entries()).forEach(([_weekIndex, days]) => {
     const sortedDays = [...days].sort((a, b) => a - b);
     const weekendDay =
       sortedDays.find(
@@ -2056,7 +2056,7 @@ function generateSpecificHashtags(niche: string) {
 
 function buildVisualPrompt(
   business: BusinessProfile,
-  topic: string,
+  _topic: string,
   contentType: string,
   isViral: boolean,
 ) {
@@ -2324,7 +2324,7 @@ function buildCtaFromSeed(business: BusinessProfile, seed: PlannedPostSeed) {
 
 function buildCaptionFromSeed(
   business: BusinessProfile,
-  topic: string,
+  _topic: string,
   seed: PlannedPostSeed,
 ) {
   const audience = getShortAudience(business.target_audience).toLowerCase();
@@ -2659,7 +2659,7 @@ PASSO A PASSO:
 
 function buildBastidorStoryFallback(
   business: BusinessProfile,
-  topic: string,
+  _topic: string,
 ) {
   const niche = getNicheReference(business);
 
@@ -2673,7 +2673,7 @@ PASSO A PASSO:
 
 function buildTipStoryFallback(
   business: BusinessProfile,
-  topic: string,
+  _topic: string,
 ) {
   const niche = getNicheReference(business);
 
@@ -3021,7 +3021,7 @@ function buildFallbackPost(
   };
 }
 
-function buildWeekPrompt(
+function _buildWeekPrompt(
   business: BusinessProfile,
   weekIndex: number,
   year: number,
@@ -3156,7 +3156,7 @@ Retorne APENAS JSON valido, sem markdown, neste formato:
   return strategyPrompt.trim();
 }
 
-function buildWeekPromptV2(
+function _buildWeekPromptV2(
   business: BusinessProfile,
   weekIndex: number,
   year: number,

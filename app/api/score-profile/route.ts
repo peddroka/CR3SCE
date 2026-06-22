@@ -221,7 +221,7 @@ function inferAreaKeys(text: string) {
   return matches;
 }
 
-function normalizeProblems(problems: unknown): ProblemItem[] {
+function _normalizeProblems(problems: unknown): ProblemItem[] {
   if (!Array.isArray(problems)) return [];
 
   return problems
@@ -237,7 +237,7 @@ function normalizeProblems(problems: unknown): ProblemItem[] {
     .filter((item) => item.title && item.description);
 }
 
-function normalizeImprovements(improvements: unknown): ImprovementItem[] {
+function _normalizeImprovements(improvements: unknown): ImprovementItem[] {
   if (!Array.isArray(improvements)) return [];
 
   return improvements

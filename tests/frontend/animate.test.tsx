@@ -23,7 +23,6 @@ describe("<AnimateOnScroll />", () => {
       thresholds = [];
     }
 
-    // @ts-expect-error overriding global for tests
     global.IntersectionObserver = IntersectionObserverSpy;
   });
 

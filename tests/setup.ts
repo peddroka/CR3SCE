@@ -36,7 +36,6 @@ class IntersectionObserverMock {
   rootMargin = "";
   thresholds = [];
 }
-// @ts-expect-error global override for tests
 global.IntersectionObserver = IntersectionObserverMock;
 
 // Mock ResizeObserver
@@ -45,7 +44,6 @@ class ResizeObserverMock {
   unobserve = vi.fn();
   disconnect = vi.fn();
 }
-// @ts-expect-error global override for tests
 global.ResizeObserver = ResizeObserverMock;
 
 // Polyfill URL.createObjectURL (used in video preview)
