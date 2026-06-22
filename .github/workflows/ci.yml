@@ -100,6 +100,7 @@ jobs:
       # Build-time public env vars (use placeholder values for build verification)
       NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
       NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder-key-for-build-only
+      SUPABASE_SERVICE_ROLE_KEY: placeholder-service-role-key-for-build-only
       NEXT_PUBLIC_APP_URL: https://example.com
       NEXT_PUBLIC_CAKTO_CHECKOUT_URL: https://example.com
     steps:
