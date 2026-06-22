@@ -413,7 +413,7 @@ export function ScoreClient({
   analysisCount,
   lastAnalysis,
 }: Props) {
-  const [images, setImages] = useState<File[]>([]);
+  const [, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>(() => {
     const urls: string[] = [];
     if (business?.bio_screenshot_url) urls.push(business.bio_screenshot_url);
@@ -806,7 +806,7 @@ export function ScoreClient({
     );
   }
 
-  function InstagramMockup({
+  function _InstagramMockup({
     business,
     improvements,
     bios,

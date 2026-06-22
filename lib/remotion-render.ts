@@ -100,6 +100,7 @@ export async function renderBrandClip({
     `--props=${propsPath}`,
     `--width=${width}`,
     `--height=${height}`,
+    `--fps=${fps}`,
     "--scale=1",
     "--codec=h264",
     "--log=warn",

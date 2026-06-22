@@ -359,7 +359,7 @@ function cleanStoryText(value: string) {
     .trim();
 }
 
-function parseStorySections(script: string): StorySection[] {
+function _parseStorySections(script: string): StorySection[] {
   const matches = Array.from(
     script.matchAll(
       /(?:^|\n)(?:\*\*)?(Story\s+\d+)(?:\s*[-:]\s*([^\n*]+))?(?:\*\*)?:?\s*([\s\S]*?)(?=(?:\n(?:\*\*)?Story\s+\d+)|$)/gi,

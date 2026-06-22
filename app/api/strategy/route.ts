@@ -2056,7 +2056,7 @@ function generateSpecificHashtags(niche: string) {
 
 function buildVisualPrompt(
   business: BusinessProfile,
-  _topic: string,
+  topic: string,
   contentType: string,
   isViral: boolean,
 ) {
@@ -2324,7 +2324,7 @@ function buildCtaFromSeed(business: BusinessProfile, seed: PlannedPostSeed) {
 
 function buildCaptionFromSeed(
   business: BusinessProfile,
-  _topic: string,
+  topic: string,
   seed: PlannedPostSeed,
 ) {
   const audience = getShortAudience(business.target_audience).toLowerCase();
@@ -3453,7 +3453,7 @@ Retorne APENAS JSON valido, sem markdown, neste formato:
 `.trim();
 }
 
-function sanitizeGeneratedText(value: string) {
+function _sanitizeGeneratedText(value: string) {
   return (value || "")
     .replace(/\*/g, "")
     .replace(/[“”"]/g, "")
