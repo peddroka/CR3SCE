@@ -115,9 +115,9 @@ export default function ChatPage() {
   return (
     <div className="flex h-[calc(100vh-8rem)] flex-col gap-4 md:h-[calc(100vh-4rem)]">
       <div className="flex items-center justify-between gap-4">
-        <div>
+        <div className="min-w-0">
           <h1 className="flex items-center gap-2 text-2xl font-bold text-white">
-            <Sparkles className="size-6 text-[#C8F135]" />
+            <Sparkles className="size-6 shrink-0 text-[#C8F135]" />
             Assistente CR3SCE
           </h1>
           <p className="mt-1 text-sm text-[#666]">
@@ -125,7 +125,7 @@ export default function ChatPage() {
             estratégia.
           </p>
         </div>
-        <div className="flex items-center gap-2 rounded-full border border-border bg-white/5 px-3 py-1.5">
+        <div className="flex shrink-0 items-center gap-2 rounded-full border border-border bg-white/5 px-3 py-1.5">
           <span className="h-2 w-2 animate-pulse rounded-full bg-green-500" />
           <span className="text-xs text-[#888]">online</span>
         </div>
@@ -199,7 +199,7 @@ export default function ChatPage() {
                       : "border border-border bg-card text-[#c0c0c0]",
                   )}
                 >
-                  <div className="whitespace-pre-wrap">{message.content}</div>
+                  <div className="whitespace-pre-wrap break-words">{message.content}</div>
                 </div>
               </div>
             ))}

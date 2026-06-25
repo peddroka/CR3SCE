@@ -26,7 +26,6 @@ const steps = [
 export function HowItWorks() {
   return (
     <section
-      id="como"
       className="mx-auto max-w-6xl px-6 py-20 md:px-12 md:py-32 lg:px-16 lg:py-40"
     >
       <AnimateOnScroll className="mb-14 md:mb-20">
@@ -43,7 +42,7 @@ export function HowItWorks() {
           <AnimateOnScroll
             key={i}
             delay={i * 150}
-            className="relative overflow-hidden bg-background p-12 transition-colors hover:bg-card"
+            className="relative overflow-hidden bg-background p-8 transition-colors hover:bg-card md:p-12"
           >
             <span className="absolute right-4 top-2 select-none font-bebas text-[100px] leading-none text-[#C8F135]/5">
               {step.num}

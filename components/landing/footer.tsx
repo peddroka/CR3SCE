@@ -15,12 +15,12 @@ export function Footer() {
   return (
     <footer className="border-t border-border bg-background">
       <div className="mx-auto max-w-6xl px-6 md:px-12">
-        <div className="grid grid-cols-1 gap-12 py-16 md:grid-cols-4 md:py-20">
-          <div className="flex flex-col gap-5 md:col-span-1">
+        <div className="grid grid-cols-1 gap-12 py-16 sm:grid-cols-2 md:py-20 lg:grid-cols-4">
+          <div className="flex flex-col gap-5 sm:col-span-2 lg:col-span-1">
             <Logo size="lg" />
             <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
-              Planejamento de conteudo inteligente para Instagram. 30 dias
-              prontos, todo mes.
+              Planejamento de conteúdo inteligente para Instagram. 30 dias
+              prontos, todo mês.
             </p>
             <div className="flex flex-wrap items-center gap-3">
               <a
@@ -75,7 +75,7 @@ export function Footer() {
                 { label: "Cases de Sucesso", href: "#cases" },
                 { label: "Depoimentos", href: "#depoimentos" },
                 { label: "Perguntas Frequentes", href: "#faq" },
-                { label: "Precos", href: "#preco" },
+                { label: "Preços", href: "#preco" },
               ].map((item) => (
                 <a
                   key={item.label}
@@ -115,12 +115,12 @@ export function Footer() {
             <nav className="flex flex-col gap-3">
               {[
                 {
-                  label: "Politica de Privacidade",
+                  label: "Política de Privacidade",
                   href: "/politica-de-privacidade",
                 },
                 { label: "Termos de Uso", href: "/termos-de-uso" },
                 {
-                  label: "Politica de Cookies",
+                  label: "Política de Cookies",
                   href: "/politica-de-cookies",
                 },
               ].map((item) => (
@@ -141,13 +141,13 @@ export function Footer() {
               Comece agora
             </p>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              Pare de improvisar. Tenha 30 dias de conteudo planejado todo mes.
+              Pare de improvisar. Tenha 30 dias de conteúdo planejado todo mês.
             </p>
             <Link
               href="/auth/sign-up"
               className="inline-block w-fit border border-white/10 bg-primary px-6 py-3 text-sm font-semibold uppercase tracking-wider text-primary-foreground transition-all hover:-translate-y-0.5 hover:bg-[#333333]"
             >
-              Comecar agora {"->"}
+              Começar agora {"->"}
             </Link>
             <div className="flex flex-col gap-2">
               <p className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -156,13 +156,13 @@ export function Footer() {
               </p>
               <p className="flex items-center gap-2 text-xs text-muted-foreground">
                 <span className="text-lime">+</span> Plano anual: 2 meses
-                gratis
+                grátis
               </p>
               <p className="flex items-center gap-2 text-xs text-muted-foreground">
                 <span className="text-lime">+</span> Garantia de 7 dias
               </p>
               <p className="flex items-center gap-2 text-xs text-muted-foreground">
-                <span className="text-lime">+</span> Resultado no primeiro mes
+                <span className="text-lime">+</span> Resultado no primeiro mês
               </p>
             </div>
           </div>

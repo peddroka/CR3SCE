@@ -4,18 +4,17 @@ import Link from "next/link";
 import { AnimateOnScroll } from "@/components/ui/animate";
 
 const features = [
-  "Calendario completo de 30 dias para o Instagram",
+  "Calendário completo de 30 dias para o Instagram",
   "Roteiro de cada post - legenda, formato e CTA",
-  "Horario estrategico personalizado pro seu publico",
+  "Horário estratégico personalizado pro seu público",
   "Planejamento para Instagram - feed, reels e stories",
   "IA pessoal de marketing integrada",
-  "Suporte durante todo o mes",
+  "Suporte durante todo o mês",
 ];
 
 export function PricingSection() {
   return (
     <section
-      id="preco"
       className="mx-auto max-w-6xl px-6 py-20 text-center md:px-12 md:py-32 lg:px-16 lg:py-40"
     >
       <AnimateOnScroll className="mb-14 md:mb-20">
@@ -25,11 +24,11 @@ export function PricingSection() {
         <h2 className="font-bebas text-[clamp(36px,5vw,72px)] leading-tight">
           SEM SURPRESA.
           <br />
-          SEM ENROLACAO.
+          SEM ENROLAÇÃO.
         </h2>
         <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-muted-foreground">
-          Ao inves de pagar <strong className="text-white">R$2.000+</strong> por
-          mes para um social media profissional, voce paga apenas{" "}
+          Ao invés de pagar <strong className="text-white">R$2.000+</strong> por
+          mês para um social media profissional, você paga apenas{" "}
           <strong className="text-lime">R$79,90</strong> com o plano anual ou{" "}
           <strong className="text-white">R$99,90</strong> no mensal.
         </p>
@@ -47,7 +46,7 @@ export function PricingSection() {
           <div className="mb-1 font-bebas leading-none">
             <span className="text-xl text-muted-foreground">R$</span>
             <span className="text-[60px]">99</span>
-            <span className="text-lg text-muted-foreground">,90/mes</span>
+            <span className="text-lg text-muted-foreground">,90/mês</span>
           </div>
 
           <p className="mb-6 text-xs text-muted-foreground">
@@ -72,7 +71,7 @@ export function PricingSection() {
             href="/auth/sign-up"
             className="block w-full border border-white/10 bg-white/5 py-3.5 text-center text-xs font-bold uppercase tracking-widest text-white transition-all hover:bg-white/10"
           >
-            Comecar mensalmente
+            Começar mensalmente
           </Link>
 
           <p className="mt-3 text-center text-[10px] text-muted-foreground">
@@ -91,20 +90,20 @@ export function PricingSection() {
           </div>
 
           <p className="mb-4 text-[10px] font-medium uppercase tracking-[0.3em] text-lime">
-            Plano Anual - Melhor opcao
+            Plano Anual - Melhor opção
           </p>
 
           <div className="mb-1 font-bebas leading-none">
             <span className="text-2xl text-muted-foreground">R$</span>
             <span className="text-[88px] text-lime">79</span>
-            <span className="text-xl text-muted-foreground">,90/mes</span>
+            <span className="text-xl text-muted-foreground">,90/mês</span>
           </div>
 
           <p className="mb-1 text-xs text-muted-foreground">
             Cobrado anualmente - R$958,80/ano
           </p>
           <p className="mb-8 text-xs font-medium text-lime">
-            Voce economiza R$239,90 por ano - 2 meses gratis
+            Você economiza R$239,90 por ano - 2 meses grátis
           </p>
 
           <ul className="mb-8 flex flex-col gap-3">
@@ -141,7 +140,7 @@ export function PricingSection() {
       <AnimateOnScroll className="mt-8 text-xs text-muted-foreground">
         <p>
           * Plano mensal: cancele quando quiser, sem multa. Plano anual:
-          fidelidade de 12 meses. Cancelamento antecipado sujeito a multa
+          fidelidade de 12 meses. Cancelamento antecipado sujeito à multa
           proporcional.
         </p>
       </AnimateOnScroll>

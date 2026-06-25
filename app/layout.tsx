@@ -18,8 +18,8 @@ const bebasNeue = Bebas_Neue({
 });
 
 export const metadata: Metadata = {
-  title: "CR3SCE - Planejamento de Conteudo para Instagram",
-  description: "R$79,90/mes. 30 dias de conteudo planejado para o Instagram.",
+  title: "CR3SCE - Planejamento de Conteúdo para Instagram",
+  description: "R$79,90/mês. 30 dias de conteúdo planejado para o Instagram.",
   icons: {
     icon: "/logo.svg",
   },

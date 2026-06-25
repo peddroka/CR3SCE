@@ -39,7 +39,7 @@ export default function AguardandoPagamentoPage() {
         if (result.status === "unconfigured") {
           shouldStopPolling = true;
           setPaymentError(
-            "Nao consegui validar o pagamento no Supabase. Rode o SQL de pagamentos e depois recarregue a pagina.",
+            "Não consegui validar o pagamento no Supabase. Rode o SQL de pagamentos e depois recarregue a página.",
           );
           return;
         }
@@ -56,7 +56,7 @@ export default function AguardandoPagamentoPage() {
         shouldStopPolling = true;
         console.error("Erro ao verificar pagamento:", error);
         setPaymentError(
-          "Nao foi possivel verificar o pagamento agora. Confira o Supabase e tente novamente.",
+          "Não foi possível verificar o pagamento agora. Confira o Supabase e tente novamente.",
         );
       }
     };
@@ -97,13 +97,13 @@ export default function AguardandoPagamentoPage() {
         "Abra o arquivo scripts/006_add_cakto_payments.sql no projeto.",
         "Rode esse SQL no SQL Editor do Supabase.",
         "Confirme que a coluna payment_status existe em profiles.",
-        "Recarregue esta pagina para retomar a validacao.",
+        "Recarregue esta página para retomar a validação.",
       ]
     : [
-        "Clique no botao abaixo para ir ao checkout.",
-        "Complete o pagamento de R$79,90 por mes.",
-        "Esta pagina detecta o pagamento automaticamente.",
-        "Voce e redirecionado para o painel sem precisar fazer nada.",
+        "Clique no botão abaixo para ir ao checkout.",
+        "Complete o pagamento de R$79,90 por mês.",
+        "Esta página detecta o pagamento automaticamente.",
+        "Você é redirecionado para o painel sem precisar fazer nada.",
       ];
 
   return (
@@ -156,7 +156,7 @@ export default function AguardandoPagamentoPage() {
             <div>
               <h1 className="mb-2 text-2xl font-bold text-white">
                 {paymentError
-                  ? "Configuracao de pagamento pendente"
+                  ? "Configuração de pagamento pendente"
                   : "Finalize seu pagamento"}
               </h1>
               <p className="max-w-xs text-sm leading-relaxed text-[#888]">
@@ -168,7 +168,7 @@ export default function AguardandoPagamentoPage() {
 
             <div className="flex w-full flex-col gap-3 rounded-xl border border-border bg-card p-5 text-left">
               <p className="text-[10px] font-semibold uppercase tracking-widest text-[#555]">
-                {paymentError ? "Proximo passo" : "Como funciona"}
+                {paymentError ? "Próximo passo" : "Como funciona"}
               </p>
               {steps.map((step, i) => (
                 <div key={i} className="flex items-start gap-3">
@@ -185,7 +185,7 @@ export default function AguardandoPagamentoPage() {
               className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#C8F135] py-4 text-sm font-bold uppercase tracking-wider text-[#111] transition-all hover:-translate-y-0.5 hover:bg-[#a8d020] hover:shadow-[0_12px_40px_rgba(200,241,53,0.2)]"
             >
               <ExternalLink className="size-4" />
-              Ir para o Checkout - R$79,90/mes
+              Ir para o Checkout - R$79,90/mês
             </button>
 
             <p className="flex items-center gap-1.5 text-xs text-[#444]">
@@ -193,7 +193,7 @@ export default function AguardandoPagamentoPage() {
                 className={paymentError ? "size-3" : "size-3 animate-spin"}
               />
               {paymentError
-                ? "A validacao automatica foi pausada ate o Supabase ser configurado."
+                ? "A validação automática foi pausada até o Supabase ser configurado."
                 : "Verificando pagamento automaticamente..."}
             </p>
           </div>

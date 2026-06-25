@@ -216,7 +216,7 @@ export function InlineChat({
 
   const growthIntent =
     mainGoal === "visualizacao"
-      ? "aumentar visualizacao"
+      ? "aumentar visualização"
       : mainGoal === "identidade"
         ? "construir identidade"
         : mainGoal === "vendas"
@@ -229,7 +229,7 @@ export function InlineChat({
 
   const suggestions = [
     `Ideia de Reels para ${niche || "o seu nicho"}`,
-    "Que conteudo postar amanha?",
+    "Que conteúdo postar amanhã?",
     `Como viralizar no ${platforms === "instagram" ? "Instagram" : "TikTok"}`,
     `Dica para ${growthIntent}`,
   ];
@@ -250,7 +250,7 @@ export function InlineChat({
               <div className="mt-0.5 flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-green-500" />
                 <span className="text-[10px] text-[#666]">
-                  sempre disponivel para ajudar
+                  sempre disponível para ajudar
                 </span>
               </div>
             </div>
@@ -261,7 +261,7 @@ export function InlineChat({
       <CardContent className="flex flex-col gap-3 px-5 pb-5">
         <div
           ref={scrollAreaRef}
-          className="h-140 overflow-y-auto rounded-xl border border-border bg-background/50 p-3"
+          className="h-96 overflow-y-auto rounded-xl border border-border bg-background/50 p-3 sm:h-140"
         >
           <div className="flex flex-col gap-3">
             {messages.length === 0 && (
@@ -270,14 +270,14 @@ export function InlineChat({
                   <Sparkles className="size-5 text-lime" />
                 </div>
                 <p className="text-sm font-medium text-white">
-                  Ola
+                  Olá
                   {businessName
                     ? `, como posso ajudar o ${businessName}?`
                     : "! Como posso ajudar?"}
                 </p>
                 <p className="max-w-xs text-xs leading-relaxed text-[#666]">
-                  Fale sobre ideias de conteudo, estrategias de crescimento e
-                  duvidas de marketing. Estou aqui.
+                  Fale sobre ideias de conteúdo, estratégias de crescimento e
+                  dúvidas de marketing. Estou aqui.
                 </p>
               </div>
             )}
@@ -311,7 +311,7 @@ export function InlineChat({
                 </div>
                 <div
                   className={cn(
-                    "max-w-[80%] rounded-xl px-3 py-2 text-xs leading-relaxed",
+                    "max-w-[80%] break-words rounded-xl px-3 py-2 text-xs leading-relaxed",
                     message.role === "user"
                       ? "border border-[#C8F135]/20 bg-[#C8F135]/15 text-[#d0d0d0]"
                       : "border border-border bg-card text-[#c0c0c0]",
@@ -362,7 +362,7 @@ export function InlineChat({
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Pergunte algo sobre seu negocio..."
+            placeholder="Pergunte algo sobre seu negócio..."
             className="h-10 flex-1 border-border bg-white/5 text-sm text-white placeholder:text-[#444] focus-visible:border-lime/50"
             disabled={isLoading}
           />

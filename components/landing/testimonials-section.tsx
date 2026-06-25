@@ -59,7 +59,6 @@ const testimonials = [
 export function TestimonialsSection() {
   return (
     <section
-      id="depoimentos"
       className="mx-auto max-w-6xl px-6 py-20 md:px-12 md:py-32 lg:px-16 lg:py-40"
     >
       <AnimateOnScroll className="mb-14 md:mb-20">
@@ -77,7 +76,7 @@ export function TestimonialsSection() {
         {logos.map((logo, i) => (
           <div
             key={i}
-            className="flex-1 whitespace-nowrap border-b border-r border-border px-6 py-5 text-center font-bebas text-sm tracking-widest text-muted-foreground transition-colors hover:text-foreground"
+            className="flex-1 basis-1/2 whitespace-nowrap border-b border-r border-border px-4 py-5 text-center font-bebas text-sm tracking-widest text-muted-foreground transition-colors hover:text-foreground sm:basis-auto sm:px-6"
           >
             {logo}
           </div>

@@ -26,7 +26,7 @@ export function FinalCta() {
 
       <AnimateOnScroll delay={100} className="relative z-10 mx-auto mb-12 max-w-md text-lg text-muted-foreground">
         <p>
-          Mais de 340 empreendedores já pararam de improvisar no Instagram. Agora
+          Mais de 47 empreendedores já pararam de improvisar no Instagram. Agora
           é a sua vez.
         </p>
       </AnimateOnScroll>

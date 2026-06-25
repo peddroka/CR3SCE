@@ -242,45 +242,45 @@ export default function EvolutionPage() {
         <div>
           <h1 className="flex items-center gap-2 text-2xl font-bold text-white md:text-3xl">
             <TrendingUp className="size-7 text-primary" />
-            Jornada de Evolucao
+            Jornada de Evolução
           </h1>
         </div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-2xl border border-border bg-card p-8 text-center"
+          className="rounded-2xl border border-border bg-card p-6 text-center sm:p-8"
         >
           <div className="mx-auto mb-6 flex size-20 items-center justify-center rounded-full border border-[#C8F135]/20 bg-[#C8F135]/10 text-4xl">
             💰
           </div>
           <h2 className="mb-3 text-xl font-bold text-white">
-            Orcamento insuficiente por enquanto
+            Orçamento insuficiente por enquanto
           </h2>
           <p className="mx-auto mb-6 max-w-sm text-sm leading-relaxed text-[#888]">
-            Com menos de R$50 disponivel, nao conseguimos montar uma jornada de
-            evolucao relevante para o seu negocio. Quando voce tiver um valor
-            maior disponivel este mes, volte aqui e libere sua jornada!
+            Com menos de R$50 disponível, não conseguimos montar uma jornada de
+            evolução relevante para o seu negócio. Quando você tiver um valor
+            maior disponível este mês, volte aqui e libere sua jornada!
           </p>
 
           <div className="mb-6 rounded-xl border border-[#C8F135]/20 bg-[#C8F135]/5 p-4 text-left">
             <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#C8F135]">
-              O que voce pode fazer agora
+              O que você pode fazer agora
             </p>
             <ul className="space-y-2 text-sm text-[#888]">
               <li className="flex gap-2">
                 <span className="shrink-0 text-[#C8F135]">1.</span>
-                Foque no calendario de conteudo - postar consistentemente ja gera
+                Foque no calendário de conteúdo - postar consistentemente já gera
                 crescimento
               </li>
               <li className="flex gap-2">
                 <span className="shrink-0 text-[#C8F135]">2.</span>
-                Quando tiver um valor disponivel, volte aqui e clique em
+                Quando tiver um valor disponível, volte aqui e clique em
                 "Liberar minha jornada"
               </li>
               <li className="flex gap-2">
                 <span className="shrink-0 text-[#C8F135]">3.</span>
-                Mesmo R$100-200 ja permite comecar com equipamentos basicos
+                Mesmo R$100-200 já permite começar com equipamentos básicos
               </li>
             </ul>
           </div>
@@ -305,10 +305,10 @@ export default function EvolutionPage() {
       <div>
         <h1 className="flex items-center gap-2 text-2xl font-bold text-white md:text-3xl">
           <TrendingUp className="size-7 text-primary" />
-          Jornada de Evolucao
+          Jornada de Evolução
         </h1>
         <p className="mt-1 text-sm text-[#888888]">
-          Complete os niveis em ordem para evoluir sua presenca digital.
+          Complete os níveis em ordem para evoluir sua presença digital.
         </p>
       </div>
 
@@ -323,7 +323,7 @@ export default function EvolutionPage() {
               <div className="mb-4 flex items-center gap-2">
                 <span className="text-lg">🗺️</span>
                 <h2 className="font-bebas text-xl tracking-wide text-white">
-                  Mapa de Evolucao
+                  Mapa de Evolução
                 </h2>
               </div>
               <EvolutionMap
@@ -351,7 +351,7 @@ export default function EvolutionPage() {
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="relative z-10 w-full max-w-md rounded-2xl border border-border bg-card p-8 shadow-2xl"
+              className="relative z-10 w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-2xl sm:p-8"
             >
               <div className="mb-8 text-center">
                 <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10">
@@ -362,7 +362,7 @@ export default function EvolutionPage() {
                 </h2>
                 <p className="text-sm leading-relaxed text-[#888888]">
                   Defina seu investimento mensal e a IA vai montar uma jornada
-                  personalizada para o seu negocio.
+                  personalizada para o seu negócio.
                 </p>
               </div>
 
@@ -372,7 +372,7 @@ export default function EvolutionPage() {
                     htmlFor="investment"
                     className="text-sm font-medium text-[#c0c0c0]"
                   >
-                    Investimento mensal disponivel (R$)
+                    Investimento mensal disponível (R$)
                   </Label>
                   <div className="relative">
                     <DollarSign className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#888888]" />
@@ -389,7 +389,7 @@ export default function EvolutionPage() {
                     />
                   </div>
                   <p className="text-xs text-[#555]">
-                    Este valor define quais equipamentos e acoes serao sugeridos
+                    Este valor define quais equipamentos e ações serão sugeridos
                     na sua jornada.
                   </p>
                 </div>
@@ -407,7 +407,7 @@ export default function EvolutionPage() {
                   ) : (
                     <>
                       <Sparkles className="size-4" />
-                      Comecar Jornada
+                      Começar Jornada
                     </>
                   )}
                 </Button>

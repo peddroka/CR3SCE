@@ -6,40 +6,39 @@ const pillars = [
   {
     num: "1",
     label: "Pilar 01 - O QUE",
-    title: "CONTEUDO",
-    desc: "Roteiro completo de cada post - tema, legenda e call to action. Voce nunca mais vai ficar em branco na frente do celular.",
+    title: "CONTEÚDO",
+    desc: "Roteiro completo de cada post - tema, legenda e call to action. Você nunca mais vai ficar em branco na frente do celular.",
   },
   {
     num: "2",
     label: "Pilar 02 - QUANDO",
-    title: "FREQUENCIA",
-    desc: "Horario e dia definidos para cada publicacao. Consistencia e o que o algoritmo mais valoriza - e o CR3SCE garante isso.",
+    title: "FREQUÊNCIA",
+    desc: "Horário e dia definidos para cada publicação. Consistência é o que o algoritmo mais valoriza - e o CR3SCE garante isso.",
   },
   {
     num: "3",
     label: "Pilar 03 - POR QUE",
-    title: "ESTRATEGIA",
-    desc: "Cada post tem um objetivo - engajamento, autoridade ou venda. Conteudo sem estrategia e so barulho. Com o CR3SCE, vira resultado.",
+    title: "ESTRATÉGIA",
+    desc: "Cada post tem um objetivo - engajamento, autoridade ou venda. Conteúdo sem estratégia é só barulho. Com o CR3SCE, vira resultado.",
   },
 ];
 
 export function PillarsSection() {
   return (
     <section
-      id="pilares"
       className="mx-auto max-w-6xl px-6 py-20 md:px-12 md:py-32 lg:px-16 lg:py-40"
     >
       <AnimateOnScroll className="mb-14 md:mb-20">
         <p className="mb-5 text-xs font-medium uppercase tracking-[0.3em] text-lime md:mb-6">
-          O Metodo
+          O Método
         </p>
         <h2 className="font-bebas text-[clamp(36px,5vw,72px)] leading-tight">
           POR QUE O <span className="text-lime">3</span>?
         </h2>
         <p className="mt-4 max-w-lg text-sm leading-relaxed text-muted-foreground">
-          O numero 3 no nome nao e enfeite. Ele representa os{" "}
+          O número 3 no nome não é enfeite. Ele representa os{" "}
           <strong className="text-foreground">
-            3 pilares que todo negocio precisa
+            3 pilares que todo negócio precisa
           </strong>{" "}
           para crescer no Instagram - e que a maioria nunca resolve ao mesmo
           tempo.
@@ -51,7 +50,7 @@ export function PillarsSection() {
           <AnimateOnScroll
             key={index}
             delay={index * 150}
-            className="relative overflow-hidden bg-background p-12 transition-colors hover:bg-card"
+            className="relative overflow-hidden bg-background p-8 transition-colors hover:bg-card md:p-12"
           >
             <span className="absolute right-3 top-0 select-none font-bebas text-[140px] leading-none text-[#C8F135]/5">
               {pillar.num}
@@ -75,19 +74,19 @@ export function PillarsSection() {
         </span>
         <div>
           <h3 className="mb-4 font-bebas text-3xl tracking-wide">
-            O 3 NAO E UM NUMERO.
+            O 3 NÃO É UM NÚMERO.
             <br />
-            E O METODO.
+            É O MÉTODO.
           </h3>
           <p className="max-w-lg text-sm leading-relaxed text-muted-foreground">
-            Quando voce ve <strong className="text-lime">CR3SCE</strong> escrito,
-            o 3 no meio nao e enfeite. Ele representa os{" "}
+            Quando você vê <strong className="text-lime">CR3SCE</strong> escrito,
+            o 3 no meio não é enfeite. Ele representa os{" "}
             <strong className="text-foreground">
-              3 pilares que o seu negocio precisa
+              3 pilares que o seu negócio precisa
             </strong>{" "}
             para crescer de verdade no Instagram - e que o CR3SCE entrega todo
-            mes, completo, sem voce precisar pensar nisso. Fala "cresce". Todo
-            mundo entende. Mas quando ve escrito, nunca mais esquece.
+            mês, completo, sem você precisar pensar nisso. Fala "cresce". Todo
+            mundo entende. Mas quando vê escrito, nunca mais esquece.
           </p>
         </div>
       </AnimateOnScroll>

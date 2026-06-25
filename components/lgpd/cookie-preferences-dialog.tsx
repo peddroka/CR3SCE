@@ -54,17 +54,17 @@ export function CookiePreferencesDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-h-[90vh] w-[calc(100%-2rem)] max-w-lg overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Preferencias de cookies</DialogTitle>
+          <DialogTitle>Preferências de cookies</DialogTitle>
           <DialogDescription>
-            Escolha quais cookies voce permite. Para detalhes, veja a{" "}
+            Escolha quais cookies você permite. Para detalhes, veja a{" "}
             <Link
               href="/politica-de-cookies"
               className="text-lime hover:underline"
               onClick={() => onOpenChange(false)}
             >
-              Politica de Cookies
+              Política de Cookies
             </Link>
             .
           </DialogDescription>
@@ -72,21 +72,21 @@ export function CookiePreferencesDialog({
 
         <div className="flex flex-col gap-4 py-2">
           <CategoryRow
-            title="Estritamente necessarios"
-            description="Indispensaveis para autenticacao e funcionamento basico. Nao podem ser desativados."
+            title="Estritamente necessários"
+            description="Indispensáveis para autenticação e funcionamento básico. Não podem ser desativados."
             checked={true}
             disabled
             onChange={() => undefined}
           />
           <CategoryRow
             title="Analytics"
-            description="Metricas agregadas de uso para melhorar o produto."
+            description="Métricas agregadas de uso para melhorar o produto."
             checked={analytics}
             onChange={setAnalytics}
           />
           <CategoryRow
             title="Marketing"
-            description="Mensuracao de campanhas e personalizacao de anuncios."
+            description="Mensuração de campanhas e personalização de anúncios."
             checked={marketing}
             onChange={setMarketing}
           />
@@ -98,7 +98,7 @@ export function CookiePreferencesDialog({
           </Button>
           <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
             <Button variant="outline" onClick={handleSave}>
-              Salvar selecao
+              Salvar seleção
             </Button>
             <Button onClick={handleAcceptAll}>Aceitar todos</Button>
           </div>

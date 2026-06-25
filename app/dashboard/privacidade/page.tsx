@@ -47,7 +47,7 @@ type DeletionRequest = {
 };
 
 const CONSENT_LABELS: Record<string, string> = {
-  privacy_policy: "Politica de Privacidade",
+  privacy_policy: "Política de Privacidade",
   terms_of_use: "Termos de Uso",
   marketing_emails: "E-mails de marketing",
   cookies_analytics: "Cookies de analytics",
@@ -101,7 +101,7 @@ export default function PrivacidadePage() {
       toast.success(granted ? "Consentimento registrado" : "Consentimento revogado");
       await refresh();
     } catch {
-      toast.error("Nao foi possivel atualizar.");
+      toast.error("Não foi possível atualizar.");
     } finally {
       setBusy(null);
     }
@@ -123,7 +123,7 @@ export default function PrivacidadePage() {
       URL.revokeObjectURL(url);
       toast.success("Download iniciado.");
     } catch {
-      toast.error("Nao foi possivel exportar.");
+      toast.error("Não foi possível exportar.");
     } finally {
       setBusy(null);
     }
@@ -138,11 +138,11 @@ export default function PrivacidadePage() {
         body: JSON.stringify({ reason: deletionReason || undefined }),
       });
       if (!res.ok) throw new Error();
-      toast.success("Solicitacao registrada. Voce tem 30 dias para cancelar.");
+      toast.success("Solicitação registrada. Você tem 30 dias para cancelar.");
       setDeletionReason("");
       await refresh();
     } catch {
-      toast.error("Nao foi possivel solicitar a exclusao.");
+      toast.error("Não foi possível solicitar a exclusão.");
     } finally {
       setBusy(null);
     }
@@ -153,10 +153,10 @@ export default function PrivacidadePage() {
     try {
       const res = await fetch("/api/lgpd/delete", { method: "DELETE" });
       if (!res.ok) throw new Error();
-      toast.success("Solicitacao de exclusao cancelada.");
+      toast.success("Solicitação de exclusão cancelada.");
       await refresh();
     } catch {
-      toast.error("Nao foi possivel cancelar.");
+      toast.error("Não foi possível cancelar.");
     } finally {
       setBusy(null);
     }
@@ -184,15 +184,15 @@ export default function PrivacidadePage() {
           </h1>
         </div>
         <p className="max-w-2xl text-sm text-muted-foreground">
-          Aqui voce exerce os direitos previstos no Art. 18 da LGPD: acessar,
+          Aqui você exerce os direitos previstos no Art. 18 da LGPD: acessar,
           corrigir, portar, revogar consentimentos e excluir sua conta. Veja
-          tambem a{" "}
+          também a{" "}
           <Link
             href="/politica-de-privacidade"
             target="_blank"
             className="text-lime hover:underline"
           >
-            Politica de Privacidade
+            Política de Privacidade
           </Link>
           .
         </p>
@@ -209,7 +209,7 @@ export default function PrivacidadePage() {
             </div>
             <p className="text-sm text-muted-foreground">
               Baixe um arquivo JSON com todos os dados que armazenamos sobre
-              voce: cadastro, perfil do negocio, estrategias, consentimentos e
+              você: cadastro, perfil do negócio, estratégias, consentimentos e
               logs de auditoria.
             </p>
             <Button
@@ -236,11 +236,11 @@ export default function PrivacidadePage() {
               </h2>
             </div>
             <p className="text-sm text-muted-foreground">
-              Atualize informacoes do seu negocio, perfil e preferencias na
-              area de configuracoes.
+              Atualize informações do seu negócio, perfil e preferências na
+              área de configurações.
             </p>
             <Button asChild variant="outline" className="w-fit">
-              <Link href="/dashboard/settings">Ir para configuracoes</Link>
+              <Link href="/dashboard/settings">Ir para configurações</Link>
             </Button>
           </CardContent>
         </Card>
@@ -254,7 +254,7 @@ export default function PrivacidadePage() {
               </h2>
             </div>
             <p className="text-sm text-muted-foreground">
-              Revise quais categorias de cookies voce permite.
+              Revise quais categorias de cookies você permite.
             </p>
             <Button
               variant="outline"
@@ -278,8 +278,8 @@ export default function PrivacidadePage() {
             </div>
             <p className="text-sm text-muted-foreground">
               {current.marketing_emails
-                ? "Voce esta recebendo nossos e-mails."
-                : "Voce nao recebe e-mails de marketing."}
+                ? "Você está recebendo nossos e-mails."
+                : "Você não recebe e-mails de marketing."}
             </p>
             <div className="flex items-center gap-3">
               <Switch
@@ -309,15 +309,15 @@ export default function PrivacidadePage() {
             {deletion ? (
               <>
                 <p className="text-sm text-muted-foreground">
-                  Voce solicitou a exclusao em{" "}
+                  Você solicitou a exclusão em{" "}
                   <strong className="text-foreground">
                     {new Date(deletion.requested_at).toLocaleDateString("pt-BR")}
                   </strong>
-                  . A conta sera permanentemente excluida em{" "}
+                  . A conta será permanentemente excluída em{" "}
                   <strong className="text-foreground">
                     {new Date(deletion.scheduled_for).toLocaleDateString("pt-BR")}
                   </strong>
-                  . Voce pode cancelar antes dessa data.
+                  . Você pode cancelar antes dessa data.
                 </p>
                 <Button
                   variant="outline"
@@ -328,30 +328,30 @@ export default function PrivacidadePage() {
                   {busy === "cancel" ? (
                     <Loader2 className="size-4 animate-spin" />
                   ) : null}
-                  Cancelar solicitacao
+                  Cancelar solicitação
                 </Button>
               </>
             ) : (
               <>
                 <p className="text-sm text-muted-foreground">
-                  A exclusao apaga sua conta, perfil, conteudos gerados e
-                  consentimentos. Mantemos somente o estritamente necessario
-                  para obrigacoes legais (ex. dados fiscais por 5 anos).
-                  Apos confirmar, voce tem 30 dias para se arrepender.
+                  A exclusão apaga sua conta, perfil, conteúdos gerados e
+                  consentimentos. Mantemos somente o estritamente necessário
+                  para obrigações legais (ex. dados fiscais por 5 anos).
+                  Após confirmar, você tem 30 dias para se arrepender.
                 </p>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button variant="destructive" className="w-fit">
                       <Trash2 className="size-4" />
-                      Solicitar exclusao
+                      Solicitar exclusão
                     </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
                       <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
                       <AlertDialogDescription>
-                        Sua conta sera agendada para exclusao em 30 dias. Voce
-                        pode contar (opcional) o motivo para nos ajudar a
+                        Sua conta será agendada para exclusão em 30 dias. Você
+                        pode nos contar (opcional) o motivo para nos ajudar a
                         melhorar:
                       </AlertDialogDescription>
                     </AlertDialogHeader>
@@ -372,7 +372,7 @@ export default function PrivacidadePage() {
                         {busy === "delete" ? (
                           <Loader2 className="size-4 animate-spin" />
                         ) : null}
-                        Confirmar exclusao
+                        Confirmar exclusão
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
@@ -387,19 +387,19 @@ export default function PrivacidadePage() {
         <Card>
           <CardContent className="p-6">
             <h2 className="mb-4 text-base font-semibold text-foreground">
-              Historico de consentimentos
+              Histórico de consentimentos
             </h2>
             {history.length === 0 ? (
               <p className="text-sm text-muted-foreground">
                 Nenhum registro ainda.
               </p>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+              <div className="-mx-2 overflow-x-auto px-2">
+                <table className="w-full min-w-[32rem] text-sm">
                   <thead>
                     <tr className="border-b border-border text-left text-xs uppercase tracking-wider text-muted-foreground">
                       <th className="py-2 pr-4">Tipo</th>
-                      <th className="py-2 pr-4">Versao</th>
+                      <th className="py-2 pr-4">Versão</th>
                       <th className="py-2 pr-4">Status</th>
                       <th className="py-2 pr-4">Data</th>
                     </tr>

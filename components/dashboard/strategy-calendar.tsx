@@ -239,22 +239,22 @@ function isStaticPostType(type: string): boolean {
 
 function getContentReason(type: string): string {
   if (isReelsType(type)) {
-    return "Reels tem o maior alcance organico do Instagram. Mesmo seguidores que nao interagem com seus posts veem Reels, o que ajuda a alcancar novos publicos.";
+    return "Reels tem o maior alcance orgânico do Instagram. Mesmo seguidores que não interagem com seus posts veem Reels, o que ajuda a alcançar novos públicos.";
   }
 
   if (isStoriesType(type)) {
-    return "Stories mantem voce presente na mente dos seus seguidores diariamente. Eles fortalecem o relacionamento e geram mais conversas com quem ja te acompanha.";
+    return "Stories mantêm você presente na mente dos seus seguidores diariamente. Eles fortalecem o relacionamento e geram mais conversas com quem já te acompanha.";
   }
 
   if (isCarouselType(type)) {
-    return "Carrosseis geram mais salvamentos. Quando as pessoas salvam, o algoritmo entende que o conteudo tem alto valor e tende a ampliar o alcance.";
+    return "Carrosséis geram mais salvamentos. Quando as pessoas salvam, o algoritmo entende que o conteúdo tem alto valor e tende a ampliar o alcance.";
   }
 
   if (isStaticPostType(type)) {
-    return "Posts estaticos constroem a identidade visual do perfil. Quando alguem visita sua pagina, a grade de posts ajuda a contar a historia da sua marca.";
+    return "Posts estáticos constroem a identidade visual do perfil. Quando alguém visita sua página, a grade de posts ajuda a contar a história da sua marca.";
   }
 
-  return "Lives sao priorizadas pelo algoritmo do Instagram e seus seguidores recebem notificacao automatica. Isso gera confianca por mostrar autenticidade em tempo real.";
+  return "Lives são priorizadas pelo algoritmo do Instagram e seus seguidores recebem notificação automática. Isso gera confiança por mostrar autenticidade em tempo real.";
 }
 
 function getTooltipStyleId(post: Post): string {
@@ -544,7 +544,7 @@ function formatMonthList(months: MonthRef[]) {
   const monthNames = [
     "Janeiro",
     "Fevereiro",
-    "Marco",
+    "Março",
     "Abril",
     "Maio",
     "Junho",
@@ -611,7 +611,7 @@ export function StrategyCalendar({
   const [supabase] = useState(() => createClient());
   const allowedMonths = getCycleMonths(businessCreatedAt);
   const allowedMonthKeys = new Set(allowedMonths.map(getMonthKey));
-  const focusMessage = `Seu plano esta focado em ${formatMonthList(allowedMonths)}. Concentre-se na sua estrategia desses meses por enquanto.`;
+  const focusMessage = `Seu plano está focado em ${formatMonthList(allowedMonths)}. Concentre-se na sua estratégia desses meses por enquanto.`;
   const selectedPostKey = selectedPost ? getPostCacheKey(selectedPost) : null;
   const activeTooltip =
     selectedPostKey && dismissedTooltipKey !== selectedPostKey
@@ -648,7 +648,7 @@ export function StrategyCalendar({
       if (!res.ok || !data || "error" in data) {
         throw new Error(
           (data && "error" in data && data.error) ||
-            "Nao foi possivel gerar a explicacao agora.",
+            "Não foi possível gerar a explicação agora.",
         );
       }
 
@@ -841,7 +841,7 @@ export function StrategyCalendar({
       const { user } = await getUserSafely(supabase);
 
       if (!user) {
-        setCalendarError("Sua sessao expirou. Entre novamente para continuar.");
+        setCalendarError("Sua sessão expirou. Entre novamente para continuar.");
         return;
       }
 
@@ -874,8 +874,8 @@ export function StrategyCalendar({
         setLocalStrategy(null);
       }
     } catch (error) {
-      console.error("Erro ao carregar estrategia:", error);
-      setCalendarError("Nao foi possivel carregar sua estrategia agora.");
+      console.error("Erro ao carregar estratégia:", error);
+      setCalendarError("Não foi possível carregar sua estratégia agora.");
     } finally {
       setLoading(false);
     }
@@ -905,16 +905,16 @@ export function StrategyCalendar({
         | null;
 
       if (!res.ok) {
-        throw new Error(data?.error || "Nao foi possivel gerar a estrategia.");
+        throw new Error(data?.error || "Não foi possível gerar a estratégia.");
       }
 
       await loadMonthStrategy(true);
     } catch (error) {
-      console.error("Erro ao gerar estrategia:", error);
+      console.error("Erro ao gerar estratégia:", error);
       setCalendarError(
         error instanceof Error
           ? error.message
-          : "Nao foi possivel gerar a estrategia agora.",
+          : "Não foi possível gerar a estratégia agora.",
       );
     } finally {
       setGeneratingStrategy(false);
@@ -978,7 +978,7 @@ export function StrategyCalendar({
       );
 
       if (postIndex === -1) {
-        console.error("Post nao encontrado:", post.time, post.content_type);
+        console.error("Post não encontrado:", post.time, post.content_type);
         console.log(
           "Posts no banco:",
           dbPosts.map((p) => `${p.time}-${p.content_type}`),
@@ -1095,11 +1095,11 @@ export function StrategyCalendar({
             </motion.div>
 
             <div className="space-y-2">
-              <h2 className="text-3xl font-bold text-primary">
-                Nenhuma estrategia para {currentMonth}/{currentYear}
+              <h2 className="text-2xl md:text-3xl font-bold text-primary">
+                Nenhuma estratégia para {currentMonth}/{currentYear}
               </h2>
               <p className="text-lg text-muted-foreground">
-                Gere agora o calendario deste mes para continuar.
+                Gere agora o calendário deste mês para continuar.
               </p>
             </div>
 
@@ -1119,7 +1119,7 @@ export function StrategyCalendar({
               ) : (
                 <Sparkles className="size-5" />
               )}
-              {generatingStrategy ? "Gerando estrategia..." : "Gerar estrategia"}
+              {generatingStrategy ? "Gerando estratégia..." : "Gerar estratégia"}
             </Button>
           </CardContent>
         </Card>
@@ -1130,7 +1130,7 @@ export function StrategyCalendar({
   const monthNames = [
     "Janeiro",
     "Fevereiro",
-    "Marco",
+    "Março",
     "Abril",
     "Maio",
     "Junho",
@@ -1162,7 +1162,7 @@ export function StrategyCalendar({
     totalPosts > 0 ? (completedPosts / totalPosts) * 100 : 0;
   const streak = calculateStreak(sortedDays);
 
-  const weekDays = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
+  const weekDays = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
   const firstDayOfMonth = new Date(currentYear, currentMonth - 1, 1).getDay();
   const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
   const isStructuredContent = Boolean(
@@ -1272,7 +1272,7 @@ export function StrategyCalendar({
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium flex items-center gap-2">
                 <CheckCircle2 className="size-4 text-[#C8F135]" />
-                Progresso do mes
+                Progresso do mês
               </span>
               <span className="text-sm text-muted-foreground">
                 {Math.round(completionPercentage)}%
@@ -1521,7 +1521,7 @@ export function StrategyCalendar({
                             )}
                             {post.completed && (
                               <Badge className="bg-green-500 rounded-full px-3">
-                                Concluido
+                                Concluído
                               </Badge>
                             )}
                           </div>
@@ -1572,9 +1572,9 @@ export function StrategyCalendar({
               )}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex items-start justify-between mb-6">
-                <div>
-                  <div className="flex items-center gap-3 mb-2">
+              <div className="flex items-start justify-between gap-3 mb-6">
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2">
                     <h3 className="text-2xl font-bold text-primary">
                       {selectedPost.time}
                     </h3>
@@ -1600,8 +1600,8 @@ export function StrategyCalendar({
                   </p>
                   {selectedPost.is_viral && isReelsType(selectedPost.content_type) && (
                     <p className="mt-3 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-100">
-                      Este conteudo foi especialmente criado para viralizar.
-                      Invista mais tempo na producao.
+                      Este conteúdo foi especialmente criado para viralizar.
+                      Invista mais tempo na produção.
                     </p>
                   )}
                 </div>
@@ -1625,7 +1625,7 @@ export function StrategyCalendar({
                   >
                     <span className="text-sm font-medium text-white flex items-center gap-2">
                       <Sparkles className="size-4 text-primary" />
-                      Titulo do Conteudo
+                      Título do Conteúdo
                     </span>
                     {expandedSections.titulo ? (
                       <ChevronUp className="size-4 text-primary" />
@@ -1652,7 +1652,7 @@ export function StrategyCalendar({
                   >
                     <span className="text-sm font-medium text-white flex items-center gap-2">
                       <Video className="size-4 text-primary" />
-                      Como fazer este conteudo
+                      Como fazer este conteúdo
                     </span>
                     {expandedSections.comoFazer ? (
                       <ChevronUp className="size-4 text-primary" />
@@ -1817,7 +1817,7 @@ export function StrategyCalendar({
                                         </ol>
                                       ) : (
                                         <p className="text-sm leading-relaxed text-[#d1d5db]">
-                                          Grave um video vertical mostrando seu rosto
+                                          Grave um vídeo vertical mostrando seu rosto
                                           e siga este formato com linguagem simples.
                                         </p>
                                       )}
@@ -1913,7 +1913,7 @@ export function StrategyCalendar({
                       {selectedPost.content_type === "Post Estatico" && (
                         <>
                           <p className="text-sm font-medium text-white">
-                            Como criar este Post Estatico:
+                            Como criar este Post Estático:
                           </p>
                           <ol className="space-y-2 text-sm text-[#c0c0c0]">
                             <li className="flex gap-2">
@@ -1922,11 +1922,11 @@ export function StrategyCalendar({
                             </li>
                             <li className="flex gap-2">
                               <span className="shrink-0 font-bold text-[#C8F135]">2.</span>
-                              Use o topico do roteiro como titulo visual da imagem
+                              Use o tópico do roteiro como título visual da imagem
                             </li>
                             <li className="flex gap-2">
                               <span className="shrink-0 font-bold text-[#C8F135]">3.</span>
-                              Texto sobreposto: maximo 20% da imagem
+                              Texto sobreposto: máximo 20% da imagem
                             </li>
                             <li className="flex gap-2">
                               <span className="shrink-0 font-bold text-[#C8F135]">4.</span>
@@ -1938,7 +1938,7 @@ export function StrategyCalendar({
                             </li>
                           </ol>
                           <p className="text-xs text-[#666]">
-                            Dica: imagens com rosto humano geram ate 38% mais engajamento.
+                            Dica: imagens com rosto humano geram até 38% mais engajamento.
                           </p>
                         </>
                       )}
@@ -1950,11 +1950,11 @@ export function StrategyCalendar({
                           <ol className="space-y-2 text-sm text-[#c0c0c0]">
                             <li className="flex gap-2">
                               <span className="shrink-0 font-bold text-[#C8F135]">1.</span>
-                              Avise nos Stories com 24h de antecedencia usando o sticker de contagem regressiva
+                              Avise nos Stories com 24h de antecedência usando o sticker de contagem regressiva
                             </li>
                             <li className="flex gap-2">
                               <span className="shrink-0 font-bold text-[#C8F135]">2.</span>
-                              Prepare os topicos do roteiro acima como pauta
+                              Prepare os tópicos do roteiro acima como pauta
                             </li>
                             <li className="flex gap-2">
                               <span className="shrink-0 font-bold text-[#C8F135]">3.</span>
@@ -1962,15 +1962,15 @@ export function StrategyCalendar({
                             </li>
                             <li className="flex gap-2">
                               <span className="shrink-0 font-bold text-[#C8F135]">4.</span>
-                              Desenvolvimento: siga a pauta do roteiro interagindo com comentarios
+                              Desenvolvimento: siga a pauta do roteiro interagindo com comentários
                             </li>
                             <li className="flex gap-2">
                               <span className="shrink-0 font-bold text-[#C8F135]">5.</span>
-                              Encerramento: agradeca e mencione o proximo conteudo
+                              Encerramento: agradeça e mencione o próximo conteúdo
                             </li>
                           </ol>
                           <p className="text-xs text-[#666]">
-                            Dica: lives com mais de 20 minutos sao priorizadas pelo algoritmo do Instagram.
+                            Dica: lives com mais de 20 minutos são priorizadas pelo algoritmo do Instagram.
                           </p>
                         </>
                       )}
@@ -2169,7 +2169,7 @@ export function StrategyCalendar({
                   <div className="mb-2 flex items-center gap-2">
                     <Sparkles className="size-4 text-blue-400" />
                     <span className="text-sm font-medium text-blue-400">
-                      Por que postar este conteudo?
+                      Por que postar este conteúdo?
                     </span>
                   </div>
                   <p className="text-sm text-white">

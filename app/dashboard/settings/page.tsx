@@ -93,7 +93,7 @@ export default function SettingsPage() {
       const { user } = await getUserSafely(supabase);
 
       if (!user) {
-        throw new Error("Usuario nao autenticado");
+        throw new Error("Usuário não autenticado");
       }
 
       const { error: updateError } = await supabase
@@ -108,7 +108,7 @@ export default function SettingsPage() {
         throw updateError;
       }
 
-      // Audit log nao bloqueante
+      // Audit log não bloqueante
       fetch("/api/lgpd/audit-log", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -125,7 +125,7 @@ export default function SettingsPage() {
       if (err instanceof Error) {
         setError(err.message);
       } else {
-        setError("Nao foi possivel salvar as alteracoes.");
+        setError("Não foi possível salvar as alterações.");
       }
     } finally {
       setSaving(false);
@@ -133,7 +133,7 @@ export default function SettingsPage() {
   };
 
   const goalLabels: Record<string, string> = {
-    visualizacao: "📣 Aumentar visualizacao",
+    visualizacao: "📣 Aumentar visualização",
     identidade: "🧭 Construir identidade",
     engajamento: "🔥 Aumentar engajamento",
     seguidores: "📈 Ganhar seguidores",
@@ -149,12 +149,12 @@ export default function SettingsPage() {
 
   const speedLabels: Record<string, string> = {
     rapido: "🚀 Explosivo (stories, feed, reels e viral no fim de semana)",
-    moderado: "⚡ Moderado (stories diarios, feed diario e reels semanais)",
+    moderado: "⚡ Moderado (stories diários, feed diário e reels semanais)",
     leve: "🌱 Crescimento leve (1-2x semana)",
   };
 
   const styleLabels: Record<string, string> = {
-    humoristico: "😂 Humoristico",
+    humoristico: "😂 Humorístico",
     educativo: "📚 Educativo",
     casual: "😊 Casual",
     formal: "👔 Formal",
@@ -181,10 +181,10 @@ export default function SettingsPage() {
         </div>
         <div>
           <h1 className="text-2xl font-bold text-foreground md:text-3xl">
-            Configuracoes
+            Configurações
           </h1>
           <p className="text-sm text-muted-foreground">
-            Gerencie as informacoes do seu negocio
+            Gerencie as informações do seu negócio
           </p>
         </div>
       </div>
@@ -193,11 +193,11 @@ export default function SettingsPage() {
         <Info className="mt-0.5 size-4 shrink-0 text-[#C8F135]" />
         <div>
           <p className="text-sm font-medium text-[#C8F135]">
-            Campos do negocio bloqueados
+            Campos do negócio bloqueados
           </p>
           <p className="mt-1 text-xs leading-relaxed text-[#888]">
-            As informacoes do negocio so podem ser alteradas uma vez por mes, no
-            periodo de renovacao da assinatura. Voce pode alterar livremente seu
+            As informações do negócio só podem ser alteradas uma vez por mês, no
+            período de renovação da assinatura. Você pode alterar livremente seu
             nome e Instagram a qualquer momento.
           </p>
         </div>
@@ -208,14 +208,14 @@ export default function SettingsPage() {
           <div className="space-y-4">
             <h2 className="flex items-center gap-2 border-b border-border pb-2 text-lg font-semibold">
               <User className="size-4 text-[#C8F135]" />
-              Informacoes Pessoais
+              Informações Pessoais
               <span className="ml-auto rounded-full border border-[#C8F135]/20 bg-[#C8F135]/10 px-2 py-0.5 text-[11px] font-normal text-[#C8F135]">
-                Editavel
+                Editável
               </span>
             </h2>
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="responsible_name">Nome do responsavel</Label>
+                <Label htmlFor="responsible_name">Nome do responsável</Label>
                 <Input
                   id="responsible_name"
                   value={formData.responsible_name}
@@ -256,7 +256,7 @@ export default function SettingsPage() {
           <div className="space-y-4">
             <h2 className="flex items-center gap-2 border-b border-border pb-2 text-lg font-semibold">
               <Store className="size-4 text-[#888]" />
-              Sobre o Negocio
+              Sobre o Negócio
               <span className="ml-auto flex items-center gap-1 rounded-full border border-border bg-white/5 px-2 py-0.5 text-[11px] font-normal text-[#555]">
                 <Lock className="size-2.5" />
                 Bloqueado
@@ -264,22 +264,22 @@ export default function SettingsPage() {
             </h2>
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label className="text-[#888]">Nome do negocio</Label>
+                <Label className="text-[#888]">Nome do negócio</Label>
                 <div className="rounded-md border border-border bg-white/5 px-3 py-2.5 text-sm text-[#666] opacity-60">
-                  {formData.business_name || "Nao informado"}
+                  {formData.business_name || "Não informado"}
                 </div>
               </div>
               <div className="space-y-2">
                 <Label className="text-[#888]">Nicho / Segmento</Label>
                 <div className="rounded-md border border-border bg-white/5 px-3 py-2.5 text-sm text-[#666] opacity-60">
-                  {formData.niche || "Nao informado"}
+                  {formData.niche || "Não informado"}
                 </div>
               </div>
             </div>
             <div className="space-y-2">
-              <Label className="text-[#888]">Publico-alvo</Label>
+              <Label className="text-[#888]">Público-alvo</Label>
               <div className="rounded-md border border-border bg-white/5 px-3 py-2.5 text-sm text-[#666] opacity-60">
-                {formData.target_audience || "Nao informado"}
+                {formData.target_audience || "Não informado"}
               </div>
             </div>
           </div>
@@ -287,7 +287,7 @@ export default function SettingsPage() {
           <div className="space-y-4">
             <h2 className="flex items-center gap-2 border-b border-border pb-2 text-lg font-semibold">
               <Target className="size-4 text-[#888]" />
-              Objetivos e Estrategia
+              Objetivos e Estratégia
               <span className="ml-auto flex items-center gap-1 rounded-full border border-border bg-white/5 px-2 py-0.5 text-[11px] font-normal text-[#555]">
                 <Lock className="size-2.5" />
                 Bloqueado
@@ -311,7 +311,7 @@ export default function SettingsPage() {
                     formData.growth_speed,
                 },
                 {
-                  label: "Estilo de comunicacao",
+                  label: "Estilo de comunicação",
                   value:
                     styleLabels[formData.communication_style] ||
                     formData.communication_style,
@@ -320,7 +320,7 @@ export default function SettingsPage() {
                 <div key={field.label} className="space-y-2">
                   <Label className="text-[#888]">{field.label}</Label>
                   <div className="rounded-md border border-border bg-white/5 px-3 py-2.5 text-sm text-[#666] opacity-60">
-                    {field.value || "Nao informado"}
+                    {field.value || "Não informado"}
                   </div>
                 </div>
               ))}
@@ -338,10 +338,10 @@ export default function SettingsPage() {
             </h2>
             <div className="space-y-2">
               <Label className="text-[#888]">
-                O que voce quer conquistar usando o CR3SCE
+                O que você quer conquistar usando o CR3SCE
               </Label>
               <div className="min-h-[80px] rounded-md border border-border bg-white/5 px-3 py-2.5 text-sm text-[#666] opacity-60">
-                {formData.brand_description || "Nao informado"}
+                {formData.brand_description || "Não informado"}
               </div>
             </div>
           </div>
@@ -358,7 +358,7 @@ export default function SettingsPage() {
                     Plano CR3SCE Pro
                   </p>
                   <p className="text-xs text-[#666]">
-                    R$79,90/mes - Renovacao automatica
+                    R$79,90/mês - Renovação automática
                   </p>
                 </div>
                 <span className="rounded-full border border-[#C8F135]/30 bg-[#C8F135]/10 px-3 py-1 text-xs font-medium text-[#C8F135]">
@@ -368,7 +368,7 @@ export default function SettingsPage() {
               <div className="h-px bg-border" />
               <div className="flex flex-col gap-2 text-xs text-[#666]">
                 {[
-                  "Calendario de 30 dias todo mes",
+                  "Calendário de 30 dias todo mês",
                   "Chat IA ilimitado",
                   "Suporte via WhatsApp",
                   "Cancele quando quiser",

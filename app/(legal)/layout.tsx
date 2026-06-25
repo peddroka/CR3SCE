@@ -11,7 +11,7 @@ export default function LegalLayout({
     <div className="flex min-h-screen flex-col bg-background">
       <header className="border-b border-border bg-background/95 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-4xl items-center justify-between px-6 md:h-20">
-          <Link href="/" aria-label="Voltar a pagina inicial">
+          <Link href="/" aria-label="Voltar à página inicial">
             <Logo size="lg" />
           </Link>
           <div className="flex items-center gap-4 text-sm">
@@ -25,7 +25,7 @@ export default function LegalLayout({
               href="/auth/sign-up"
               className="rounded-lg border border-white/10 bg-primary px-4 py-2 font-semibold text-primary-foreground transition-all hover:bg-[#333]"
             >
-              Comecar
+              Começar
             </Link>
           </div>
         </div>
@@ -41,7 +41,7 @@ export default function LegalLayout({
             href="/politica-de-privacidade"
             className="text-muted-foreground transition-colors hover:text-lime"
           >
-            Politica de Privacidade
+            Política de Privacidade
           </Link>
           <Link
             href="/termos-de-uso"
@@ -53,7 +53,7 @@ export default function LegalLayout({
             href="/politica-de-cookies"
             className="text-muted-foreground transition-colors hover:text-lime"
           >
-            Politica de Cookies
+            Política de Cookies
           </Link>
         </nav>
       </main>

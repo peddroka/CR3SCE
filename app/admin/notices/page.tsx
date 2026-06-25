@@ -314,7 +314,7 @@ export default function AdminNoticesPage() {
                     className="rounded-xl border border-border bg-white/5 p-4"
                   >
                     <div className="flex items-start justify-between gap-3">
-                      <div className="flex-1">
+                      <div className="min-w-0 flex-1">
                         <div className="mb-1 flex flex-wrap items-center gap-2">
                           <Icon className={`size-3.5 ${cfg.color}`} />
                           <p className="font-medium text-white">{notice.title}</p>
@@ -342,7 +342,7 @@ export default function AdminNoticesPage() {
                           </p>
                         )}
                         {notice.link_url && (
-                          <p className="mt-1 text-[11px] text-[#C8F135]">
+                          <p className="mt-1 break-all text-[11px] text-[#C8F135]">
                             {notice.link_url}
                           </p>
                         )}

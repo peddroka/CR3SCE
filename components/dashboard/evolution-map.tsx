@@ -112,7 +112,7 @@ export function EvolutionMap({
                       >
                         {unlocked
                           ? level.title
-                          : `Nivel ${level.level_number} - Bloqueado`}
+                          : `Nível ${level.level_number} - Bloqueado`}
                       </p>
                       {isCurrent && (
                         <span className="rounded-full bg-[#C8F135] px-2 py-0.5 text-[10px] font-bold text-[#111]">
@@ -130,7 +130,7 @@ export function EvolutionMap({
                       </p>
                     ) : (
                       <p className="mt-0.5 text-xs text-[#555]">
-                        Complete o nivel anterior para desbloquear
+                        Complete o nível anterior para desbloquear
                       </p>
                     )}
                   </div>
@@ -173,7 +173,7 @@ export function EvolutionMap({
               initial={{ scale: 0.9, opacity: 0, y: 16 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="relative z-10 w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-2xl"
+              className="relative z-10 max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl border border-border bg-card p-5 shadow-2xl sm:p-6"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="mb-5 text-center">
@@ -198,12 +198,12 @@ export function EvolutionMap({
               {!isLevelCompleted(selectedLevel) ? (
                 <>
                   <p className="mb-3 text-center text-xs font-semibold uppercase tracking-wider text-[#555]">
-                    Escolha uma opcao para concluir este nivel:
+                    Escolha uma opção para concluir este nível:
                   </p>
 
                   {(!selectedLevel.options || selectedLevel.options.length === 0) && (
                     <p className="py-4 text-center text-sm text-[#888]">
-                      Opcoes nao disponiveis. Tente gerar a jornada novamente.
+                      Opções não disponíveis. Tente gerar a jornada novamente.
                     </p>
                   )}
 
@@ -254,18 +254,18 @@ export function EvolutionMap({
                     }}
                     className="w-full bg-[#C8F135] font-semibold text-[#111] hover:bg-[#a8d020] disabled:opacity-50"
                   >
-                    {selectedOption ? "Confirmar escolha" : "Selecione uma opcao"}
+                    {selectedOption ? "Confirmar escolha" : "Selecione uma opção"}
                   </Button>
                 </>
               ) : (
                 <div className="text-center">
                   <div className="mb-4 flex items-center justify-center gap-2 rounded-xl bg-[#C8F135]/10 p-3 text-[#C8F135]">
                     <CheckCircle2 className="size-5" />
-                    <span className="text-sm font-medium">Nivel concluido!</span>
+                    <span className="text-sm font-medium">Nível concluído!</span>
                   </div>
                   {getChosenOption(selectedLevel) && (
                     <p className="text-sm text-[#888]">
-                      Voce escolheu: {getChosenOption(selectedLevel)?.icon}{" "}
+                      Você escolheu: {getChosenOption(selectedLevel)?.icon}{" "}
                       {getChosenOption(selectedLevel)?.title}
                     </p>
                   )}

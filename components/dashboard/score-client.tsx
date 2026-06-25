@@ -497,7 +497,7 @@ export function ScoreClient({
   const analyzeProfile = async () => {
     if (imagePreviews.length === 0) return;
     if (remainingAnalyses <= 0) {
-      setError("Voce atingiu o limite de 4 analises este mes. Volte no mes que vem.");
+      setError("Você atingiu o limite de 4 análises este mês. Volte no mês que vem.");
       return;
     }
 
@@ -746,7 +746,7 @@ export function ScoreClient({
           </div>
 
           <div className="mt-3 flex gap-3">
-            {["Parceiros", "Servicos", "Equipe", "Contato"].map((hlName) => (
+            {["Parceiros", "Serviços", "Equipe", "Contato"].map((hlName) => (
               <div
                 key={hlName}
                 className="flex shrink-0 flex-col items-center gap-1"
@@ -762,7 +762,7 @@ export function ScoreClient({
               Painel profissional
             </p>
             <p className="text-[9px] text-[#0095f6]">
-              {"↗"} 12 visualizacoes nos ultimos 30 dias
+              {"↗"} 12 visualizações nos últimos 30 dias
             </p>
           </div>
 
@@ -818,7 +818,7 @@ export function ScoreClient({
     const [mobileIndex, setMobileIndex] = useState(0);
 
     const handle = business?.instagram_handle || "seuarroba";
-    const name = business?.business_name || "Nome do Negocio";
+    const name = business?.business_name || "Nome do Negócio";
     const niche = business?.niche || "";
     const bestBio = bios?.[0]?.text || "";
 
@@ -841,13 +841,13 @@ export function ScoreClient({
         defaultSuggestion:
           "Use uma foto profissional ou logo com fundo limpo. Evite foto escura ou sem identidade visual clara.",
         defaultExample:
-          "Logo com fundo branco ou colorido solido, sem poluicao visual",
+          "Logo com fundo branco ou colorido sólido, sem poluição visual",
       },
       {
         key: "nome",
-        label: "Nome de exibicao",
+        label: "Nome de exibição",
         imp: getImp(["nome", "exibicao"]),
-        defaultSuggestion: `Adicione sua especialidade no nome. Ex: "${name} | Agencia de Marketing". Isso aparece nas buscas do Instagram.`,
+        defaultSuggestion: `Adicione sua especialidade no nome. Ex: "${name} | Agência de Marketing". Isso aparece nas buscas do Instagram.`,
         defaultExample: `${name} | Marketing Digital`,
       },
       {
@@ -855,17 +855,17 @@ export function ScoreClient({
         label: "Bio",
         imp: getImp(["bio"]),
         defaultSuggestion:
-          "A bio deve ter: o que voce faz, para quem, resultado ou diferencial e um CTA claro.",
+          "A bio deve ter: o que você faz, para quem, resultado ou diferencial e um CTA claro.",
         defaultExample:
           bestBio ||
-          "Ajudamos empresas a crescerem no digital | Trafego pago + Social Media | Fale com a gente 👇",
+          "Ajudamos empresas a crescerem no digital | Tráfego pago + Social Media | Fale com a gente 👇",
       },
       {
         key: "link",
         label: "Link na bio",
         imp: getImp(["link"]),
         defaultSuggestion:
-          "Use o Linktree ou um link direto para WhatsApp. O link e o principal conversor do perfil.",
+          "Use o Linktree ou um link direto para WhatsApp. O link é o principal conversor do perfil.",
         defaultExample: `wa.me/55xx9xxxx-xxxx ou linktr.ee/${handle}`,
       },
       {
@@ -873,8 +873,8 @@ export function ScoreClient({
         label: "Destaques",
         imp: getImp(["destaque", "highlight"]),
         defaultSuggestion:
-          "Organize os destaques com capas personalizadas. Categorias essenciais para agencias:",
-        defaultExample: "Parceiros | Servicos | Cases | Equipe | Contato",
+          "Organize os destaques com capas personalizadas. Categorias essenciais para agências:",
+        defaultExample: "Parceiros | Serviços | Cases | Equipe | Contato",
       },
     ].map((a) => ({
       key: a.key,
@@ -1009,7 +1009,7 @@ export function ScoreClient({
                   disabled={mobileIndex === allAnnotations.length - 1}
                   className="flex items-center gap-1 rounded-xl border border-border bg-white/5 px-4 py-2 text-xs text-white disabled:opacity-30"
                 >
-                  Proxima
+                  Próxima
                   <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
                     <path
                       d="M2 6 C6 3, 10 2, 14 6 M14 6 L10 3 M14 6 L10 9"
@@ -1257,19 +1257,19 @@ export function ScoreClient({
       animate={{ opacity: 1, y: 0 }}
       className="mx-auto flex max-w-2xl flex-col gap-6 pb-12"
     >
-      <div className="flex items-start justify-between">
-        <div>
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
           <h1 className="flex items-center gap-2 text-2xl font-bold text-white md:text-3xl">
-            <Star className="size-7 text-[#C8F135]" />
+            <Star className="size-7 shrink-0 text-[#C8F135]" />
             Score do Perfil
           </h1>
           <p className="mt-1 text-sm text-[#888]">
-            A IA analisa seu perfil e gera diagnostico completo com sugestoes de
+            A IA analisa seu perfil e gera diagnóstico completo com sugestões de
             melhoria.
           </p>
         </div>
         <div
-          className={`flex flex-col items-center rounded-xl border px-4 py-2 text-center ${
+          className={`flex shrink-0 flex-col items-center rounded-xl border px-4 py-2 text-center ${
             remainingAnalyses > 0
               ? "border-[#C8F135]/20 bg-[#C8F135]/5"
               : "border-red-500/20 bg-red-500/5"
@@ -1282,8 +1282,8 @@ export function ScoreClient({
           >
             {remainingAnalyses}
           </p>
-          <p className="text-[10px] text-[#888]">analises restantes</p>
-          <p className="text-[10px] text-[#555]">este mes</p>
+          <p className="text-[10px] text-[#888]">análises restantes</p>
+          <p className="text-[10px] text-[#555]">este mês</p>
         </div>
       </div>
 
@@ -1298,8 +1298,8 @@ export function ScoreClient({
             )}
           </div>
           <p className="text-xs leading-relaxed text-[#888]">
-            A analise verifica nome de pesquisa, bio, foto ou logo, link de contato,
-            quantidade de posts e, se houver painel profissional, tambem as metricas.
+            A análise verifica nome de pesquisa, bio, foto ou logo, link de contato,
+            quantidade de posts e, se houver painel profissional, também as métricas.
           </p>
 
           <input
@@ -1413,8 +1413,8 @@ export function ScoreClient({
             className="h-[3px]"
             style={{ background: getScoreColor(getDisplayScore(result)) }}
           />
-          <CardContent className="p-6">
-            <div className="flex items-center gap-6">
+          <CardContent className="p-4 md:p-6">
+            <div className="flex items-center gap-4 md:gap-6">
               <div className="relative flex size-24 shrink-0 items-center justify-center">
                 <svg className="size-24 -rotate-90" viewBox="0 0 100 100">
                   <circle
@@ -1499,7 +1499,7 @@ export function ScoreClient({
 
       {result?.criterios && result.criterios.length > 0 && (
         <Card className="rounded-xl border border-border bg-card">
-          <CardContent className="space-y-4 p-6">
+          <CardContent className="space-y-4 p-4 md:p-6">
             <div>
               <p className="text-sm font-semibold text-white">Critérios analisados</p>
               <p className="mt-1 text-xs text-[#888]">
@@ -1550,7 +1550,7 @@ export function ScoreClient({
 
       {result && ((result.melhorias_prioritarias?.length || 0) > 0 || (result.pontos_fortes?.length || 0) > 0 || result.proximos_passos) && (
         <Card className="rounded-xl border border-border bg-card">
-          <CardContent className="space-y-5 p-6">
+          <CardContent className="space-y-5 p-4 md:p-6">
             {(result.melhorias_prioritarias?.length || 0) > 0 && (
               <div className="space-y-3">
                 <p className="text-sm font-semibold text-white">Melhorias prioritárias</p>
@@ -1618,7 +1618,7 @@ export function ScoreClient({
 
       {result && (
         <Card className="rounded-xl border border-border bg-card">
-          <CardContent className="p-6">
+          <CardContent className="p-4 md:p-6">
             <InstagramMockupV2
               business={business}
               improvements={result.improvements || []}
@@ -1635,7 +1635,7 @@ export function ScoreClient({
           className="flex items-center justify-center gap-2 rounded-xl border border-border bg-white/5 p-3 text-sm text-[#888] transition-all hover:bg-white/10 hover:text-white"
         >
           <Upload className="size-4" />
-          Enviar novo print para comparar evolucao ({remainingAnalyses} analises
+          Enviar novo print para comparar evolução ({remainingAnalyses} análises
           restantes)
         </button>
       )}

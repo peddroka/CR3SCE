@@ -521,9 +521,9 @@ export function VideoEditorClient({
       {/* Header */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-[#C8F135]/20 bg-[#C8F135]/10 px-3 py-1 text-xs font-medium text-[#C8F135]">
-            <Clapperboard className="size-3.5" />
-            Studio de edição com IA · {businessName}
+          <div className="mb-3 inline-flex max-w-full items-center gap-2 rounded-full border border-[#C8F135]/20 bg-[#C8F135]/10 px-3 py-1 text-xs font-medium text-[#C8F135]">
+            <Clapperboard className="size-3.5 shrink-0" />
+            <span className="truncate">Studio de edição com IA · {businessName}</span>
           </div>
           <h1 className="flex items-center gap-2 text-3xl font-bold text-white md:text-4xl">
             Editar Vídeo

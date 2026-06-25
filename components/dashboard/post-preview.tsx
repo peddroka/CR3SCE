@@ -68,20 +68,23 @@ function pickColors(palette?: PostPalette[]): Colors {
   };
 }
 
+// Tamanhos escalam com a largura do container (cqw) usando ~420px como referência,
+// para a prévia não estourar/cortar em telas estreitas. clamp() preserva a proporção
+// original no desktop e impede que fique grande demais.
 function hookFontSize(text: string): string {
   const len = text.trim().length;
-  if (len < 24) return "84px";
-  if (len < 48) return "64px";
-  if (len < 80) return "48px";
-  if (len < 120) return "36px";
-  return "28px";
+  if (len < 24) return "clamp(40px, 20cqw, 84px)";
+  if (len < 48) return "clamp(32px, 15.2cqw, 64px)";
+  if (len < 80) return "clamp(24px, 11.4cqw, 48px)";
+  if (len < 120) return "clamp(20px, 8.6cqw, 36px)";
+  return "clamp(16px, 6.7cqw, 28px)";
 }
 
 function slideTitleSize(text: string): string {
   const len = text.trim().length;
-  if (len < 24) return "44px";
-  if (len < 48) return "32px";
-  return "24px";
+  if (len < 24) return "clamp(24px, 10.5cqw, 44px)";
+  if (len < 48) return "clamp(18px, 7.6cqw, 32px)";
+  return "clamp(16px, 5.7cqw, 24px)";
 }
 
 type Props = {
@@ -121,6 +124,7 @@ export const PostPreview = forwardRef<HTMLDivElement, Props>(function PostPrevie
     color: colors.texto,
     aspectRatio: "4 / 5",
     fontFamily: "var(--font-inter), system-ui, sans-serif",
+    containerType: "inline-size",
   } as React.CSSProperties;
 
   return (
@@ -448,7 +452,7 @@ function LayoutSwissGrid({
             className="text-[10px] font-semibold uppercase tracking-[0.2em]"
             style={{ color: colors.secundaria }}
           >
-            indice / 01
+            índice / 01
           </span>
         </div>
       </div>

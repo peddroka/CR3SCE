@@ -115,7 +115,7 @@ export function AdminModals({ data }: AdminModalsProps) {
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="relative z-10 w-full max-w-lg rounded-2xl border border-border bg-[#0e0e0e] p-6 shadow-2xl"
+              className="relative z-10 flex max-h-[90vh] w-full max-w-lg flex-col rounded-2xl border border-border bg-[#0e0e0e] p-4 shadow-2xl sm:p-6"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="mb-4 flex items-center justify-between">
@@ -131,18 +131,18 @@ export function AdminModals({ data }: AdminModalsProps) {
                 </button>
               </div>
 
-              <div className="flex max-h-96 flex-col gap-2 overflow-y-auto">
+              <div className="flex max-h-96 min-h-0 flex-1 flex-col gap-2 overflow-y-auto">
                 {currentModal.users.length === 0 ? (
                   <p className="py-8 text-center text-sm text-[#555]">Nenhum usuário neste período</p>
                 ) : (
                   currentModal.users.map((user, i) => (
                     <div
                       key={i}
-                      className="flex items-center justify-between rounded-lg border border-border bg-white/5 px-3 py-2"
+                      className="flex items-center justify-between gap-3 rounded-lg border border-border bg-white/5 px-3 py-2"
                     >
-                      <p className="text-sm text-white">{user.email}</p>
+                      <p className="min-w-0 break-words text-sm text-white">{user.email}</p>
                       {user.created_at && (
-                        <p className="text-[11px] text-[#555]">
+                        <p className="shrink-0 text-[11px] text-[#555]">
                           {new Date(user.created_at).toLocaleDateString("pt-BR", {
                             day: "2-digit",
                             month: "2-digit",

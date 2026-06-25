@@ -89,7 +89,7 @@ export function DashboardHome({
   const firstName =
     business?.responsible_name?.split(" ")[0] ||
     profile?.full_name?.split(" ")[0] ||
-    "Usuario";
+    "Usuário";
   const today = new Date();
   const currentMonth = today.getMonth() + 1;
   const currentYear = today.getFullYear();
@@ -119,7 +119,7 @@ export function DashboardHome({
       icon: CheckCircle2,
       value: completedPosts,
       label: "Posts feitos",
-      sub: `de ${totalPosts} no mes`,
+      sub: `de ${totalPosts} no mês`,
     },
     {
       icon: Flame,
@@ -132,14 +132,14 @@ export function DashboardHome({
       icon: TrendingUp,
       value: `${progress}%`,
       label: "Progresso",
-      sub: progress >= 50 ? "Mais da metade!" : "Vamos la!",
+      sub: progress >= 50 ? "Mais da metade!" : "Vamos lá!",
     },
   ];
 
   const getMainGoalLabel = (goal: string) =>
     (
       {
-        visualizacao: "Aumentar visualizacao",
+        visualizacao: "Aumentar visualização",
         identidade: "Construir identidade",
         engajamento: "Aumentar engajamento",
         seguidores: "Ganhar seguidores",
@@ -170,7 +170,7 @@ export function DashboardHome({
       >
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
-            Ola, {firstName}!
+            Olá, {firstName}!
           </h1>
           <p className="text-sm text-muted-foreground">
             Bem-vindo ao seu painel de marketing inteligente.
@@ -209,7 +209,7 @@ export function DashboardHome({
                         {business.growth_speed === "rapido" &&
                           "Explosivo (stories, feed, reels e viral no fim de semana)"}
                         {business.growth_speed === "moderado" &&
-                          "Moderado (stories diarios, feed diario e reels semanais)"}
+                          "Moderado (stories diários, feed diário e reels semanais)"}
                         {business.growth_speed === "leve" &&
                           "Leve (2-3x por semana)"}
                       </p>
@@ -352,12 +352,12 @@ export function DashboardHome({
                     </p>
                     <p className="text-sm leading-relaxed text-[#c0c0c0]">
                       {progress < 30
-                        ? "Poste nos primeiros 3 dias da semana para ativar o algoritmo. Consistencia no inicio da semana gera mais alcance."
+                        ? "Poste nos primeiros 3 dias da semana para ativar o algoritmo. Consistência no início da semana gera mais alcance."
                         : progress < 60
-                          ? "Voce esta indo bem! Interaja com os comentarios dos seus posts nas primeiras horas apos publicar. Isso ajuda o alcance."
+                          ? "Você está indo bem! Interaja com os comentários dos seus posts nas primeiras horas após publicar. Isso ajuda o alcance."
                           : progress < 90
-                            ? "Reta final do mes! Reels costumam entregar mais alcance que posts estaticos. Priorize video nesta fase."
-                            : "Mes quase completo! Compartilhe um resultado real que voce teve neste mes nos Stories. Prova social converte muito."}
+                            ? "Reta final do mês! Reels costumam entregar mais alcance que posts estáticos. Priorize vídeo nesta fase."
+                            : "Mês quase completo! Compartilhe um resultado real que você teve neste mês nos Stories. Prova social converte muito."}
                     </p>
                   </div>
                 </div>

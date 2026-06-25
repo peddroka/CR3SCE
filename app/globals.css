@@ -85,6 +85,20 @@
     overflow-y: scroll;
   }
 
+  /* Scroll-snap imersivo — escopado à landing (classe aplicada via JS) */
+  html.landing-snap {
+    scroll-snap-type: y proximity;
+    scroll-padding-top: 5rem;
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html.landing-snap {
+      scroll-snap-type: none;
+      scroll-behavior: auto;
+    }
+  }
+
   body {
     @apply bg-background text-foreground;
   }

@@ -137,7 +137,6 @@ export function CasesSection() {
 
   return (
     <section
-      id="cases"
       className="mx-auto max-w-6xl px-6 py-20 md:px-12 md:py-32 lg:px-16 lg:py-40"
     >
       <AnimateOnScroll className="mb-14 md:mb-20">
@@ -196,7 +195,7 @@ export function CasesSection() {
             className="max-h-[90vh] w-full max-w-lg overflow-y-auto border border-border bg-card animate-in zoom-in-95 duration-200"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-start justify-between border-b border-border p-8">
+            <div className="flex items-start justify-between border-b border-border p-6 md:p-8">
               <div>
                 <p className="mb-2 text-[10px] font-medium uppercase tracking-widest text-lime">
                   {selected.tag}
@@ -210,11 +209,11 @@ export function CasesSection() {
                 <X className="size-5" />
               </button>
             </div>
-            <div className="p-8">
+            <div className="p-6 md:p-8">
               <div className="mb-8 grid grid-cols-3 gap-px bg-border">
                 {selected.stats.map((s, i) => (
-                  <div key={i} className="bg-secondary p-5 text-center">
-                    <p className="font-bebas text-3xl text-lime">{s.num}</p>
+                  <div key={i} className="bg-secondary p-3 text-center md:p-5">
+                    <p className="font-bebas text-2xl text-lime md:text-3xl">{s.num}</p>
                     <p className="mt-1 text-[10px] uppercase tracking-wider text-muted-foreground">
                       {s.label}
                     </p>

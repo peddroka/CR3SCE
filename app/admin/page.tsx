@@ -256,10 +256,10 @@ export default async function AdminPage() {
                 {usersWithoutStrategy.slice(0, 10).map((u) => (
                   <div
                     key={u.id}
-                    className="flex items-center justify-between text-xs"
+                    className="flex items-center justify-between gap-2 text-xs"
                   >
-                    <span className="text-[#888]">{u.email}</span>
-                    <span className="text-[#555]">
+                    <span className="min-w-0 truncate text-[#888]">{u.email}</span>
+                    <span className="shrink-0 text-[#555]">
                       {u.created_at
                         ? new Date(u.created_at).toLocaleDateString("pt-BR")
                         : "—"}
@@ -293,10 +293,10 @@ export default async function AdminPage() {
               {noticeRows.map((notice) => (
                 <div
                   key={notice.id}
-                  className="flex items-start justify-between rounded-lg border border-border bg-white/5 p-3"
+                  className="flex items-start justify-between gap-3 rounded-lg border border-border bg-white/5 p-3"
                 >
-                  <div>
-                    <p className="text-sm font-medium text-white">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium text-white">
                       {notice.title}
                     </p>
                     <p className="text-xs text-[#666]">
@@ -326,10 +326,10 @@ export default async function AdminPage() {
             {recentUsers.map((user) => (
               <div
                 key={user.id}
-                className="flex items-center justify-between border-b border-border/50 pb-2"
+                className="flex items-center justify-between gap-3 border-b border-border/50 pb-2"
               >
-                <div>
-                  <p className="text-sm text-white">{user.email}</p>
+                <div className="min-w-0">
+                  <p className="truncate text-sm text-white">{user.email}</p>
                   <p className="text-[11px] text-[#555]">
                     {user.created_at
                       ? new Date(user.created_at).toLocaleDateString("pt-BR", {
@@ -342,7 +342,7 @@ export default async function AdminPage() {
                       : "—"}
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex shrink-0 items-center gap-2">
                   {usersWithStrategy.has(user.id) && (
                     <span className="rounded-full bg-blue-500/10 px-2 py-0.5 text-[10px] text-blue-400">
                       estratégia

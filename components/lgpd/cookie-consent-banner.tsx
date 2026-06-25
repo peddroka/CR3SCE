@@ -26,7 +26,7 @@ export function CookieConsentBanner() {
       setInitial(stored.categories);
     }
 
-    // Permite reabrir via evento global (link no rodape)
+    // Permite reabrir via evento global (link no rodapé)
     function handleOpenPrefs() {
       const current = getStoredConsent();
       setInitial(current?.categories ?? DEFAULT_CONSENT);
@@ -58,31 +58,31 @@ export function CookieConsentBanner() {
           role="dialog"
           aria-label="Aviso de cookies"
           aria-live="polite"
-          className="fixed inset-x-0 bottom-0 z-[60] border-t border-border bg-background/95 p-4 shadow-2xl backdrop-blur-xl md:p-6"
+          className="fixed inset-x-0 bottom-0 z-[60] max-h-[85vh] overflow-y-auto border-t border-border bg-background/95 p-4 shadow-2xl backdrop-blur-xl md:p-6"
         >
           <div className="mx-auto flex max-w-6xl flex-col gap-4 md:flex-row md:items-start md:gap-6">
-            <div className="flex items-start gap-3">
+            <div className="flex items-start gap-3 pr-8 md:pr-0">
               <Cookie className="mt-0.5 size-5 shrink-0 text-lime" />
               <div className="flex-1">
                 <p className="text-sm font-semibold text-foreground">
-                  Usamos cookies para melhorar sua experiencia
+                  Usamos cookies para melhorar sua experiência
                 </p>
                 <p className="mt-1 text-xs text-muted-foreground md:text-sm">
-                  Usamos cookies essenciais para autenticacao e, mediante seu
-                  consentimento, cookies de analytics e marketing. Voce pode
+                  Usamos cookies essenciais para autenticação e, mediante seu
+                  consentimento, cookies de analytics e marketing. Você pode
                   personalizar a qualquer momento. Veja a{" "}
                   <Link
                     href="/politica-de-cookies"
                     className="text-lime hover:underline"
                   >
-                    Politica de Cookies
+                    Política de Cookies
                   </Link>{" "}
                   e a{" "}
                   <Link
                     href="/politica-de-privacidade"
                     className="text-lime hover:underline"
                   >
-                    Politica de Privacidade
+                    Política de Privacidade
                   </Link>
                   .
                 </p>
@@ -117,7 +117,7 @@ export function CookieConsentBanner() {
               type="button"
               onClick={handleRejectAll}
               aria-label="Fechar (equivale a apenas essenciais)"
-              className="absolute right-3 top-3 rounded-full p-1 text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground md:hidden"
+              className="absolute right-2 top-2 flex size-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground md:hidden"
             >
               <X className="size-4" />
             </button>

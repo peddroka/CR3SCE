@@ -3,7 +3,7 @@
 import { AnimateOnScroll } from "@/components/ui/animate";
 
 const stats = [
-  { num: "340+", label: "Empreendedores ativos" },
+  { num: "47+", label: "Empreendedores ativos" },
   { num: "30", label: "Dias de conteúdo por mês" },
   { num: "3x", label: "Mais engajamento médio" },
 ];

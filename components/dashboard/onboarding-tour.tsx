@@ -33,34 +33,34 @@ const TOUR_STEPS: TourStep[] = [
     emoji: "👋",
     title: "Bem-vindo ao CR3SCE!",
     description:
-      "Esta e sua pagina inicial. Aqui voce acompanha seu progresso, ve a dica do dia e conversa com sua IA pessoal de marketing.",
+      "Esta é sua página inicial. Aqui você acompanha seu progresso, vê a dica do dia e conversa com sua IA pessoal de marketing.",
     targetId: "nav-inicio",
     arrowDir: "left",
     modalSide: "right",
   },
   {
     emoji: "📅",
-    title: "Calendario de Conteudo",
+    title: "Calendário de Conteúdo",
     description:
-      "No Calendario voce encontra todos os posts do mes com roteiro completo, horario estrategico e hashtags personalizadas.",
+      "No Calendário você encontra todos os posts do mês com roteiro completo, horário estratégico e hashtags personalizadas.",
     targetId: "nav-calendario",
     arrowDir: "left",
     modalSide: "right",
   },
   {
     emoji: "🗺️",
-    title: "Jornada de Evolucao",
+    title: "Jornada de Evolução",
     description:
-      "Na Evolucao voce acompanha sua jornada de crescimento. Complete missoes em ordem para desbloquear as proximas fases.",
+      "Na Evolução você acompanha sua jornada de crescimento. Complete missões em ordem para desbloquear as próximas fases.",
     targetId: "nav-evolucao",
     arrowDir: "left",
     modalSide: "right",
   },
   {
     emoji: "⚡",
-    title: "Modo Tendencia",
+    title: "Modo Tendência",
     description:
-      "Veja o que esta bombando no seu nicho agora e receba ideias prontas de conteudo viral para postar.",
+      "Veja o que está bombando no seu nicho agora e receba ideias prontas de conteúdo viral para postar.",
     targetId: "nav-tendencia",
     arrowDir: "left",
     modalSide: "right",
@@ -69,7 +69,7 @@ const TOUR_STEPS: TourStep[] = [
     emoji: "🏆",
     title: "Suas Conquistas",
     description:
-      "Acompanhe seu progresso, desbloqueie conquistas e veja um relatorio completo da sua evolucao.",
+      "Acompanhe seu progresso, desbloqueie conquistas e veja um relatório completo da sua evolução.",
     targetId: "nav-conquistas",
     arrowDir: "left",
     modalSide: "right",
@@ -78,16 +78,16 @@ const TOUR_STEPS: TourStep[] = [
     emoji: "⭐",
     title: "Score do Perfil",
     description:
-      "A IA analisa o print da sua bio do Instagram e da uma nota de 0 a 100 com diagnostico completo e 3 opcoes de bio otimizada para o seu nicho.",
+      "A IA analisa o print da sua bio do Instagram e dá uma nota de 0 a 100 com diagnóstico completo e 3 opções de bio otimizada para o seu nicho.",
     targetId: "nav-score",
     arrowDir: "left",
     modalSide: "right",
   },
   {
     emoji: "⚙️",
-    title: "Configuracoes",
+    title: "Configurações",
     description:
-      "Edite seu nome e Instagram. As informacoes do negocio sao atualizadas na renovacao mensal.",
+      "Edite seu nome e Instagram. As informações do negócio são atualizadas na renovação mensal.",
     targetId: "nav-configuracoes",
     arrowDir: "left",
     modalSide: "right",
@@ -96,16 +96,16 @@ const TOUR_STEPS: TourStep[] = [
     emoji: "🤖",
     title: "Sua IA Pessoal",
     description:
-      "Logo abaixo nesta pagina voce tem acesso direto a sua IA. Peca ideias, tire duvidas de marketing — ela conhece o seu negocio.",
+      "Logo abaixo nesta página você tem acesso direto à sua IA. Peça ideias, tire dúvidas de marketing — ela conhece o seu negócio.",
     targetId: "inline-chat-section",
     arrowDir: "down",
     modalSide: "center",
   },
   {
     emoji: "🚀",
-    title: "Sua sequencia de posts",
+    title: "Sua sequência de posts",
     description:
-      "O foguete mostra quantos dias seguidos voce esta postando. Quanto mais dias consecutivos, mais forte fica o foguete. Mantenha a sequencia para o algoritmo te favorecer!",
+      "O foguete mostra quantos dias seguidos você está postando. Quanto mais dias consecutivos, mais forte fica o foguete. Mantenha a sequência para o algoritmo te favorecer!",
     targetId: "streak-indicator",
     arrowDir: "right",
     modalSide: "left",
@@ -114,7 +114,7 @@ const TOUR_STEPS: TourStep[] = [
     emoji: "💬",
     title: "Suporte CR3SCE",
     description:
-      "O botao verde no canto inferior direito e o suporte. Qualquer duvida sobre a plataforma, clique nele.",
+      "O botão verde no canto inferior direito é o suporte. Qualquer dúvida sobre a plataforma, clique nele.",
     targetId: "support-button",
     arrowDir: "down-right",
     modalSide: "left",
@@ -122,10 +122,10 @@ const TOUR_STEPS: TourStep[] = [
 ];
 
 const MOBILE_SIDEBAR_ITEMS = [
-  { id: "nav-inicio", label: "Inicio", icon: Home },
-  { id: "nav-calendario", label: "Calendario", icon: CalendarDays },
+  { id: "nav-inicio", label: "Início", icon: Home },
+  { id: "nav-calendario", label: "Calendário", icon: CalendarDays },
   { id: "nav-evolucao", label: "Jornada", icon: Target },
-  { id: "nav-tendencia", label: "Tendencia", icon: TrendingUp },
+  { id: "nav-tendencia", label: "Tendência", icon: TrendingUp },
   { id: "nav-conquistas", label: "Conquistas", icon: Medal },
   { id: "nav-score", label: "Score", icon: Gauge },
   { id: "nav-configuracoes", label: "Ajustes", icon: Settings },
@@ -169,7 +169,7 @@ function MobileSidebarPreview({ activeId }: { activeId: string }) {
             {MOBILE_SIDEBAR_ITEMS.find((item) => item.id === activeId)?.label}
           </p>
           <p className="mt-1 text-[11px] leading-relaxed text-[#b9b9b9]">
-            Esse icone leva voce para esta area.
+            Esse ícone leva você para esta área.
           </p>
         </div>
         <div className="ml-2 mt-2 h-10 w-10 rotate-[18deg] rounded-full border-l-2 border-t-2 border-[#C8F135]" />
@@ -354,7 +354,7 @@ export function OnboardingTour() {
       window.dispatchEvent(
         new CustomEvent("show-tip", {
           detail: {
-            message: "Dica: grave todos os conteudos antes e va postando aos poucos. Isso otimiza seu tempo e mantem consistencia!",
+            message: "Dica: grave todos os conteúdos antes e vá postando aos poucos. Isso otimiza seu tempo e mantém consistência!",
           },
         }),
       );
@@ -492,8 +492,8 @@ export function OnboardingTour() {
               zIndex: 302,
               width: isMobile ? undefined : 340,
             }}
-            className={`overflow-hidden border border-border bg-card shadow-2xl ${
-              isMobile ? "rounded-[28px]" : "rounded-2xl"
+            className={`border border-border bg-card shadow-2xl ${
+              isMobile ? "overflow-y-auto rounded-[28px]" : "overflow-hidden rounded-2xl"
             }`}
             onClick={(e) => e.stopPropagation()}
           >

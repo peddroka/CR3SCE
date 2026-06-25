@@ -14,7 +14,7 @@ export function CookiePreferencesLink({ className }: { className?: string }) {
         "w-fit text-left text-sm text-muted-foreground transition-colors hover:text-lime"
       }
     >
-      Preferencias de cookies
+      Preferências de cookies
     </button>
   );
 }

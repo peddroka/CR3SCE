@@ -62,10 +62,10 @@ function normalizeOption(
 
 const LIMIT = 10;
 const MESSAGES = [
-  "Buscando o melhor fundo para o seu negocio...",
+  "Buscando o melhor fundo para o seu negócio...",
   "Aplicando sua identidade visual...",
   "Compondo o layout...",
-  "Adicionando iluminacao e textura...",
+  "Adicionando iluminação e textura...",
   "Finalizando os detalhes...",
 ];
 const STAGES = [14, 32, 51, 73, 91];
@@ -139,7 +139,7 @@ export function ImageCreatorClient({
 
   const preview = images[format] || images[primaryFormat] || null;
   const formatLabel = format === "feed" ? "Feed 1:1" : "Story 9:16";
-  const counterLabel = `${remaining}/${limit} geracoes restantes nesta hora`;
+  const counterLabel = `${remaining}/${limit} gerações restantes nesta hora`;
 
   useEffect(() => {
     setPrompt(initialPrompt ?? "");
@@ -246,7 +246,7 @@ export function ImageCreatorClient({
         requestError instanceof DOMException &&
         requestError.name === "AbortError"
       ) {
-        setError("A geracao demorou mais de 30 segundos. Tente novamente.");
+        setError("A geração demorou mais de 30 segundos. Tente novamente.");
       } else {
         setError(getErrorMessage(requestError));
       }
@@ -273,7 +273,7 @@ export function ImageCreatorClient({
         elements?: Array<string | ImageOption>;
         error?: string;
       };
-      if (!res.ok) throw new Error(data.error || "Erro ao carregar opcoes.");
+      if (!res.ok) throw new Error(data.error || "Erro ao carregar opções.");
       setBgOptions(
         (data.backgrounds ?? []).map((item, index) =>
           normalizeOption(item, "bg", index),
@@ -708,7 +708,7 @@ export function ImageCreatorClient({
                     Voltar ao Calendário
                   </Button>
                 </div>
-                <p className="text-center text-xs text-[#7f7f7f]">{remaining} geracoes restantes nesta hora.</p>
+                <p className="text-center text-xs text-[#7f7f7f]">{remaining} gerações restantes nesta hora.</p>
               </motion.div>
             )}
 

@@ -91,7 +91,7 @@ export function TrendsClient({ business }: Props) {
         throw new Error(
           typeof data?.error === "string"
             ? data.error
-            : "Nao foi possivel buscar trends agora.",
+            : "Não foi possível buscar trends agora.",
         );
       }
 
@@ -101,13 +101,13 @@ export function TrendsClient({ business }: Props) {
           typeof data.updated_at === "string" ? new Date(data.updated_at) : new Date(),
         );
       } else {
-        throw new Error("Nenhuma trend valida foi retornada.");
+        throw new Error("Nenhuma trend válida foi retornada.");
       }
     } catch (fetchError) {
       const message =
         fetchError instanceof Error
           ? fetchError.message
-          : "Nao foi possivel buscar trends agora.";
+          : "Não foi possível buscar trends agora.";
       setError(normalizeText(message));
     } finally {
       setLoading(false);
@@ -301,7 +301,7 @@ export function TrendsClient({ business }: Props) {
               initial={{ scale: 0.94, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.94, opacity: 0 }}
-              className="relative z-10 w-full max-w-2xl rounded-2xl border border-border bg-card p-6 shadow-2xl"
+              className="relative z-10 max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-border bg-card p-5 shadow-2xl sm:p-6"
               onClick={(event) => event.stopPropagation()}
             >
               <button

@@ -106,12 +106,12 @@ export function NoticeModal() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ type: "spring", stiffness: 350, damping: 28 }}
-            className="relative z-10 w-full max-w-md overflow-hidden rounded-2xl border border-border bg-card shadow-2xl"
+            className="relative z-10 max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl border border-border bg-card shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="h-1 bg-[#C8F135]" />
 
-            <div className="p-6">
+            <div className="p-5 sm:p-6">
               {notices.length > 1 && (
                 <p className="mb-2 text-[10px] font-semibold uppercase tracking-widest text-[#555]">
                   Aviso {currentIndex + 1} de {notices.length}
@@ -138,7 +138,7 @@ export function NoticeModal() {
                 <div
                   className={`mb-6 inline-block rounded-lg border border-dashed px-4 py-2 ${config.codeBorder}`}
                 >
-                  <p className="font-mono text-lg font-bold tracking-widest">
+                  <p className="break-all font-mono text-lg font-bold tracking-widest">
                     {current.promo_code}
                   </p>
                 </div>

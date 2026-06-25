@@ -194,10 +194,10 @@ export default function LoginPage() {
               <AlertCircle className="mt-0.5 size-5 shrink-0 text-yellow-500" />
               <div className="flex-1 text-yellow-100">
                 <p className="font-semibold text-yellow-300">
-                  Supabase nao configurado
+                  Supabase não configurado
                 </p>
                 <p className="mt-1 leading-relaxed text-yellow-100/80">
-                  Para fazer login voce precisa criar o arquivo{" "}
+                  Para fazer login você precisa criar o arquivo{" "}
                   <code className="rounded bg-black/30 px-1 py-0.5 text-xs">
                     .env.local
                   </code>{" "}

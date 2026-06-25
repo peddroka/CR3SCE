@@ -88,7 +88,7 @@ type GeneratedPost = {
 const FORMAT_OPTIONS: { value: PostFormat; label: string; description: string }[] = [
   {
     value: "single",
-    label: "Post unico",
+    label: "Post único",
     description: "Uma imagem 4:5 com legenda forte",
   },
   {
@@ -104,12 +104,12 @@ const FORMAT_OPTIONS: { value: PostFormat; label: string; description: string }[
 ];
 
 const OBJECTIVE_OPTIONS: { value: PostObjective; label: string }[] = [
-  { value: "engajamento", label: "Engajamento (likes/comentarios)" },
+  { value: "engajamento", label: "Engajamento (likes/comentários)" },
   { value: "alcance", label: "Alcance (descoberta de novos seguidores)" },
-  { value: "vendas", label: "Vendas / conversao" },
+  { value: "vendas", label: "Vendas / conversão" },
   { value: "autoridade", label: "Autoridade no nicho" },
   { value: "comunidade", label: "Construir comunidade" },
-  { value: "lancamento", label: "Lancamento de produto/servico" },
+  { value: "lancamento", label: "Lançamento de produto/serviço" },
 ];
 
 export default function CriarPostPage() {
@@ -192,7 +192,7 @@ export default function CriarPostPage() {
 
   function copyText(text: string, label = "Copiado") {
     if (typeof navigator === "undefined" || !navigator.clipboard) {
-      toast.error("Clipboard nao disponivel.");
+      toast.error("Clipboard não disponível.");
       return;
     }
     navigator.clipboard.writeText(text);
@@ -220,7 +220,7 @@ export default function CriarPostPage() {
       toast.success("PNG baixado!");
     } catch (err) {
       console.error(err);
-      toast.error("Falha ao gerar PNG. Tente recarregar a pagina.");
+      toast.error("Falha ao gerar PNG. Tente recarregar a página.");
     } finally {
       setDownloading(false);
     }
@@ -246,7 +246,7 @@ export default function CriarPostPage() {
               Criar Post
             </h1>
             <p className="text-sm text-muted-foreground">
-              Posts unicos para o seu negocio, com briefing visual atual.
+              Posts únicos para o seu negócio, com briefing visual atual.
             </p>
           </div>
         </div>
@@ -322,18 +322,18 @@ export default function CriarPostPage() {
                 id="tone"
                 value={tone}
                 onChange={(e) => setTone(e.target.value)}
-                placeholder="Ex: irreverente, didatico, provocador"
+                placeholder="Ex: irreverente, didático, provocador"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="extra">Observacoes extras (opcional)</Label>
+            <Label htmlFor="extra">Observações extras (opcional)</Label>
             <Textarea
               id="extra"
               value={extraNotes}
               onChange={(e) => setExtraNotes(e.target.value)}
-              placeholder="Coisas que NAO podem aparecer, referencias, links, contexto especifico..."
+              placeholder="Coisas que NÃO podem aparecer, referências, links, contexto específico..."
               className="min-h-[64px] resize-none"
               maxLength={500}
             />
@@ -347,7 +347,7 @@ export default function CriarPostPage() {
 
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-xs text-muted-foreground">
-              Usa o perfil do seu negocio + tendencias de design 2026.
+              Usa o perfil do seu negócio + tendências de design 2026.
             </p>
             <Button
               onClick={handleGenerate}
@@ -442,7 +442,7 @@ export default function CriarPostPage() {
                 disabled={loading}
                 className="gap-2 bg-lime text-[#111] hover:bg-[#a8d020]"
               >
-                <RefreshCw className="size-4" /> Gerar outra versao
+                <RefreshCw className="size-4" /> Gerar outra versão
               </Button>
             </div>
           </motion.div>
@@ -521,7 +521,7 @@ function PostPreviewSection({
                 disabled={slideIndex === totalSlides - 1}
                 className="gap-1"
               >
-                Proximo <ChevronRight className="size-4" />
+                Próximo <ChevronRight className="size-4" />
               </Button>
             </div>
           )}
@@ -548,7 +548,7 @@ function PostPreviewSection({
             </h3>
             <p className="mt-1 text-sm text-muted-foreground">
               Renderizado com a paleta e o layout escolhidos pela IA para este
-              tema. Voce pode baixar como PNG e usar direto, ou levar o briefing
+              tema. Você pode baixar como PNG e usar direto, ou levar o briefing
               ao Canva pra ajustar.
             </p>
           </div>
@@ -600,7 +600,7 @@ function VibeCard({
             ? "Carrossel"
             : format === "reel"
               ? "Reel"
-              : "Post unico"}
+              : "Post único"}
         </div>
       </CardContent>
     </Card>
@@ -823,7 +823,7 @@ function TrendTipsCard({ tips }: { tips: string[] }) {
     <Card>
       <CardContent className="flex flex-col gap-3 p-6">
         <h2 className="flex items-center gap-2 text-base font-semibold text-foreground">
-          <Lightbulb className="size-4 text-lime" /> Tendencias 2026 aplicadas
+          <Lightbulb className="size-4 text-lime" /> Tendências 2026 aplicadas
         </h2>
         <ul className="space-y-2 text-sm">
           {tips.map((tip, idx) => (

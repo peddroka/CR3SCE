@@ -18,7 +18,7 @@ export function VideoSection() {
           Entenda em 90 segundos
         </p>
         <h2 className="font-bebas text-[clamp(32px,5vw,64px)] leading-tight">
-          PARA QUEM E O <span className="text-lime">CR3SCE</span>?
+          PARA QUEM É O <span className="text-lime">CR3SCE</span>?
         </h2>
         <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-muted-foreground">
           Antes de assinar, entenda exatamente quem vai se beneficiar do CR3SCE
@@ -36,14 +36,14 @@ export function VideoSection() {
             className="absolute inset-0 h-full w-full"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
-            title="Para quem e o CR3SCE"
+            title="Para quem é o CR3SCE"
           />
         ) : (
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             {thumbnailUrl ? (
               <img
                 src={thumbnailUrl}
-                alt="Thumbnail do video do CR3SCE"
+                alt="Thumbnail do vídeo do CR3SCE"
                 className="absolute inset-0 h-full w-full object-cover"
               />
             ) : (
@@ -80,11 +80,11 @@ export function VideoSection() {
       <AnimateOnScroll delay={300} className="mt-6 flex flex-wrap justify-center gap-3">
         {[
           "Donos de restaurante",
-          "Donos de comercio",
-          "Salao & Estetica",
+          "Donos de comércio",
+          "Salão & Estética",
           "Academia & Personal",
-          "Clinicas & Saude",
-          "Prestadores de servico",
+          "Clínicas & Saúde",
+          "Prestadores de serviço",
         ].map((tag) => (
           <span
             key={tag}

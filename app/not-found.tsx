@@ -5,10 +5,10 @@ export default function NotFound() {
     <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background px-6 text-center">
       <p className="text-sm uppercase tracking-[0.3em] text-[#C8F135]">404</p>
       <h1 className="text-3xl font-bold text-foreground">
-        Pagina nao encontrada
+        Página não encontrada
       </h1>
       <p className="max-w-md text-sm text-muted-foreground">
-        A pagina que voce tentou abrir nao existe ou foi movida.
+        A página que você tentou abrir não existe ou foi movida.
       </p>
       <Link
         href="/"

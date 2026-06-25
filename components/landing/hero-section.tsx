@@ -20,17 +20,17 @@ export function HeroSection() {
       <AnimateOnLoad delay={100} className="relative z-10 mb-10 flex items-center gap-2 rounded-full border border-[rgba(200,241,53,0.3)] bg-[rgba(200,241,53,0.1)] px-4 py-2">
         <span className="bg-lime h-2 w-2 animate-pulse rounded-full" />
         <span className="text-xs font-medium uppercase tracking-widest text-lime">
-          Planejamento mensal para Instagram
+          Seu negócio precisa aparecer
         </span>
       </AnimateOnLoad>
 
       <AnimateOnLoad delay={300} className="relative z-10 mb-8">
         <h1 className="font-bebas text-[clamp(56px,10vw,140px)] leading-[0.92] tracking-wide">
-          SEU NEGÓCIO
+          PLANEJAMENTO
           <br />
-          <span className="text-lime">PRECISA</span>
+          <span className="text-lime">MENSAL</span>
           <br />
-          APARECER
+          PARA INSTAGRAM
           <span className="mt-4 block font-sans text-[clamp(18px,3vw,44px)] font-light tracking-widest text-muted-foreground">
             todos os dias. sem desculpa.
           </span>
@@ -82,7 +82,7 @@ export function HeroSection() {
             <div className="text-xs tracking-widest text-lime">★★★★★</div>
             <p className="text-xs text-muted-foreground">
               <strong className="text-foreground">
-                +340 empreendedores
+                +47 empreendedores
               </strong>{" "}
               já crescendo
             </p>

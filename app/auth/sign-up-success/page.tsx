@@ -24,7 +24,7 @@ export default function SignUpSuccessPage() {
           </CardHeader>
           <CardContent className="text-center">
             <p className="text-sm text-muted-foreground">
-              Enviamos um link de confirmacao para o seu email. Clique no link
+              Enviamos um link de confirmação para o seu email. Clique no link
               para ativar sua conta e começar a usar a CR3SCE.
             </p>
             <div className="mt-6">

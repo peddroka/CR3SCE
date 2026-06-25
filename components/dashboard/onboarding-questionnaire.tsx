@@ -48,15 +48,15 @@ const LEGACY_DRAFT_KEY = DRAFT_KEY_PREFIX;
 const GOAL_OPTIONS = [
   {
     value: "visualizacao",
-    label: "Aumentar visualizacao",
+    label: "Aumentar visualização",
     description:
-      "Conteudo mais viral e mais aberto para alcance. Voce ganha mais descoberta, mas fala com um publico menos filtrado.",
+      "Conteúdo mais viral e mais aberto para alcance. Você ganha mais descoberta, mas fala com um público menos filtrado.",
   },
   {
     value: "identidade",
     label: "Construir identidade",
     description:
-      "Conteudo mais direcionado para quem realmente se interessa pelo seu nicho. Tende a gerar menos volume e mais intencao de compra.",
+      "Conteúdo mais direcionado para quem realmente se interessa pelo seu nicho. Tende a gerar menos volume e mais intenção de compra.",
   },
 ] as const;
 
@@ -71,28 +71,28 @@ const GROWTH_OPTIONS = [
     value: "rapido",
     label: "Explosivo",
     description:
-      "6 Stories por dia, 1 post no feed por dia, 1 Reels por dia, lives em dias estrategicos e Reels viral no fim de semana.",
+      "6 Stories por dia, 1 post no feed por dia, 1 Reels por dia, lives em dias estratégicos e Reels viral no fim de semana.",
   },
 ] as const;
 
 const COMMUNICATION_STYLE_OPTIONS = [
   {
     value: "humoristico",
-    label: "Humoristico",
+    label: "Humorístico",
     description:
-      "Tom leve, rapido e divertido. A IA vai puxar mais ganchos engraçados e cenas espontaneas.",
+      "Tom leve, rápido e divertido. A IA vai puxar mais ganchos engraçados e cenas espontâneas.",
   },
   {
     value: "educativo",
     label: "Educativo",
     description:
-      "Tom de especialista. A IA vai priorizar explicacoes claras, provas e ensinamentos praticos.",
+      "Tom de especialista. A IA vai priorizar explicações claras, provas e ensinamentos práticos.",
   },
   {
     value: "casual",
     label: "Casual",
     description:
-      "Tom natural e proximo. A IA vai escrever como uma conversa direta com o cliente.",
+      "Tom natural e próximo. A IA vai escrever como uma conversa direta com o cliente.",
   },
 ] as const;
 
@@ -282,7 +282,7 @@ export function OnboardingQuestionnaire() {
 
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) {
-      window.alert("Navegador nao suporta voz. Use Chrome ou Edge.");
+      window.alert("Navegador não suporta voz. Use Chrome ou Edge.");
       return;
     }
 
@@ -319,7 +319,7 @@ export function OnboardingQuestionnaire() {
 
   const generateTargetAudience = async () => {
     if (!formData.business_name || !formData.niche) {
-      setError("Preencha o nome do negocio e nicho primeiro");
+      setError("Preencha o nome do negócio e nicho primeiro");
       return;
     }
 
@@ -340,7 +340,7 @@ export function OnboardingQuestionnaire() {
 
       setAiSuggestion({
         field: "target_audience",
-        suggestion: "Sugestao gerada pela IA:",
+        suggestion: "Sugestão gerada pela IA:",
         improved: data.audience,
       });
       setValidationAttempts(1);
@@ -366,7 +366,7 @@ export function OnboardingQuestionnaire() {
 
   const handleNext = async () => {
     if (!validateStep(step)) {
-      setError("Preencha todos os campos obrigatorios");
+      setError("Preencha todos os campos obrigatórios");
       return;
     }
 
@@ -378,7 +378,7 @@ export function OnboardingQuestionnaire() {
 
   const handleSubmit = async () => {
     if (!validateStep(step)) {
-      setError("Preencha todos os campos obrigatorios");
+      setError("Preencha todos os campos obrigatórios");
       return;
     }
 
@@ -387,7 +387,7 @@ export function OnboardingQuestionnaire() {
 
     try {
       const { user } = await getUserSafely(supabase);
-      if (!user) throw new Error("Nao autenticado");
+      if (!user) throw new Error("Não autenticado");
 
       const { data: existing } = await supabase
         .from("businesses")
@@ -486,12 +486,12 @@ export function OnboardingQuestionnaire() {
               | { error?: string }
               | null;
             console.error(
-              "Erro ao gerar estrategia inicial:",
+              "Erro ao gerar estratégia inicial:",
               data?.error || response.statusText,
             );
           })
           .catch((generationError) => {
-            console.error("Erro ao gerar estrategia inicial:", generationError);
+            console.error("Erro ao gerar estratégia inicial:", generationError);
           });
       });
 
@@ -508,25 +508,25 @@ export function OnboardingQuestionnaire() {
     {
       title: "Abra o Instagram",
       description:
-        "Acesse o Instagram no seu celular e va para o seu perfil clicando na sua foto no canto inferior direito.",
+        "Acesse o Instagram no seu celular e vá para o seu perfil clicando na sua foto no canto inferior direito.",
       image: "1",
     },
     {
       title: "Visualize sua Bio",
       description:
-        "Voce vera seu nome, bio, numero de seguidores e posts. Esta e a tela que precisamos. Tire um print desta tela inteira.",
+        "Você verá seu nome, bio, número de seguidores e posts. Esta é a tela que precisamos. Tire um print desta tela inteira.",
       image: "2",
     },
     {
       title: "Tire o print",
       description:
-        "No iPhone: pressione o botao lateral + volume. No Android: pressione power + volume abaixo ao mesmo tempo.",
+        "No iPhone: pressione o botão lateral + volume. No Android: pressione power + volume abaixo ao mesmo tempo.",
       image: "3",
     },
     {
       title: "Volte e envie",
       description:
-        "Volte para esta pagina - seus dados estao salvos. Clique em 'Adicionar print' e selecione a foto que acabou de tirar.",
+        "Volte para esta página - seus dados estão salvos. Clique em 'Adicionar print' e selecione a foto que acabou de tirar.",
       image: "4",
     },
   ];
@@ -580,7 +580,7 @@ export function OnboardingQuestionnaire() {
             ))}
           </div>
           <p className="text-sm text-[#888]">
-            Criando sua estrategia personalizada...
+            Criando sua estratégia personalizada...
           </p>
         </motion.div>
       </div>
@@ -620,7 +620,7 @@ export function OnboardingQuestionnaire() {
               initial={{ opacity: 0, scale: 0.92, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="fixed left-1/2 top-1/2 z-[201] w-full max-w-sm -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-2xl border border-border bg-card shadow-2xl"
+              className="fixed left-1/2 top-1/2 z-[201] w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-2xl border border-border bg-card shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="h-1 bg-border">
@@ -669,7 +669,7 @@ export function OnboardingQuestionnaire() {
                     }}
                   >
                     {guideStep < guideSteps.length - 1
-                      ? "Proximo"
+                      ? "Próximo"
                       : "Adicionar print"}
                     <ChevronRight className="ml-1 size-3.5" />
                   </Button>
@@ -712,7 +712,7 @@ export function OnboardingQuestionnaire() {
             </div>
             <CardTitle className="text-xl font-bold text-foreground sm:text-2xl">
               {step === 1 && "Vamos decolar!"}
-              {step === 2 && "Defina sua estrategia"}
+              {step === 2 && "Defina sua estratégia"}
               {step === 3 && "Seu objetivo no CR3SCE"}
               {step === 4 && "Seu perfil do Instagram"}
             </CardTitle>
@@ -753,11 +753,11 @@ export function OnboardingQuestionnaire() {
                         htmlFor="business_name"
                         className="text-sm font-medium"
                       >
-                        Nome do negocio *
+                        Nome do negócio *
                       </Label>
                       <Input
                         id="business_name"
-                        placeholder="Ex: Padaria do Joao"
+                        placeholder="Ex: Padaria do João"
                         value={formData.business_name}
                         onChange={(e) =>
                           updateField("business_name", e.target.value)
@@ -769,7 +769,7 @@ export function OnboardingQuestionnaire() {
                       />
                       {hasError("business_name") && (
                         <p className="text-xs text-destructive">
-                          Campo obrigatorio
+                          Campo obrigatório
                         </p>
                       )}
                     </div>
@@ -783,7 +783,7 @@ export function OnboardingQuestionnaire() {
                       </Label>
                       <Input
                         id="responsible_name"
-                        placeholder="Ex: Joao Silva"
+                        placeholder="Ex: João Silva"
                         value={formData.responsible_name}
                         onChange={(e) =>
                           updateField("responsible_name", e.target.value)
@@ -796,7 +796,7 @@ export function OnboardingQuestionnaire() {
                       />
                       {hasError("responsible_name") && (
                         <p className="text-xs text-destructive">
-                          Campo obrigatorio
+                          Campo obrigatório
                         </p>
                       )}
                     </div>
@@ -816,13 +816,13 @@ export function OnboardingQuestionnaire() {
                       />
                       {hasError("niche") && (
                         <p className="text-xs text-destructive">
-                          Campo obrigatorio
+                          Campo obrigatório
                         </p>
                       )}
                       <div className="mt-1 flex items-start gap-1">
                         <Lightbulb className="mt-0.5 size-3 shrink-0 text-primary" />
                         <p className="text-xs text-muted-foreground">
-                          Quanto mais especifico, melhor
+                          Quanto mais específico, melhor
                         </p>
                       </div>
                     </div>
@@ -832,12 +832,12 @@ export function OnboardingQuestionnaire() {
                         htmlFor="target_audience"
                         className="text-sm font-medium"
                       >
-                        Publico-alvo *
+                        Público-alvo *
                       </Label>
                       <div className="relative">
                         <Textarea
                           id="target_audience"
-                          placeholder="Ex: Mulheres de 25-40 anos, classe media"
+                          placeholder="Ex: Mulheres de 25-40 anos, classe média"
                           value={formData.target_audience}
                           onChange={(e) =>
                             updateField("target_audience", e.target.value)
@@ -868,7 +868,7 @@ export function OnboardingQuestionnaire() {
                       </div>
                       {hasError("target_audience") && (
                         <p className="text-xs text-destructive">
-                          Campo obrigatorio
+                          Campo obrigatório
                         </p>
                       )}
                     </div>
@@ -906,19 +906,19 @@ export function OnboardingQuestionnaire() {
                       </div>
                       {hasError("main_goal") && (
                         <p className="text-xs text-destructive">
-                          Campo obrigatorio
+                          Campo obrigatório
                         </p>
                       )}
 
                       {formData.main_goal && (
                         <div className="rounded-xl border border-[#C8F135]/20 bg-[#C8F135]/5 p-4">
                           <p className="mb-1 text-sm font-medium text-[#C8F135]">
-                            O que isso muda na sua estrategia?
+                            O que isso muda na sua estratégia?
                           </p>
                           <p className="text-xs leading-relaxed text-[#888]">
                             {formData.main_goal === "visualizacao"
-                              ? "Seu calendario vai priorizar alcance, ganchos fortes, temas mais compartilhaveis e conteudos com pegada mais viral. A descoberta tende a subir, mas o publico fica menos filtrado."
-                              : "Seu calendario vai priorizar autoridade, clareza de posicionamento, diferenciacao e conteudos feitos para atrair pessoas realmente interessadas no seu nicho. O alcance pode ser menor, mas a tendencia e gerar mais conversas e vendas qualificadas."}
+                              ? "Seu calendário vai priorizar alcance, ganchos fortes, temas mais compartilháveis e conteúdos com pegada mais viral. A descoberta tende a subir, mas o público fica menos filtrado."
+                              : "Seu calendário vai priorizar autoridade, clareza de posicionamento, diferenciação e conteúdos feitos para atrair pessoas realmente interessadas no seu nicho. O alcance pode ser menor, mas a tendência é gerar mais conversas e vendas qualificadas."}
                           </p>
                         </div>
                       )}
@@ -931,7 +931,7 @@ export function OnboardingQuestionnaire() {
                           Instagram
                         </p>
                         <p className="mt-1 text-xs text-[#888]">
-                          Por enquanto esta etapa fica fixa no Instagram para manter a estrategia mais consistente.
+                          Por enquanto esta etapa fica fixa no Instagram para manter a estratégia mais consistente.
                         </p>
                       </div>
                     </div>
@@ -969,7 +969,7 @@ export function OnboardingQuestionnaire() {
                       </div>
                       {hasError("growth_speed") && (
                         <p className="text-xs text-destructive">
-                          Campo obrigatorio
+                          Campo obrigatório
                         </p>
                       )}
                     </div>
@@ -979,7 +979,7 @@ export function OnboardingQuestionnaire() {
                   <>
                     <div className="space-y-1.5">
                       <Label className="text-sm font-medium">
-                        Estilo de comunicacao *
+                        Estilo de comunicação *
                       </Label>
                       <div className="grid gap-3 sm:grid-cols-3">
                         {COMMUNICATION_STYLE_OPTIONS.map((option) => (
@@ -1010,7 +1010,7 @@ export function OnboardingQuestionnaire() {
                       </div>
                       {hasError("communication_style") && (
                         <p className="text-xs text-destructive">
-                          Campo obrigatorio
+                          Campo obrigatório
                         </p>
                       )}
 
@@ -1023,9 +1023,9 @@ export function OnboardingQuestionnaire() {
                             {formData.communication_style === "humoristico" &&
                               "A IA vai puxar roteiros mais leves, com ganchos engraçados, linguagem solta e cortes que parecem naturais."}
                             {formData.communication_style === "educativo" &&
-                              "A IA vai escrever como especialista, com explicacoes objetivas, provas e conteudos que ensinam algo util."}
+                              "A IA vai escrever como especialista, com explicações objetivas, provas e conteúdos que ensinam algo útil."}
                             {formData.communication_style === "casual" &&
-                              "A IA vai falar como conversa do dia a dia: direta, humana e facil de entender, sem ficar formal demais."}
+                              "A IA vai falar como conversa do dia a dia: direta, humana e fácil de entender, sem ficar formal demais."}
                           </p>
                         </div>
                       )}
@@ -1033,16 +1033,16 @@ export function OnboardingQuestionnaire() {
 
                     <div className="space-y-1.5">
                       <Label className="text-sm font-medium">
-                        O que voce quer conquistar usando o CR3SCE? *
+                        O que você quer conquistar usando o CR3SCE? *
                       </Label>
                       <p className="text-xs leading-relaxed text-[#888]">
                         Exemplos: ganhar mais seguidores, vender mais, aumentar
-                        visualizacoes, lancar um produto, viralizar ou educar
-                        sua audiencia.
+                        visualizações, lançar um produto, viralizar ou educar
+                        sua audiência.
                       </p>
                       <div className="relative">
                         <Textarea
-                          placeholder="Explique com suas palavras o que voce quer conquistar. Quanto mais contexto voce der, mais estrategico o calendario fica."
+                          placeholder="Explique com suas palavras o que você quer conquistar. Quanto mais contexto você der, mais estratégico o calendário fica."
                           value={formData.brand_description}
                           onChange={(e) =>
                             updateField("brand_description", e.target.value)
@@ -1072,12 +1072,12 @@ export function OnboardingQuestionnaire() {
                         </p>
                       )}
                       <p className="text-xs leading-relaxed text-[#666]">
-                        Dica: ative o microfone e fale. Quanto mais voce
-                        explicar, melhor o CR3SCE vai trabalhar pra voce.
+                        Dica: ative o microfone e fale. Quanto mais você
+                        explicar, melhor o CR3SCE vai trabalhar pra você.
                       </p>
                       {hasError("brand_description") && (
                         <p className="text-xs text-destructive">
-                          Campo obrigatorio
+                          Campo obrigatório
                         </p>
                       )}
                     </div>
@@ -1095,13 +1095,13 @@ export function OnboardingQuestionnaire() {
                         A nossa IA vai analisar nome, nome de pesquisa, bio,
                         foto ou logomarca, link de contato, quantidade de posts
                         e clareza do perfil para o seu nicho. Se a conta for
-                        profissional, ela tambem analisa as metricas do painel.
+                        profissional, ela também analisa as métricas do painel.
                       </p>
                     </div>
 
                     <div className="space-y-2">
                       <Label className="text-sm font-medium">
-                        Seu Instagram e normal ou profissional?
+                        Seu Instagram é normal ou profissional?
                       </Label>
                       <div className="grid grid-cols-2 gap-3">
                         {[
@@ -1157,8 +1157,8 @@ export function OnboardingQuestionnaire() {
                         <p className="text-xs leading-relaxed text-[#888]">
                           Envie dois prints: um da sua bio (perfil) e um do
                           Painel Profissional (clique em "Ver insights" no seu
-                          perfil). Isso nos permite analisar suas metricas de
-                          alcance e engajamento tambem.
+                          perfil). Isso nos permite analisar suas métricas de
+                          alcance e engajamento também.
                         </p>
                       </motion.div>
                     )}
@@ -1245,7 +1245,7 @@ export function OnboardingQuestionnaire() {
                             className="flex items-center justify-center gap-2 rounded-xl border border-border bg-white/5 p-3 text-sm text-[#888] transition-all hover:bg-white/10 hover:text-white"
                           >
                             <Upload className="size-4" />
-                            Ja tenho o print, quero adicionar direto
+                            Já tenho o print, quero adicionar direto
                           </button>
                         </div>
                       )}
@@ -1357,7 +1357,7 @@ export function OnboardingQuestionnaire() {
                       size="sm"
                       className="h-9 gap-1 rounded-md bg-primary px-4 text-xs hover:bg-primary/90"
                     >
-                      Proximo <ArrowRight className="size-3" />
+                      Próximo <ArrowRight className="size-3" />
                     </Button>
                   ) : (
                     <Button

@@ -176,7 +176,7 @@ export function SupportButton() {
             animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
             exit={{ opacity: 0, y: 24, scale: 0.92 }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
-            className="fixed bottom-6 right-6 z-[150] w-[340px] overflow-hidden rounded-2xl border border-border bg-card shadow-2xl"
+            className="fixed bottom-6 right-4 z-[150] w-[340px] max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-border bg-card shadow-2xl"
             style={{ transformOrigin: "bottom right" }}
           >
             <div className="flex items-center justify-between border-b border-border bg-[#C8F135]/5 px-4 py-3">
@@ -221,7 +221,7 @@ export function SupportButton() {
                   className={`flex gap-2 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}
                 >
                   <div
-                    className={`max-w-[85%] rounded-xl px-3 py-2 text-xs leading-relaxed ${
+                    className={`max-w-[85%] break-words rounded-xl px-3 py-2 text-xs leading-relaxed ${
                       msg.role === "user"
                         ? "bg-[#C8F135]/15 text-[#c0c0c0]"
                         : "border border-border bg-background/80 text-[#c0c0c0]"

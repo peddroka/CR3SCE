@@ -34,10 +34,10 @@ export function AIDisclosureNotice() {
       <div className="flex-1 text-muted-foreground">
         <p>
           <strong className="text-foreground">Este recurso usa IA.</strong>{" "}
-          Suas mensagens sao processadas por um modelo de linguagem (Groq) e o
-          contexto do seu negocio e enviado para gerar a resposta. Solicitamos
-          contratualmente que o provedor nao use seu conteudo para treinamento.
-          O conteudo gerado pode conter imprecisoes - revise antes de usar.{" "}
+          Suas mensagens são processadas por um modelo de linguagem (Groq) e o
+          contexto do seu negócio é enviado para gerar a resposta. Solicitamos
+          contratualmente que o provedor não use seu conteúdo para treinamento.
+          O conteúdo gerado pode conter imprecisões - revise antes de usar.{" "}
           <Link
             href="/politica-de-privacidade"
             target="_blank"
@@ -51,8 +51,8 @@ export function AIDisclosureNotice() {
       <button
         type="button"
         onClick={dismiss}
-        aria-label="Entendi, nao mostrar de novo"
-        className="rounded-full p-1 text-muted-foreground transition-colors hover:bg-white/10 hover:text-foreground"
+        aria-label="Entendi, não mostrar de novo"
+        className="-mr-1 -mt-1 flex size-9 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-white/10 hover:text-foreground"
       >
         <X className="size-4" />
       </button>

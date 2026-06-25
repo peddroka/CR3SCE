@@ -40,13 +40,13 @@ export function DashboardSidebar({ className }: SidebarProps) {
   const navItems = [
     {
       href: "/dashboard",
-      label: "Inicio",
+      label: "Início",
       icon: LayoutDashboard,
       id: "nav-inicio",
     },
     {
       href: "/dashboard/calendar",
-      label: "Calendario",
+      label: "Calendário",
       icon: CalendarDays,
       id: "nav-calendario",
     },
@@ -58,7 +58,7 @@ export function DashboardSidebar({ className }: SidebarProps) {
     },
     {
       href: "/dashboard/trends",
-      label: "Modo Tendencia",
+      label: "Modo Tendência",
       icon: Zap,
       id: "nav-tendencia",
     },
@@ -89,7 +89,7 @@ export function DashboardSidebar({ className }: SidebarProps) {
     },
     {
       href: "/dashboard/settings",
-      label: "Configuracoes",
+      label: "Configurações",
       icon: Settings,
       id: "nav-configuracoes",
     },
@@ -217,7 +217,7 @@ export function DashboardSidebar({ className }: SidebarProps) {
                 Plano Ativo
               </p>
               <p className="text-xs font-medium text-[#c0c0c0]">CR3SCE Pro</p>
-              <p className="mt-0.5 text-[11px] text-[#555]">R$79,90/mes</p>
+              <p className="mt-0.5 text-[11px] text-[#555]">R$79,90/mês</p>
             </div>
 
             <button

@@ -77,7 +77,7 @@ export default function SignUpPage() {
 
     if (!acceptedPolicies) {
       setError(
-        "Para continuar, voce precisa aceitar a Politica de Privacidade e os Termos de Uso.",
+        "Para continuar, você precisa aceitar a Política de Privacidade e os Termos de Uso.",
       );
       setIsLoading(false);
       return;
@@ -305,10 +305,10 @@ export default function SignUpPage() {
               <AlertCircle className="mt-0.5 size-5 shrink-0 text-yellow-500" />
               <div className="flex-1 text-yellow-100">
                 <p className="font-semibold text-yellow-300">
-                  Supabase nao configurado
+                  Supabase não configurado
                 </p>
                 <p className="mt-1 leading-relaxed text-yellow-100/80">
-                  Para criar conta voce precisa criar o arquivo{" "}
+                  Para criar conta você precisa criar o arquivo{" "}
                   <code className="rounded bg-black/30 px-1 py-0.5 text-xs">
                     .env.local
                   </code>{" "}
@@ -418,7 +418,7 @@ export default function SignUpPage() {
                     target="_blank"
                     className="text-lime hover:underline"
                   >
-                    Politica de Privacidade
+                    Política de Privacidade
                   </Link>{" "}
                   e os{" "}
                   <Link
@@ -445,7 +445,7 @@ export default function SignUpPage() {
                 />
                 <span className="leading-snug text-muted-foreground">
                   Quero receber novidades, dicas e ofertas por e-mail
-                  (opcional, voce pode revogar a qualquer momento em
+                  (opcional, você pode revogar a qualquer momento em
                   Privacidade).
                 </span>
               </label>
