@@ -352,8 +352,8 @@ function normalizeCriteria(criteria: unknown): CriterionItem[] {
       nota: 0,
       peso: definition.peso,
       status: "regular",
-      feedback: "Nao houve evidencia suficiente para analisar este criterio com seguranca.",
-      acoes: ["Revisar esse ponto manualmente na proxima analise."],
+      feedback: "Não houve evidência suficiente para analisar este critério com segurança.",
+      acoes: ["Revisar esse ponto manualmente na próxima análise."],
     } satisfies CriterionItem;
   });
 }
@@ -479,9 +479,9 @@ function enforceCriteriaContext(
         nota: Math.max(criterion.nota, 6),
         status: "regular",
         feedback:
-          "Nao houve foto de perfil suficiente para analise visual detalhada. Os outros criterios foram avaliados normalmente, mas aqui o ideal e enviar uma imagem nitida do avatar ou logo.",
+          "Não houve foto de perfil suficiente para análise visual detalhada. Os outros critérios foram avaliados normalmente, mas aqui o ideal é enviar uma imagem nítida do avatar ou logo.",
         acoes: [
-          "Envie uma foto de perfil nitida ou um print aproximado do avatar.",
+          "Envie uma foto de perfil nítida ou um print aproximado do avatar.",
           "Se for logo, garanta contraste forte e leitura clara em tamanho pequeno.",
         ],
       } satisfies CriterionItem;
@@ -493,9 +493,9 @@ function enforceCriteriaContext(
         nota: Math.max(criterion.nota, 6),
         status: "regular",
         feedback:
-          "Nao houve informacao suficiente sobre os ultimos posts ou a frequencia recente para validar consistencia com seguranca. A leitura aqui fica parcial ate receber exemplos do feed.",
+          "Não houve informação suficiente sobre os últimos posts ou a frequência recente para validar consistência com segurança. A leitura aqui fica parcial até receber exemplos do feed.",
         acoes: [
-          "Envie descricoes dos ultimos posts ou um print do grid recente.",
+          "Envie descrições dos últimos posts ou um print do grid recente.",
           "Mostre variedade entre foto, carrossel e reels para uma leitura mais precisa.",
         ],
       } satisfies CriterionItem;
@@ -511,7 +511,7 @@ function extractJsonObject(text: string) {
   const end = cleaned.lastIndexOf("}");
 
   if (start === -1 || end === -1 || end <= start) {
-    throw new Error("Resposta da IA sem JSON valido.");
+    throw new Error("Resposta da IA sem JSON válido.");
   }
 
   return JSON.parse(cleaned.slice(start, end + 1));
@@ -568,7 +568,7 @@ function buildLegacyBiosFromPriorities(improvements: PriorityImprovementItem[]) 
     {
       option: 1,
       text: sanitizeSingleLine(bioImprovement.sugestao_concreta).slice(0, 150),
-      explanation: "Sugestao prioritaria de bio baseada na analise do perfil.",
+      explanation: "Sugestão prioritária de bio baseada na análise do perfil.",
     },
   ];
 }
@@ -593,11 +593,11 @@ function buildNextStepsFallback(improvements: PriorityImprovementItem[]) {
   const first = improvements[0];
 
   if (!first) {
-    return "Seu foco agora deve ser manter a consistencia do perfil e revisar os pontos que ja estao funcionando para nao perder clareza ao crescer.";
+    return "Seu foco agora deve ser manter a consistência do perfil e revisar os pontos que já estão funcionando para não perder clareza ao crescer.";
   }
 
   return sanitizeOutputText(
-    `Comece pelo criterio ${first.criterio.replace(/_/g, " ")}. Esse ajuste tende a gerar o maior impacto agora. Depois, revise o restante com calma e mantenha consistencia no perfil inteiro.`,
+    `Comece pelo critério ${first.criterio.replace(/_/g, " ")}. Esse ajuste tende a gerar o maior impacto agora. Depois, revise o restante com calma e mantenha consistência no perfil inteiro.`,
   );
 }
 
@@ -629,18 +629,18 @@ function buildStructuredProfileContext(input: StructuredProfileInput) {
   const posts = Array.isArray(input.ultimos_posts) ? input.ultimos_posts.slice(0, 9) : [];
 
   return [
-    `username: ${sanitizeSingleLine(input.username || "nao informado")}`,
-    `nome_exibido: ${sanitizeSingleLine(input.nome_exibido || "nao informado")}`,
-    `bio: ${sanitizeOutputText(input.bio || "nao informado")}`,
+    `username: ${sanitizeSingleLine(input.username || "não informado")}`,
+    `nome_exibido: ${sanitizeSingleLine(input.nome_exibido || "não informado")}`,
+    `bio: ${sanitizeOutputText(input.bio || "não informado")}`,
     `num_posts: ${Number(input.num_posts) || 0}`,
     `num_seguidores: ${Number(input.num_seguidores) || 0}`,
     `num_seguindo: ${Number(input.num_seguindo) || 0}`,
-    `nicho: ${sanitizeSingleLine(input.nicho || "nao informado")}`,
-    `objetivo: ${sanitizeSingleLine(input.objetivo || "nao informado")}`,
+    `nicho: ${sanitizeSingleLine(input.nicho || "não informado")}`,
+    `objetivo: ${sanitizeSingleLine(input.objetivo || "não informado")}`,
     `ultimos_posts: ${
       posts.length
         ? posts.map((post, index) => `${index + 1}. ${sanitizeSingleLine(post)}`).join(" | ")
-        : "nao informado"
+        : "não informado"
     }`,
   ].join("\n");
 }
@@ -669,7 +669,7 @@ export async function POST(req: Request) {
       nicho: body.nicho || body.niche,
       objetivo: body.objetivo,
     };
-    const niche = sanitizeSingleLine(profileInput.nicho || body.niche || "negocio local");
+    const niche = sanitizeSingleLine(profileInput.nicho || body.niche || "negócio local");
     const businessName = sanitizeSingleLine(
       body.business_name ||
         profileInput.nome_exibido ||
@@ -693,22 +693,22 @@ export async function POST(req: Request) {
 
     if (!imageList.length && !hasStructuredProfile) {
       return new Response(
-        JSON.stringify({ error: "Envie prints ou dados do perfil para analise." }),
+        JSON.stringify({ error: "Envie prints ou dados do perfil para análise." }),
         { status: 400, headers: { "Content-Type": "application/json" } },
       );
     }
 
     const previousContext = hasPreviousAnalysis
-      ? `ANALISE ANTERIOR - problemas identificados previamente:
+      ? `ANÁLISE ANTERIOR - problemas identificados previamente:
 ${previousProblems.map((p) => `- ${p.title}: ${p.description}`).join("\n")}
 
-INSTRUCAO CRITICA: Se o perfil ainda apresenta os mesmos problemas, mantenha a coerencia. So remova um problema se houver evidencia real de que ele foi corrigido.`
+INSTRUÇÃO CRÍTICA: Se o perfil ainda apresenta os mesmos problemas, mantenha a coerência. Só remova um problema se houver evidência real de que ele foi corrigido.`
       : "";
 
     const structuredContext = hasStructuredProfile
       ? `DADOS ESTRUTURADOS DO PERFIL:
 ${buildStructuredProfileContext(profileInput)}`
-      : "DADOS ESTRUTURADOS DO PERFIL: nao foram fornecidos.";
+      : "DADOS ESTRUTURADOS DO PERFIL: não foram fornecidos.";
 
     const fetchedProfilePhoto =
       !imageList.length && profileInput.foto_perfil_url
@@ -719,56 +719,56 @@ ${buildStructuredProfileContext(profileInput)}`
       imageList.length > 0 ||
       (Array.isArray(profileInput.ultimos_posts) && profileInput.ultimos_posts.length > 0);
 
-    const prompt = `Voce e um especialista em crescimento organico no Instagram. Analise o perfil recebido e retorne uma nota detalhada com melhorias claras e acionaveis.
+    const prompt = `Você é um especialista em crescimento orgânico no Instagram. Analise o perfil recebido e retorne uma nota detalhada com melhorias claras e acionáveis.
 
-NEGOCIO OU PERFIL ANALISADO: ${businessName}
+NEGÓCIO OU PERFIL ANALISADO: ${businessName}
 NICHO: ${niche}
-OBJETIVO: ${sanitizeSingleLine(profileInput.objetivo || "nao informado")}
+OBJETIVO: ${sanitizeSingleLine(profileInput.objetivo || "não informado")}
 
 ${previousContext}
 
-CONTEXTO DISPONIVEL:
+CONTEXTO DISPONÍVEL:
 - Prints recebidos: ${imageList.length}
-- Painel profissional visivel: ${hasProfessionalPanel ? "sim" : "nao"}
-- Foto de perfil enviada separadamente: ${fetchedProfilePhoto ? "sim" : profileInput.foto_perfil_url ? "url fornecida, mas sem analise visual garantida" : "nao"}
-- Ha evidencias visuais suficientes da foto de perfil: ${hasPhotoEvidence ? "sim" : "nao"}
-- Ha evidencias suficientes dos ultimos posts: ${hasPostEvidence ? "sim" : "nao"}
+- Painel profissional visível: ${hasProfessionalPanel ? "sim" : "não"}
+- Foto de perfil enviada separadamente: ${fetchedProfilePhoto ? "sim" : profileInput.foto_perfil_url ? "url fornecida, mas sem análise visual garantida" : "não"}
+- Há evidências visuais suficientes da foto de perfil: ${hasPhotoEvidence ? "sim" : "não"}
+- Há evidências suficientes dos últimos posts: ${hasPostEvidence ? "sim" : "não"}
 
 ${structuredContext}
 
-CRITERIOS DE AVALIACAO:
+CRITÉRIOS DE AVALIAÇÃO:
 1. FOTO DE PERFIL, peso 15
-- Rosto visivel, expressao confiante, fundo limpo e qualidade.
+- Rosto visível, expressão confiante, fundo limpo e qualidade.
 - Se for logo, avalie legibilidade em tamanho pequeno e contraste.
 2. NOME E USERNAME, peso 10
-- Verifique se o nome contem palavras-chave do nicho.
-- Verifique se o username e facil de lembrar e digitar.
+- Verifique se o nome contém palavras-chave do nicho.
+- Verifique se o username é fácil de lembrar e digitar.
 3. BIO, peso 25
 - Avalie se deixa claro o que faz, para quem e qual resultado entrega.
-- Avalie CTA, link, WhatsApp ou convite para acao.
-- Diga se esta especifica ou generica.
-4. CONSISTENCIA DE CONTEUDO, peso 20
-- Avalie identidade visual, variedade de formatos e frequencia.
-5. ENGAJAMENTO E PRESENCA, peso 15
-- Avalie a proporcao seguidores/seguindo.
+- Avalie CTA, link, WhatsApp ou convite para ação.
+- Diga se está específica ou genérica.
+4. CONSISTÊNCIA DE CONTEÚDO, peso 20
+- Avalie identidade visual, variedade de formatos e frequência.
+5. ENGAJAMENTO E PRESENÇA, peso 15
+- Avalie a proporção seguidores/seguindo.
 6. ALINHAMENTO COM OBJETIVO, peso 15
 - Diga se um visitante novo entenderia em 3 segundos o que esse perfil oferece.
 
-REGRAS OBRIGATORIAS:
-1. Seja especifico, honesto e encorajador. Nada de comentario generico.
-2. So sugira melhoria para um criterio se ele tiver sido avaliado como regular ou ruim.
-3. Se um criterio estiver bom ou otimo, ele nao pode aparecer nas melhorias prioritarias.
+REGRAS OBRIGATÓRIAS:
+1. Seja específico, honesto e encorajador. Nada de comentário genérico.
+2. Só sugira melhoria para um critério se ele tiver sido avaliado como regular ou ruim.
+3. Se um critério estiver bom ou ótimo, ele não pode aparecer nas melhorias prioritárias.
 4. Nunca use a frase Veja como ficaria.
-5. Sugestoes devem dizer exatamente o que mudar e por que isso ajuda.
-6. Se nao houver foto de perfil suficiente para analisar, diga isso no feedback do criterio e nao invente detalhes.
-7. A bio sugerida precisa ser personalizada para o nicho e objetivo. Use emojis estrategicamente. Maximo 150 caracteres.
+5. Sugestões devem dizer exatamente o que mudar e por que isso ajuda.
+6. Se não houver foto de perfil suficiente para analisar, diga isso no feedback do critério e não invente detalhes.
+7. A bio sugerida precisa ser personalizada para o nicho e objetivo. Use emojis estrategicamente. Máximo 150 caracteres.
 8. Pontos fortes precisam ser reais e coerentes com as notas.
-9. Se faltarem dados sobre ultimos posts ou frequencia, diga isso claramente no criterio de consistencia.
-10. Responda apenas com JSON valido e sem markdown.
-11. Nunca contradiga a propria analise. Se voce elogiou um ponto, nao o coloque nas melhorias.
-12. Nunca use feedbacks vagos como melhore sua bio. Explique como e por que.
+9. Se faltarem dados sobre últimos posts ou frequência, diga isso claramente no critério de consistência.
+10. Responda apenas com JSON válido e sem markdown.
+11. Nunca contradiga a própria análise. Se você elogiou um ponto, não o coloque nas melhorias.
+12. Nunca use feedbacks vagos como melhore sua bio. Explique como e por quê.
 
-STATUS PERMITIDOS POR CRITERIO:
+STATUS PERMITIDOS POR CRITÉRIO:
 - otimo
 - bom
 - regular
@@ -786,8 +786,8 @@ Retorne exatamente esta estrutura:
       "nota": 8,
       "peso": 15,
       "status": "bom",
-      "feedback": "Feedback especifico",
-      "acoes": ["Acao 1", "Acao 2"]
+      "feedback": "Feedback específico",
+      "acoes": ["Ação 1", "Ação 2"]
     },
     {
       "id": "nome_username",
@@ -795,8 +795,8 @@ Retorne exatamente esta estrutura:
       "nota": 0,
       "peso": 10,
       "status": "regular",
-      "feedback": "Feedback especifico",
-      "acoes": ["Acao 1"]
+      "feedback": "Feedback específico",
+      "acoes": ["Ação 1"]
     },
     {
       "id": "bio",
@@ -804,26 +804,26 @@ Retorne exatamente esta estrutura:
       "nota": 0,
       "peso": 25,
       "status": "regular",
-      "feedback": "Feedback especifico",
-      "acoes": ["Acao 1"]
+      "feedback": "Feedback específico",
+      "acoes": ["Ação 1"]
     },
     {
       "id": "consistencia_conteudo",
-      "nome": "Consistencia de conteudo",
+      "nome": "Consistência de conteúdo",
       "nota": 0,
       "peso": 20,
       "status": "regular",
-      "feedback": "Feedback especifico",
-      "acoes": ["Acao 1"]
+      "feedback": "Feedback específico",
+      "acoes": ["Ação 1"]
     },
     {
       "id": "engajamento_presenca",
-      "nome": "Engajamento e presenca",
+      "nome": "Engajamento e presença",
       "nota": 0,
       "peso": 15,
       "status": "regular",
-      "feedback": "Feedback especifico",
-      "acoes": ["Acao 1"]
+      "feedback": "Feedback específico",
+      "acoes": ["Ação 1"]
     },
     {
       "id": "alinhamento_objetivo",
@@ -831,8 +831,8 @@ Retorne exatamente esta estrutura:
       "nota": 0,
       "peso": 15,
       "status": "regular",
-      "feedback": "Feedback especifico",
-      "acoes": ["Acao 1"]
+      "feedback": "Feedback específico",
+      "acoes": ["Ação 1"]
     }
   ],
   "melhorias_prioritarias": [
@@ -840,14 +840,14 @@ Retorne exatamente esta estrutura:
       "prioridade": 1,
       "criterio": "bio",
       "impacto": "alto",
-      "descricao": "Explique o que esta fraco nesse criterio e por que isso importa.",
-      "sugestao_concreta": "Sugestao concreta pronta para aplicar. Se for bio, entregue o texto final da bio com emojis. Maximo 150 caracteres."
+      "descricao": "Explique o que está fraco nesse critério e por que isso importa.",
+      "sugestao_concreta": "Sugestão concreta pronta para aplicar. Se for bio, entregue o texto final da bio com emojis. Máximo 150 caracteres."
     }
   ],
   "pontos_fortes": [
-    "Ponto positivo especifico e real"
+    "Ponto positivo específico e real"
   ],
-  "proximos_passos": "Paragrafo curto, motivador e pratico."
+  "proximos_passos": "Parágrafo curto, motivador e prático."
 }`;
 
     const imageContents = imageList.map((img) => {

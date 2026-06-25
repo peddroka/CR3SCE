@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     const { email, userId } = await req.json();
 
     if (!email || !userId) {
-      return NextResponse.json({ error: "Dados invalidos" }, { status: 400 });
+      return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
     }
 
     if (bypassPaymentGate) {
@@ -28,8 +28,8 @@ export async function POST(req: Request) {
 
     const normalizedEmail = String(email).trim().toLowerCase();
 
-    // Se o ambiente ainda nao tem service role real, nao bloqueamos o fluxo.
-    // O usuario segue para o checkout normalmente.
+    // Se o ambiente ainda não tem service role real, não bloqueamos o fluxo.
+    // O usuário segue para o checkout normalmente.
     if (!hasValidServiceRoleKey) {
       return NextResponse.json({ status: "pending" }, { status: 200 });
     }
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
       await supabaseAdmin.auth.admin.getUserById(userId);
 
     if (authUserError || !authUserData.user) {
-      console.error("Erro ao validar usuario no post-signup:", authUserError);
+      console.error("Erro ao validar usuário no post-signup:", authUserError);
       return NextResponse.json({ status: "pending" }, { status: 200 });
     }
 

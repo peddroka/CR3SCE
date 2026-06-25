@@ -11,51 +11,51 @@ export async function POST(req: Request) {
     const { investment_amount, business, month_number, current_followers } =
       await req.json();
 
-    const prompt = `Voce e um especialista em marketing digital e crescimento de negocios brasileiros.
+    const prompt = `Você é um especialista em marketing digital e crescimento de negócios brasileiros.
 
-Crie uma jornada de evolucao personalizada para o seguinte negocio:
+Crie uma jornada de evolução personalizada para o seguinte negócio:
 
-NEGOCIO: ${business.business_name}
+NEGÓCIO: ${business.business_name}
 NICHO: ${business.niche}
 OBJETIVO: ${business.main_goal}
 PLATAFORMA: ${business.platforms}
-INVESTIMENTO DISPONIVEL: R$${investment_amount}
+INVESTIMENTO DISPONÍVEL: R$${investment_amount}
 SEGUIDORES ATUAIS: ${current_followers}
-MES: ${month_number}
+MÊS: ${month_number}
 
-INSTRUCOES IMPORTANTES:
-1. As recomendacoes devem ser ESPECIFICAS para o nicho "${business.niche}" - nao genericas
-2. Cada nivel deve ter exatamente 2 opcoes de investimento relevantes para este nicho
-3. Os valores devem caber dentro do orcamento de R$${investment_amount}
-4. Pense em: equipamentos especificos do nicho, acoes de marketing do setor, parcerias relevantes
+INSTRUÇÕES IMPORTANTES:
+1. As recomendações devem ser ESPECÍFICAS para o nicho "${business.niche}" - não genéricas
+2. Cada nível deve ter exatamente 2 opções de investimento relevantes para este nicho
+3. Os valores devem caber dentro do orçamento de R$${investment_amount}
+4. Pense em: equipamentos específicos do nicho, ações de marketing do setor, parcerias relevantes
 5. Exemplos por nicho:
-   - Padaria: fotos de produto, embalagem personalizada, delivery, influenciador alimenticio
-   - Moda: ensaio fotografico, modelo, lookbook, parceria com blogueira de moda
-   - Academia: video de treino, antes/depois, personal online, parceria com nutri
-   - Advocacia: producao de conteudo educativo, webinar juridico, LinkedIn ads
-6. Crie entre 3 e 5 niveis dependendo do orcamento (mais orcamento = mais niveis)
+   - Padaria: fotos de produto, embalagem personalizada, delivery, influenciador alimentício
+   - Moda: ensaio fotográfico, modelo, lookbook, parceria com blogueira de moda
+   - Academia: vídeo de treino, antes/depois, personal online, parceria com nutri
+   - Advocacia: produção de conteúdo educativo, webinar jurídico, LinkedIn ads
+6. Crie entre 3 e 5 níveis dependendo do orçamento (mais orçamento = mais níveis)
 
-Responda APENAS com JSON valido, sem markdown:
+Responda APENAS com JSON válido, sem markdown:
 {
   "levels": [
     {
       "level_number": 1,
-      "title": "titulo do nivel especifico para ${business.niche}",
-      "description": "descricao do que sera feito neste nivel",
-      "reward": "resultado esperado ao completar este nivel",
+      "title": "título do nível específico para ${business.niche}",
+      "description": "descrição do que será feito neste nível",
+      "reward": "resultado esperado ao completar este nível",
       "options": [
         {
           "id": "1a",
           "icon": "emoji relevante",
-          "title": "nome do investimento especifico para ${business.niche}",
-          "description": "descricao de como isso vai ajudar especificamente ${business.business_name}",
+          "title": "nome do investimento específico para ${business.niche}",
+          "description": "descrição de como isso vai ajudar especificamente ${business.business_name}",
           "price": "R$XX-XX"
         },
         {
           "id": "1b",
           "icon": "emoji relevante",
-          "title": "segunda opcao especifica para ${business.niche}",
-          "description": "descricao de como isso vai ajudar especificamente ${business.business_name}",
+          "title": "segunda opção específica para ${business.niche}",
+          "description": "descrição de como isso vai ajudar especificamente ${business.business_name}",
           "price": "R$XX-XX"
         }
       ]
@@ -86,7 +86,7 @@ Responda APENAS com JSON valido, sem markdown:
     if (!parsed?.levels || parsed.levels.length === 0) {
       return new Response(
         JSON.stringify({
-          error: "Nao foi possivel gerar a jornada. Tente novamente.",
+          error: "Não foi possível gerar a jornada. Tente novamente.",
         }),
         {
           status: 500,

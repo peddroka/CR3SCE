@@ -39,14 +39,14 @@ export async function POST(request: Request) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.json({ error: "Nao autenticado" }, { status: 401 });
+    return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   }
 
   let body: { entries?: { type: ConsentType; granted: boolean }[] };
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: "JSON invalido" }, { status: 400 });
+    return NextResponse.json({ error: "JSON inválido" }, { status: 400 });
   }
 
   const entries = Array.isArray(body.entries) ? body.entries : [];
@@ -74,7 +74,7 @@ export async function POST(request: Request) {
 
   if (rows.length === 0) {
     return NextResponse.json(
-      { error: "Tipos de consentimento invalidos" },
+      { error: "Tipos de consentimento inválidos" },
       { status: 400 },
     );
   }
@@ -89,7 +89,7 @@ export async function POST(request: Request) {
     );
   }
 
-  // Sincroniza opt-in de marketing no profile (espelho da ultima decisao)
+  // Sincroniza opt-in de marketing no profile (espelho da última decisão)
   const marketingEntry = entries.find((e) => e.type === "marketing_emails");
   if (marketingEntry) {
     await supabase
@@ -126,7 +126,7 @@ export async function GET() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.json({ error: "Nao autenticado" }, { status: 401 });
+    return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   }
 
   const { data, error } = await supabase
@@ -139,7 +139,7 @@ export async function GET() {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  // Agrega o estado corrente por tipo (ultima entrada vence)
+  // Agrega o estado corrente por tipo (última entrada vence)
   const current: Record<string, boolean> = {};
   for (const row of data ?? []) {
     if (!(row.type in current)) {

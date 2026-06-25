@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { logAudit, type AuditAction } from "@/lib/lgpd/audit";
 
-// Acoes que o cliente esta autorizado a registrar. Restringe para evitar
+// Ações que o cliente está autorizado a registrar. Restringe para evitar
 // que o cliente forje qualquer string.
 const CLIENT_ALLOWED_ACTIONS: AuditAction[] = [
   "auth.login",
@@ -17,18 +17,18 @@ export async function POST(request: Request) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.json({ error: "Nao autenticado" }, { status: 401 });
+    return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   }
 
   let body: { action?: string; entityType?: string; entityId?: string; metadata?: Record<string, unknown> };
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: "JSON invalido" }, { status: 400 });
+    return NextResponse.json({ error: "JSON inválido" }, { status: 400 });
   }
 
   if (!body.action || !CLIENT_ALLOWED_ACTIONS.includes(body.action as AuditAction)) {
-    return NextResponse.json({ error: "Acao nao permitida" }, { status: 400 });
+    return NextResponse.json({ error: "Ação não permitida" }, { status: 400 });
   }
 
   await logAudit({

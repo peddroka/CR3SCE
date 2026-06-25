@@ -9,32 +9,32 @@ const groq = createGroq({
 });
 
 const CONTENT_GENERATION_SYSTEM_PROMPT = [
-  "Voce e o nucleo de inteligencia do CR3SCE, um gestor de midias sociais profissional para pequenos negocios e criadores de conteudo brasileiros.",
-  "Sua missao e gerar estrategias de conteudo reais, criativas e que convertem. Nunca gere conteudo genérico, vazio ou com cara de template.",
+  "Você é o núcleo de inteligência do CR3SCE, um gestor de mídias sociais profissional para pequenos negócios e criadores de conteúdo brasileiros.",
+  "Sua missão é gerar estratégias de conteúdo reais, criativas e que convertem. Nunca gere conteúdo genérico, vazio ou com cara de template.",
   "Nunca use asteriscos.",
   "Nunca use aspas para destacar palavras.",
-  "Use apenas numeracao simples para listas.",
-  "Texto limpo, sem caracteres especiais de formatacao.",
+  "Use apenas numeração simples para listas.",
+  "Texto limpo, sem caracteres especiais de formatação.",
   "Escreva sempre em portugu\u00EAs do Brasil com acentua\u00E7\u00E3o correta e completa. Nunca omita acentos. Exemplos: a\u00E7\u00E3o, tamb\u00E9m, cria\u00E7\u00E3o, est\u00E1, in\u00EDcio, informa\u00E7\u00E3o.",
-  "Explique sempre de forma simples, visual e direta, como se estivesse guiando alguem que nunca trabalhou com redes sociais.",
-  "Aplique isso em Stories, Carrossel, Post Estatico e Reels.",
-  "Nos Stories, se o primeiro slot do dia acontecer antes das 10h, STORY 1 deve ser sempre um bom dia natural com o rosto do responsavel, sem caixinha ou enquete.",
-  "Caixinha e enquete entram a partir do segundo Story do dia. Quando houver H04, H05, H06 ou H07, STORY 2 avisa que vai responder no proximo story. STORY 3 responde a primeira pergunta recebida de forma natural. A partir dali, use o rotulo DICAS - Continuacao.",
-  "A pergunta da caixinha ou enquete deve ser curta, coloquial, facil de responder, adaptada ao nicho e nunca pode repetir literalmente o nome do tema do dia.",
-  "Quando houver H14, ele nunca pode comecar dizendo que abriu uma caixinha. Comece direto respondendo, como se a conversa ja estivesse em andamento.",
-  "A partir do STORY 3, nunca escreva roteiro fixo, porque o sistema nao sabe o que a audiencia vai perguntar. Apenas instrua o criador sobre como responder.",
-  'No STORY 2, use um aviso curto como: Recebi varias respostas aqui, vou responder uma por uma. Fica ligado.',
-  "No STORY 3, instrua assim: Responda a primeira pergunta recebida na caixinha. Seja direto, use exemplos reais.",
+  "Explique sempre de forma simples, visual e direta, como se estivesse guiando alguém que nunca trabalhou com redes sociais.",
+  "Aplique isso em Stories, Carrossel, Post Estático e Reels.",
+  "Nos Stories, se o primeiro slot do dia acontecer antes das 10h, STORY 1 deve ser sempre um bom dia natural com o rosto do responsável, sem caixinha ou enquete.",
+  "Caixinha e enquete entram a partir do segundo Story do dia. Quando houver H04, H05, H06 ou H07, STORY 2 avisa que vai responder no próximo story. STORY 3 responde à primeira pergunta recebida de forma natural. A partir dali, use o rótulo DICAS - Continuação.",
+  "A pergunta da caixinha ou enquete deve ser curta, coloquial, fácil de responder, adaptada ao nicho e nunca pode repetir literalmente o nome do tema do dia.",
+  "Quando houver H14, ele nunca pode começar dizendo que abriu uma caixinha. Comece direto respondendo, como se a conversa já estivesse em andamento.",
+  "A partir do STORY 3, nunca escreva roteiro fixo, porque o sistema não sabe o que a audiência vai perguntar. Apenas instrua o criador sobre como responder.",
+  'No STORY 2, use um aviso curto como: Recebi várias respostas aqui, vou responder uma por uma. Fica ligado.',
+  "No STORY 3, instrua assim: Responda à primeira pergunta recebida na caixinha. Seja direto, use exemplos reais.",
   "No STORY 4 em diante, instrua assim: Continue respondendo as perguntas recebidas, uma por uma. Seja natural, sem roteiro fixo. Se receber poucas perguntas, aprofunde mais cada resposta.",
-  "Nunca use o nome do tema_base literalmente dentro da fala do responsavel. Transforme o tema em contexto real de conversa.",
-  "Cada conteudo precisa servir ao objetivo declarado pelo usuario. Se nao servir, refaca antes de responder.",
-  "Dentro do mesmo dia, cada postagem deve cumprir uma funcao diferente na jornada do seguidor: manha para ativacao, curiosidade ou conexao emocional; meio-dia para aprofundamento, resposta ou bastidor; tarde e noite para conversao, reflexao ou CTA forte.",
-  "Nunca repita o mesmo formato no mesmo dia sem um motivo claro. Se houver enquete cedo, o proximo conteudo deve responder, aprofundar ou mostrar o resultado dessa enquete, e nao abrir outra igual.",
-  "O tema do dia e ponto de partida, nao prisao. Use o gancho cultural ou emocional para falar do nicho e do objetivo do cliente.",
-  "No Carrossel, use de 3 a 5 slides. O slide 1 deve ser capa com Passe para o lado no rodape. Os slides seguintes devem ser diretos e o ultimo slide precisa ter CTA claro.",
-  "No Post Estatico, entregue legenda pronta para copiar e colar, entre 150 e 250 caracteres, com CTA no final e descricao da imagem ideal alinhada ao nicho.",
-  "No Reel, o roteiro entra dentro de cada etapa e nao existe area de roteiro separada.",
-  "O passo a passo do Reel deve conter: 1. Abra a camera e grave na vertical. 2. Nos 3 primeiros segundos, fale este gancho: [gancho aqui]. 3. Em seguida fale: [roteiro completo aqui]. 4. Feche dizendo: [chamada para acao aqui]. 5. Na edicao: cortes rapidos, legenda e musica popular no momento da gravacao.",
+  "Nunca use o nome do tema_base literalmente dentro da fala do responsável. Transforme o tema em contexto real de conversa.",
+  "Cada conteúdo precisa servir ao objetivo declarado pelo usuário. Se não servir, refaça antes de responder.",
+  "Dentro do mesmo dia, cada postagem deve cumprir uma função diferente na jornada do seguidor: manhã para ativação, curiosidade ou conexão emocional; meio-dia para aprofundamento, resposta ou bastidor; tarde e noite para conversão, reflexão ou CTA forte.",
+  "Nunca repita o mesmo formato no mesmo dia sem um motivo claro. Se houver enquete cedo, o próximo conteúdo deve responder, aprofundar ou mostrar o resultado dessa enquete, e não abrir outra igual.",
+  "O tema do dia é ponto de partida, não prisão. Use o gancho cultural ou emocional para falar do nicho e do objetivo do cliente.",
+  "No Carrossel, use de 3 a 5 slides. O slide 1 deve ser capa com Passe para o lado no rodapé. Os slides seguintes devem ser diretos e o último slide precisa ter CTA claro.",
+  "No Post Estático, entregue legenda pronta para copiar e colar, entre 150 e 250 caracteres, com CTA no final e descrição da imagem ideal alinhada ao nicho.",
+  "No Reel, o roteiro entra dentro de cada etapa e não existe área de roteiro separada.",
+  "O passo a passo do Reel deve conter: 1. Abra a câmera e grave na vertical. 2. Nos 3 primeiros segundos, fale este gancho: [gancho aqui]. 3. Em seguida fale: [roteiro completo aqui]. 4. Feche dizendo: [chamada para ação aqui]. 5. Na edição: cortes rápidos, legenda e música popular no momento da gravação.",
 ].join("\n");
 
 type GrowthSpeed = "rapido" | "moderado" | "leve";
@@ -219,7 +219,7 @@ const DAY_STRATEGY_ROTATION: DayStrategyBlueprint[] = [
     story_interaction: "enquete",
   },
   {
-    content_pillar: "Reels de dica rapida",
+    content_pillar: "Reels de dica rápida",
     primary_format: "Reels",
     primary_subtype: "REELS_RAPIDO",
     posting_window: "evening",
@@ -233,7 +233,7 @@ const DAY_STRATEGY_ROTATION: DayStrategyBlueprint[] = [
     story_interaction: "enquete",
   },
   {
-    content_pillar: "Dica pratica do nicho",
+    content_pillar: "Dica prática do nicho",
     primary_format: "Stories",
     primary_subtype: "HISTORY_DICA",
     posting_window: "lunch",
@@ -254,14 +254,14 @@ const DAY_STRATEGY_ROTATION: DayStrategyBlueprint[] = [
     story_interaction: "caixinha",
   },
   {
-    content_pillar: "Enquete estrategica",
+    content_pillar: "Enquete estratégica",
     primary_format: "Stories",
     primary_subtype: "HISTORY_ENQUETE",
     posting_window: "lunch",
     story_interaction: "enquete",
   },
   {
-    content_pillar: "Comparativo pratico",
+    content_pillar: "Comparativo prático",
     primary_format: "Carrossel",
     primary_subtype: "FEED_CARROSSEL",
     posting_window: "evening",
@@ -277,72 +277,72 @@ const DAY_STRATEGY_ROTATION: DayStrategyBlueprint[] = [
 ];
 
 const HISTORY_STYLES: StyleDefinition[] = [
-  { id: "H01", label: "Bom dia com provocacao", family: "HISTORY", subtype: "HISTORY_BOMDIABOATARDE", description: "Abertura da manha com bom dia natural, rosto do responsavel e contexto real do dia." },
-  { id: "H02", label: "Boa tarde com enquete rapida", family: "HISTORY", subtype: "HISTORY_ENQUETE", description: "Abertura da tarde com enquete objetiva e resposta curta." },
-  { id: "H03", label: "Bastidores do dia de trabalho", family: "HISTORY", subtype: "HISTORY_BASTIDORES", description: "Mostra rotina real, processo e movimento do negocio." },
-  { id: "H04", label: "Caixinha de perguntas sobre o nicho", family: "HISTORY", subtype: "HISTORY_CAIXINHA", description: "Abre caixinha para duvidas do nicho e exige continuidade no mesmo dia." },
+  { id: "H01", label: "Bom dia com provocação", family: "HISTORY", subtype: "HISTORY_BOMDIABOATARDE", description: "Abertura da manhã com bom dia natural, rosto do responsável e contexto real do dia." },
+  { id: "H02", label: "Boa tarde com enquete rápida", family: "HISTORY", subtype: "HISTORY_ENQUETE", description: "Abertura da tarde com enquete objetiva e resposta curta." },
+  { id: "H03", label: "Bastidores do dia de trabalho", family: "HISTORY", subtype: "HISTORY_BASTIDORES", description: "Mostra rotina real, processo e movimento do negócio." },
+  { id: "H04", label: "Caixinha de perguntas sobre o nicho", family: "HISTORY", subtype: "HISTORY_CAIXINHA", description: "Abre caixinha para dúvidas do nicho e exige continuidade no mesmo dia." },
   { id: "H05", label: "Caixinha de perguntas sobre o cliente", family: "HISTORY", subtype: "HISTORY_CAIXINHA", description: "Abre caixinha focada na dor do cliente e exige continuidade no mesmo dia." },
-  { id: "H06", label: "Enquete de preferencia", family: "HISTORY", subtype: "HISTORY_ENQUETE", description: "Compara duas opcoes do nicho para gerar resposta rapida." },
-  { id: "H07", label: "Enquete mito ou verdade", family: "HISTORY", subtype: "HISTORY_ENQUETE", description: "Enquete curta para quebrar objecoes e gerar conversa." },
-  { id: "H08", label: "Dica rapida do dia", family: "HISTORY", subtype: "HISTORY_DICA", description: "Entrega uma dica curta, pratica e facil de aplicar." },
-  { id: "H09", label: "Antes e depois de cliente", family: "HISTORY", subtype: "HISTORY_BASTIDORES", description: "Compara situacao inicial e resultado final para prova social." },
-  { id: "H10", label: "Aviso de novo conteudo no feed", family: "HISTORY", subtype: "HISTORY_DICA", description: "Leva o seguidor para o feed com um motivo claro." },
-  { id: "H11", label: "Contagem regressiva de lancamento", family: "HISTORY", subtype: "HISTORY_DICA", description: "Cria expectativa para produto, vaga, evento ou novidade." },
-  { id: "H12", label: "Reacao a tendencia do momento", family: "HISTORY", subtype: "HISTORY_DICA", description: "Aproveita assunto quente com comentario rapido e opinativo." },
-  { id: "H13", label: "Pergunta reflexiva", family: "HISTORY", subtype: "HISTORY_DICA", description: "Story simples com pergunta forte para gerar identificacao." },
-  { id: "H14", label: "Resposta da caixinha anterior", family: "HISTORY", subtype: "HISTORY_DICA", description: "Continuacao direta da caixinha do mesmo dia, respondendo como se a conversa ja estivesse em andamento." },
+  { id: "H06", label: "Enquete de preferência", family: "HISTORY", subtype: "HISTORY_ENQUETE", description: "Compara duas opções do nicho para gerar resposta rápida." },
+  { id: "H07", label: "Enquete mito ou verdade", family: "HISTORY", subtype: "HISTORY_ENQUETE", description: "Enquete curta para quebrar objeções e gerar conversa." },
+  { id: "H08", label: "Dica rápida do dia", family: "HISTORY", subtype: "HISTORY_DICA", description: "Entrega uma dica curta, prática e fácil de aplicar." },
+  { id: "H09", label: "Antes e depois de cliente", family: "HISTORY", subtype: "HISTORY_BASTIDORES", description: "Compara situação inicial e resultado final para prova social." },
+  { id: "H10", label: "Aviso de novo conteúdo no feed", family: "HISTORY", subtype: "HISTORY_DICA", description: "Leva o seguidor para o feed com um motivo claro." },
+  { id: "H11", label: "Contagem regressiva de lançamento", family: "HISTORY", subtype: "HISTORY_DICA", description: "Cria expectativa para produto, vaga, evento ou novidade." },
+  { id: "H12", label: "Reação à tendência do momento", family: "HISTORY", subtype: "HISTORY_DICA", description: "Aproveita assunto quente com comentário rápido e opinativo." },
+  { id: "H13", label: "Pergunta reflexiva", family: "HISTORY", subtype: "HISTORY_DICA", description: "Story simples com pergunta forte para gerar identificação." },
+  { id: "H14", label: "Resposta da caixinha anterior", family: "HISTORY", subtype: "HISTORY_DICA", description: "Continuação direta da caixinha do mesmo dia, respondendo como se a conversa já estivesse em andamento." },
   { id: "H15", label: "Nos bastidores de um projeto", family: "HISTORY", subtype: "HISTORY_BASTIDORES", description: "Mostra projeto em andamento, tela, ambiente ou etapa real." },
-  { id: "H16", label: "Errei, aprendi e conto pra voce", family: "HISTORY", subtype: "HISTORY_BASTIDORES", description: "Story de vulnerabilidade com aprendizado aplicavel." },
-  { id: "H17", label: "O que eu faria diferente hoje", family: "HISTORY", subtype: "HISTORY_BASTIDORES", description: "Reflexao pratica sobre melhoria e maturidade profissional." },
-  { id: "H18", label: "Trend adaptada ao nicho", family: "HISTORY", subtype: "HISTORY_DICA", description: "Adapta uma trend visual ou narrativa para o contexto do negocio." },
-  { id: "H19", label: "Historia curta de cliente", family: "HISTORY", subtype: "HISTORY_BASTIDORES", description: "Conta um caso realista com comeco, conflito e licao." },
+  { id: "H16", label: "Errei, aprendi e conto pra você", family: "HISTORY", subtype: "HISTORY_BASTIDORES", description: "Story de vulnerabilidade com aprendizado aplicável." },
+  { id: "H17", label: "O que eu faria diferente hoje", family: "HISTORY", subtype: "HISTORY_BASTIDORES", description: "Reflexão prática sobre melhoria e maturidade profissional." },
+  { id: "H18", label: "Trend adaptada ao nicho", family: "HISTORY", subtype: "HISTORY_DICA", description: "Adapta uma trend visual ou narrativa para o contexto do negócio." },
+  { id: "H19", label: "História curta de cliente", family: "HISTORY", subtype: "HISTORY_BASTIDORES", description: "Conta um caso realista com começo, conflito e lição." },
   { id: "H20", label: "Aviso de live ou evento", family: "HISTORY", subtype: "HISTORY_DICA", description: "Convite direto para live, encontro, turma ou evento." },
-  { id: "H21", label: "Humor do nicho", family: "HISTORY", subtype: "HISTORY_DICA", description: "Piada leve ou cena reconhecivel por quem vive o nicho." },
-  { id: "H22", label: "Frase motivacional do nicho", family: "HISTORY", subtype: "HISTORY_DICA", description: "Mensagem curta que reforca mentalidade e posicionamento." },
-  { id: "H23", label: "Curiosidade sobre o mercado", family: "HISTORY", subtype: "HISTORY_DICA", description: "Insight curioso do mercado com aplicacao pratica." },
-  { id: "H24", label: "Desafio para o seguidor", family: "HISTORY", subtype: "HISTORY_ENQUETE", description: "Convida a audiencia a participar de um desafio rapido." },
-  { id: "H25", label: "Tutorial rapido em 3 frames", family: "HISTORY", subtype: "HISTORY_DICA", description: "Ensino curto e visual dividido em tres partes." },
+  { id: "H21", label: "Humor do nicho", family: "HISTORY", subtype: "HISTORY_DICA", description: "Piada leve ou cena reconhecível por quem vive o nicho." },
+  { id: "H22", label: "Frase motivacional do nicho", family: "HISTORY", subtype: "HISTORY_DICA", description: "Mensagem curta que reforça mentalidade e posicionamento." },
+  { id: "H23", label: "Curiosidade sobre o mercado", family: "HISTORY", subtype: "HISTORY_DICA", description: "Insight curioso do mercado com aplicação prática." },
+  { id: "H24", label: "Desafio para o seguidor", family: "HISTORY", subtype: "HISTORY_ENQUETE", description: "Convida a audiência a participar de um desafio rápido." },
+  { id: "H25", label: "Tutorial rápido em 3 frames", family: "HISTORY", subtype: "HISTORY_DICA", description: "Ensino curto e visual dividido em três partes." },
 ];
 
 const FEED_STYLES: StyleDefinition[] = [
-  { id: "F01", label: "Carrossel comparativo", family: "FEED", subtype: "FEED_CARROSSEL", description: "Compara opcao A contra opcao B com criterio claro." },
+  { id: "F01", label: "Carrossel comparativo", family: "FEED", subtype: "FEED_CARROSSEL", description: "Compara opção A contra opção B com critério claro." },
   { id: "F02", label: "Carrossel lista", family: "FEED", subtype: "FEED_CARROSSEL", description: "Lista erros, sinais, passos ou pontos essenciais." },
-  { id: "F03", label: "Carrossel passo a passo", family: "FEED", subtype: "FEED_CARROSSEL", description: "Ensina um processo em ordem simples e pratica." },
-  { id: "F04", label: "Carrossel storytelling", family: "FEED", subtype: "FEED_CARROSSEL", description: "Conta uma historia com licao e desdobramento." },
-  { id: "F05", label: "Foto com frase de impacto", family: "FEED", subtype: "FEED_FOTO", description: "Imagem estatica com frase forte e memoravel." },
+  { id: "F03", label: "Carrossel passo a passo", family: "FEED", subtype: "FEED_CARROSSEL", description: "Ensina um processo em ordem simples e prática." },
+  { id: "F04", label: "Carrossel storytelling", family: "FEED", subtype: "FEED_CARROSSEL", description: "Conta uma história com lição e desdobramento." },
+  { id: "F05", label: "Foto com frase de impacto", family: "FEED", subtype: "FEED_FOTO", description: "Imagem estática com frase forte e memorável." },
   { id: "F06", label: "Foto de bastidores com legenda reflexiva", family: "FEED", subtype: "FEED_FOTO", description: "Mostra bastidor com legenda de contexto e aprendizado." },
-  { id: "F07", label: "Foto de resultado de cliente", family: "FEED", subtype: "FEED_FOTO", description: "Prova social com resultado, bastidor ou transformacao." },
-  { id: "F08", label: "Carrossel mito vs verdade", family: "FEED", subtype: "FEED_CARROSSEL", description: "Quebra objecoes comparando mitos e fatos." },
-  { id: "F09", label: "Carrossel perguntas e respostas", family: "FEED", subtype: "FEED_CARROSSEL", description: "Organiza perguntas frequentes em formato facil de salvar." },
-  { id: "F10", label: "Infografico simples", family: "FEED", subtype: "FEED_CARROSSEL", description: "Usa dado, numero ou fluxo visual para explicar o tema." },
-  { id: "F11", label: "Carrossel de tendencias do mes", family: "FEED", subtype: "FEED_CARROSSEL", description: "Mostra mudancas e tendencias relevantes ao nicho." },
-  { id: "F12", label: "Foto minimalista com dado estatistico", family: "FEED", subtype: "FEED_FOTO", description: "Post enxuto com dado forte e leitura rapida." },
-  { id: "F13", label: "Carrossel o que ninguem te conta", family: "FEED", subtype: "FEED_CARROSSEL", description: "Revela bastidor, verdade desconfortavel ou detalhe escondido." },
-  { id: "F14", label: "Carrossel de rotina", family: "FEED", subtype: "FEED_CARROSSEL", description: "Mostra rotina, processo e ordem de execucao do nicho." },
+  { id: "F07", label: "Foto de resultado de cliente", family: "FEED", subtype: "FEED_FOTO", description: "Prova social com resultado, bastidor ou transformação." },
+  { id: "F08", label: "Carrossel mito vs verdade", family: "FEED", subtype: "FEED_CARROSSEL", description: "Quebra objeções comparando mitos e fatos." },
+  { id: "F09", label: "Carrossel perguntas e respostas", family: "FEED", subtype: "FEED_CARROSSEL", description: "Organiza perguntas frequentes em formato fácil de salvar." },
+  { id: "F10", label: "Infográfico simples", family: "FEED", subtype: "FEED_CARROSSEL", description: "Usa dado, número ou fluxo visual para explicar o tema." },
+  { id: "F11", label: "Carrossel de tendências do mês", family: "FEED", subtype: "FEED_CARROSSEL", description: "Mostra mudanças e tendências relevantes ao nicho." },
+  { id: "F12", label: "Foto minimalista com dado estatístico", family: "FEED", subtype: "FEED_FOTO", description: "Post enxuto com dado forte e leitura rápida." },
+  { id: "F13", label: "Carrossel o que ninguém te conta", family: "FEED", subtype: "FEED_CARROSSEL", description: "Revela bastidor, verdade desconfortável ou detalhe escondido." },
+  { id: "F14", label: "Carrossel de rotina", family: "FEED", subtype: "FEED_CARROSSEL", description: "Mostra rotina, processo e ordem de execução do nicho." },
   { id: "F15", label: "Foto com depoimento de cliente", family: "FEED", subtype: "FEED_FOTO", description: "Traz fala de cliente com contexto e credibilidade." },
 ];
 
 const REELS_STYLES: StyleDefinition[] = [
-  { id: "R01", label: "Reels educativo com gancho", family: "REELS", subtype: "REELS_EDUCATIVO", description: "Ensina algo relevante com gancho forte nos tres primeiros segundos." },
-  { id: "R02", label: "Reels de transformacao", family: "REELS", subtype: "REELS_RAPIDO", description: "Mostra antes e depois ou contraste de resultado." },
+  { id: "R01", label: "Reels educativo com gancho", family: "REELS", subtype: "REELS_EDUCATIVO", description: "Ensina algo relevante com gancho forte nos três primeiros segundos." },
+  { id: "R02", label: "Reels de transformação", family: "REELS", subtype: "REELS_RAPIDO", description: "Mostra antes e depois ou contraste de resultado." },
   { id: "R03", label: "Reels de trend adaptada", family: "REELS", subtype: "REELS_RAPIDO", description: "Usa trend do momento com contexto do nicho." },
-  { id: "R04", label: "Reels storytelling de caso real", family: "REELS", subtype: "REELS_EDUCATIVO", description: "Conta caso real ou realista com licao clara." },
-  { id: "R05", label: "Reels voce sabia que", family: "REELS", subtype: "REELS_EDUCATIVO", description: "Comeca com fato curioso e entrega uma revelacao." },
-  { id: "R06", label: "Reels de bastidores acelerado", family: "REELS", subtype: "REELS_RAPIDO", description: "Mostra processo em ritmo rapido e visual." },
-  { id: "R07", label: "Reels resposta a pergunta frequente", family: "REELS", subtype: "REELS_EDUCATIVO", description: "Responde uma duvida comum com clareza." },
-  { id: "R08", label: "Reels com lista rapida", family: "REELS", subtype: "REELS_RAPIDO", description: "Entrega lista curta e direta em poucos segundos." },
-  { id: "R09", label: "Reels humor do nicho", family: "REELS", subtype: "REELS_RAPIDO", description: "Usa humor leve e reconhecivel por quem vive o nicho." },
-  { id: "R10", label: "Reels com depoimento de cliente", family: "REELS", subtype: "REELS_EDUCATIVO", description: "Transforma prova social em video objetivo." },
+  { id: "R04", label: "Reels storytelling de caso real", family: "REELS", subtype: "REELS_EDUCATIVO", description: "Conta caso real ou realista com lição clara." },
+  { id: "R05", label: "Reels você sabia que", family: "REELS", subtype: "REELS_EDUCATIVO", description: "Começa com fato curioso e entrega uma revelação." },
+  { id: "R06", label: "Reels de bastidores acelerado", family: "REELS", subtype: "REELS_RAPIDO", description: "Mostra processo em ritmo rápido e visual." },
+  { id: "R07", label: "Reels resposta a pergunta frequente", family: "REELS", subtype: "REELS_EDUCATIVO", description: "Responde uma dúvida comum com clareza." },
+  { id: "R08", label: "Reels com lista rápida", family: "REELS", subtype: "REELS_RAPIDO", description: "Entrega lista curta e direta em poucos segundos." },
+  { id: "R09", label: "Reels humor do nicho", family: "REELS", subtype: "REELS_RAPIDO", description: "Usa humor leve e reconhecível por quem vive o nicho." },
+  { id: "R10", label: "Reels com depoimento de cliente", family: "REELS", subtype: "REELS_EDUCATIVO", description: "Transforma prova social em vídeo objetivo." },
   { id: "R11", label: "Reels de rotina do profissional", family: "REELS", subtype: "REELS_RAPIDO", description: "Mostra rotina, ritmo e bastidores do dia." },
-  { id: "R12", label: "Reels o que aprendi em anos", family: "REELS", subtype: "REELS_EDUCATIVO", description: "Condensa experiencia em licao pratica." },
-  { id: "R13", label: "Reels de demonstracao de servico", family: "REELS", subtype: "REELS_EDUCATIVO", description: "Demonstra produto, servico ou entrega em acao." },
-  { id: "R14", label: "Reels comparativo rapido", family: "REELS", subtype: "REELS_RAPIDO", description: "Compara duas abordagens de forma dinamica." },
-  { id: "R15", label: "Reels provocacao", family: "REELS", subtype: "REELS_RAPIDO", description: "Usa uma afirmacao forte para gerar comentarios." },
-  { id: "R16", label: "Reels nos bastidores de um processo", family: "REELS", subtype: "REELS_EDUCATIVO", description: "Mostra processo interno com explicacao acessivel." },
-  { id: "R17", label: "Reels com dado surpreendente", family: "REELS", subtype: "REELS_EDUCATIVO", description: "Abre com estatistica ou insight de mercado impactante." },
-  { id: "R18", label: "Reels de dica em 15 segundos", family: "REELS", subtype: "REELS_RAPIDO", description: "Entrega dica unica, clara e muito rapida." },
-  { id: "R19", label: "Reels POV do cliente", family: "REELS", subtype: "REELS_RAPIDO", description: "Encena ponto de vista do cliente para gerar identificacao." },
-  { id: "R20", label: "Reels com tutorial express", family: "REELS", subtype: "REELS_EDUCATIVO", description: "Ensina algo util em formato compacto e aplicavel." },
+  { id: "R12", label: "Reels o que aprendi em anos", family: "REELS", subtype: "REELS_EDUCATIVO", description: "Condensa experiência em lição prática." },
+  { id: "R13", label: "Reels de demonstração de serviço", family: "REELS", subtype: "REELS_EDUCATIVO", description: "Demonstra produto, serviço ou entrega em ação." },
+  { id: "R14", label: "Reels comparativo rápido", family: "REELS", subtype: "REELS_RAPIDO", description: "Compara duas abordagens de forma dinâmica." },
+  { id: "R15", label: "Reels provocação", family: "REELS", subtype: "REELS_RAPIDO", description: "Usa uma afirmação forte para gerar comentários." },
+  { id: "R16", label: "Reels nos bastidores de um processo", family: "REELS", subtype: "REELS_EDUCATIVO", description: "Mostra processo interno com explicação acessível." },
+  { id: "R17", label: "Reels com dado surpreendente", family: "REELS", subtype: "REELS_EDUCATIVO", description: "Abre com estatística ou insight de mercado impactante." },
+  { id: "R18", label: "Reels de dica em 15 segundos", family: "REELS", subtype: "REELS_RAPIDO", description: "Entrega dica única, clara e muito rápida." },
+  { id: "R19", label: "Reels POV do cliente", family: "REELS", subtype: "REELS_RAPIDO", description: "Encena ponto de vista do cliente para gerar identificação." },
+  { id: "R20", label: "Reels com tutorial express", family: "REELS", subtype: "REELS_EDUCATIVO", description: "Ensina algo útil em formato compacto e aplicável." },
 ];
 
 const STYLE_BANK = [...HISTORY_STYLES, ...FEED_STYLES, ...REELS_STYLES];
@@ -430,7 +430,7 @@ function dateMatchesMonth(date: Date, year: number, month: number) {
 
 function getShortAudience(targetAudience: string) {
   const cleaned = targetAudience.trim();
-  if (!cleaned) return "o seu publico ideal";
+  if (!cleaned) return "o seu público ideal";
   return cleaned.split(/[,.]/)[0].slice(0, 80);
 }
 
@@ -750,7 +750,7 @@ function getPlatformTip(subtype: EditorialSubtype, time: string) {
       subtype === "REELS_EDUCATIVO") &&
     !isTimeInRange(time, 18, 21)
   ) {
-    return "Postar entre 18h e 21h pode aumentar seu alcance. Considere adicionar esse horario.";
+    return "Postar entre 18h e 21h pode aumentar seu alcance. Considere adicionar esse horário.";
   }
 
   return null;
@@ -839,38 +839,38 @@ function buildThemeBank(
   const genericThemes = [
     `Como escolher ${niche} sem cair em promessa vazia`,
     `Os erros mais comuns de quem procura ${niche}`,
-    `O que quase ninguem avalia antes de contratar ${niche}`,
-    `Checklist rapido para acertar na escolha de ${niche}`,
-    `Como comparar opcoes de ${niche} sem se arrepender depois`,
-    `O que diferencia um bom ${niche} de uma opcao comum`,
-    `Duvida real de ${audience} sobre ${niche}`,
+    `O que quase ninguém avalia antes de contratar ${niche}`,
+    `Checklist rápido para acertar na escolha de ${niche}`,
+    `Como comparar opções de ${niche} sem se arrepender depois`,
+    `O que diferencia um bom ${niche} de uma opção comum`,
+    `Dúvida real de ${audience} sobre ${niche}`,
     `A pergunta que ${audience} deveria fazer antes de fechar ${niche}`,
     `Bastidor real: como funciona ${niche} por dentro`,
     `O erro de economia que sai caro em ${niche}`,
-    `Sinais de que voce precisa rever sua estrategia de ${niche}`,
+    `Sinais de que você precisa rever sua estratégia de ${niche}`,
     `O que mudou em ${niche} em ${currentYear}`,
-    `Mitos que confundem quem esta pesquisando ${niche}`,
-    `A verdade sobre preco e resultado em ${niche}`,
-    `Como gerar mais confianca antes de vender ${niche}`,
+    `Mitos que confundem quem está pesquisando ${niche}`,
+    `A verdade sobre preço e resultado em ${niche}`,
+    `Como gerar mais confiança antes de vender ${niche}`,
     `O detalhe que faz ${niche} parecer mais premium`,
-    `Como deixar ${niche} mais facil de entender para quem chega agora`,
+    `Como deixar ${niche} mais fácil de entender para quem chega agora`,
     `O que mais trava o crescimento de quem vende ${niche}`,
-    `Como transformar duvidas sobre ${niche} em oportunidade de venda`,
+    `Como transformar dúvidas sobre ${niche} em oportunidade de venda`,
     `As perguntas mais frequentes sobre ${niche}`,
     `Como apresentar melhor o valor de ${niche}`,
-    `O que faz alguem confiar mais em ${niche}`,
+    `O que faz alguém confiar mais em ${niche}`,
     `Como mostrar prova real em ${niche}`,
-    `Tendencias de ${niche} para ${currentYear}`,
-    `Como simplificar a comunicacao de ${niche}`,
+    `Tendências de ${niche} para ${currentYear}`,
+    `Como simplificar a comunicação de ${niche}`,
     `O que ${audience} mais quer evitar quando busca ${niche}`,
-    `Como organizar uma oferta de ${niche} que faca sentido`,
+    `Como organizar uma oferta de ${niche} que faça sentido`,
     `Os sinais de maturidade de uma marca de ${niche}`,
-    `Como usar conteudo para vender ${niche} com mais constancia`,
-    `O que responder quando alguem questiona o valor de ${niche}`,
+    `Como usar conteúdo para vender ${niche} com mais constância`,
+    `O que responder quando alguém questiona o valor de ${niche}`,
     `O antes e depois mental de quem entende ${niche} de verdade`,
     `O erro de posicionamento que enfraquece ${niche}`,
-    `Como criar mais clareza na comunicacao de ${niche}`,
-    `A decisao simples que melhora o resultado de ${niche}`,
+    `Como criar mais clareza na comunicação de ${niche}`,
+    `A decisão simples que melhora o resultado de ${niche}`,
     `Como construir autoridade real em ${niche}`,
     `O que observar no primeiro contato com ${niche}`,
   ];
@@ -975,61 +975,61 @@ function buildHolidayMoments(
 
   addPrimarySequence(
     easter,
-    "Pascoa",
+    "Páscoa",
     isFoodBusiness
-      ? "Antecipe a data com apetite e clima de reuniao em familia, conectando cardapio, reserva ou encomenda ao momento."
-      : "Antecipe a Pascoa com um gancho emocional de familia, cuidado e presente, conectando a data ao valor do negocio de forma organica.",
+      ? "Antecipe a data com apetite e clima de reunião em família, conectando cardápio, reserva ou encomenda ao momento."
+      : "Antecipe a Páscoa com um gancho emocional de família, cuidado e presente, conectando a data ao valor do negócio de forma orgânica.",
     isFoodBusiness
-      ? "No dia da Pascoa, coloque o negocio como parte da experiencia da familia, com convite claro para pedido, reserva ou visita."
-      : "No dia da Pascoa, traga conexao, carinho e um convite natural para conhecer, comprar ou agendar.",
-    "No dia seguinte, feche o ciclo com gratidao, bastidor ou prova social do que a data movimentou no negocio.",
+      ? "No dia da Páscoa, coloque o negócio como parte da experiência da família, com convite claro para pedido, reserva ou visita."
+      : "No dia da Páscoa, traga conexão, carinho e um convite natural para conhecer, comprar ou agendar.",
+    "No dia seguinte, feche o ciclo com gratidão, bastidor ou prova social do que a data movimentou no negócio.",
   );
 
   addPrimarySequence(
     mothersDay,
-    "Dia das Maes",
+    "Dia das Mães",
     isBeautyBusiness || isRetailBusiness
-      ? "Crie antecipacao com presente, autocuidado ou experiencia memoravel para maes e filhas, sempre conectado ao que a marca entrega."
-      : "Crie antecipacao com emocao, carinho e uma ideia pratica de como o negocio pode participar desse momento especial.",
-    "No proprio Dia das Maes, priorize emocao, homenagem real e um CTA suave para compra, reserva ou mensagem.",
-    "Depois da data, agradeca quem comprou, visitou ou participou e mostre como foi esse movimento no negocio.",
+      ? "Crie antecipação com presente, autocuidado ou experiência memorável para mães e filhas, sempre conectado ao que a marca entrega."
+      : "Crie antecipação com emoção, carinho e uma ideia prática de como o negócio pode participar desse momento especial.",
+    "No próprio Dia das Mães, priorize emoção, homenagem real e um CTA suave para compra, reserva ou mensagem.",
+    "Depois da data, agradeça quem comprou, visitou ou participou e mostre como foi esse movimento no negócio.",
   );
 
   addPrimarySequence(
     valentinesDay,
     "Dia dos Namorados",
     isFoodBusiness
-      ? "Aqueça a audiencia falando de experiencia a dois, reserva, cardapio ou momento especial para a data."
-      : "Aqueça a audiencia com desejo, conexao e preparacao para impressionar, sempre adaptando a data ao nicho da empresa.",
-    "No dia, use um gancho emocional de relacionamento e leve o publico para agendar, comprar ou chamar no direct.",
-    "No encerramento, agradeca o movimento da data, repostando bastidores, entregas ou clima que marcou o negocio.",
+      ? "Aqueça a audiência falando de experiência a dois, reserva, cardápio ou momento especial para a data."
+      : "Aqueça a audiência com desejo, conexão e preparação para impressionar, sempre adaptando a data ao nicho da empresa.",
+    "No dia, use um gancho emocional de relacionamento e leve o público para agendar, comprar ou chamar no direct.",
+    "No encerramento, agradeça o movimento da data, repostando bastidores, entregas ou clima que marcou o negócio.",
   );
 
   addPrimarySequence(
     blackFriday,
     "Black Friday",
-    "Comece a antecipacao com urgencia inteligente, oferta real e expectativa. Nada de desconto vazio ou generico.",
-    "No dia da Black Friday, seja direto, claro e orientado para conversao, com CTA forte para compra ou mensagem.",
-    "No dia seguinte, use escassez final, agradecimento ou ultima chamada para capturar quem quase comprou.",
+    "Comece a antecipação com urgência inteligente, oferta real e expectativa. Nada de desconto vazio ou genérico.",
+    "No dia da Black Friday, seja direto, claro e orientado para conversão, com CTA forte para compra ou mensagem.",
+    "No dia seguinte, use escassez final, agradecimento ou última chamada para capturar quem quase comprou.",
   );
 
   addPrimarySequence(
     christmas,
     "Natal",
     isRetailBusiness || isFoodBusiness
-      ? "Entre alguns dias antes com presente, ceia, encomenda ou preparacao de fim de ano conectada ao negocio."
-      : "Entre alguns dias antes com clima de presente, gratidao e conexao, encaixando o negocio com naturalidade na rotina de Natal.",
-    "No Natal, priorize gratidao, familia e presenca da marca de forma humana, sem parecer promocional demais.",
+      ? "Entre alguns dias antes com presente, ceia, encomenda ou preparação de fim de ano conectada ao negócio."
+      : "Entre alguns dias antes com clima de presente, gratidão e conexão, encaixando o negócio com naturalidade na rotina de Natal.",
+    "No Natal, priorize gratidão, família e presença da marca de forma humana, sem parecer promocional demais.",
     "No dia seguinte, feche com agradecimento, bastidor ou saldo afetivo do que a data representou para a empresa.",
   );
 
   if (month === 12) {
     addMoment(
       newYearsEve,
-      "Reveillon",
+      "Réveillon",
       "secondary",
       "dia",
-      "Feche o ano com gratidao, bastidores, equipe, aprendizados e um convite leve para o novo ciclo.",
+      "Feche o ano com gratidão, bastidores, equipe, aprendizados e um convite leve para o novo ciclo.",
     );
   }
 
@@ -1050,22 +1050,22 @@ function buildHolidayMoments(
       "secondary",
       "dia",
       isHealthBusiness || isBeautyBusiness
-        ? "Traga homenagem real, autoestima, cuidado e um convite organico para avaliacao, atendimento ou presente."
-        : "Traga reconhecimento, historia e valor para mulheres do seu publico, conectando o negocio a esse cuidado.",
+        ? "Traga homenagem real, autoestima, cuidado e um convite orgânico para avaliação, atendimento ou presente."
+        : "Traga reconhecimento, história e valor para mulheres do seu público, conectando o negócio a esse cuidado.",
     );
     addMoment(
       new Date(year, 2, 15),
       "Semana do Consumidor",
       "secondary",
       "dia",
-      "Use a data para reforcar valor percebido, oferta honesta, condicao especial ou beneficio claro para quem compra.",
+      "Use a data para reforçar valor percebido, oferta honesta, condição especial ou benefício claro para quem compra.",
     );
     addMoment(
       new Date(year, 2, 20),
-      "Inicio do Outono",
+      "Início do Outono",
       "secondary",
       "dia",
-      "Conecte a mudanca de estacao ao consumo, rotina ou cuidado relacionado ao seu nicho.",
+      "Conecte a mudança de estação ao consumo, rotina ou cuidado relacionado ao seu nicho.",
     );
   }
 
@@ -1082,14 +1082,14 @@ function buildHolidayMoments(
       "Sexta-Feira Santa",
       "secondary",
       "dia",
-      "Mantenha um tom mais sobrio, respeitoso e humano. Se vender, venda com suavidade.",
+      "Mantenha um tom mais sóbrio, respeitoso e humano. Se vender, venda com suavidade.",
     );
     addMoment(
       new Date(year, 3, 21),
       "Tiradentes",
       "secondary",
       "dia",
-      "Use o feriado para humanizar a marca, mostrar bastidor da equipe, pausa consciente ou rotina real do negocio.",
+      "Use o feriado para humanizar a marca, mostrar bastidor da equipe, pausa consciente ou rotina real do negócio.",
     );
     if (isEcoRelevant) {
       addMoment(
@@ -1097,7 +1097,7 @@ function buildHolidayMoments(
         "Dia da Terra",
         "secondary",
         "dia",
-        "Conecte sustentabilidade, materia-prima, descarte, durabilidade ou proposito a partir da realidade do negocio.",
+        "Conecte sustentabilidade, matéria-prima, descarte, durabilidade ou propósito a partir da realidade do negócio.",
       );
     }
   }
@@ -1108,7 +1108,7 @@ function buildHolidayMoments(
       "Dia do Trabalho",
       "secondary",
       "dia",
-      "Valorize a equipe, o bastidor e o trabalho bem feito por tras da marca. Humanizacao vem antes da venda.",
+      "Valorize a equipe, o bastidor e o trabalho bem feito por trás da marca. Humanização vem antes da venda.",
     );
   }
 
@@ -1118,25 +1118,25 @@ function buildHolidayMoments(
       "Dia Mundial do Meio Ambiente",
       "secondary",
       "dia",
-      "Mostre atitudes sustentaveis ou escolhas conscientes que facam sentido para a rotina da empresa.",
+      "Mostre atitudes sustentáveis ou escolhas conscientes que façam sentido para a rotina da empresa.",
     );
     addMoment(
       corpusChristi,
       "Corpus Christi",
       "secondary",
       "dia",
-      "Use o feriado para ajustar horario, humanizar a equipe ou sugerir uma rotina mais leve conectada ao negocio.",
+      "Use o feriado para ajustar horário, humanizar a equipe ou sugerir uma rotina mais leve conectada ao negócio.",
     );
     addMoment(
       new Date(year, 5, 24),
       "Festas Juninas",
       "secondary",
       "dia",
-      "Aproveite o clima junino com repertorio brasileiro, humor e adaptacao real ao nicho, sem perder a cara da marca.",
+      "Aproveite o clima junino com repertório brasileiro, humor e adaptação real ao nicho, sem perder a cara da marca.",
     );
     addMoment(
       new Date(year, 5, 29),
-      "Sao Pedro",
+      "São Pedro",
       "secondary",
       "dia",
       "Feche o ciclo junino com agradecimento, bastidor ou oferta final adaptada ao clima da data.",
@@ -1146,10 +1146,10 @@ function buildHolidayMoments(
   if (month === 7) {
     addMoment(
       new Date(year, 6, 15),
-      "Ferias Escolares",
+      "Férias Escolares",
       "secondary",
       "dia",
-      "Conecte o negocio a familia, lazer, praticidade ou rotina das ferias, de um jeito especifico para seu publico.",
+      "Conecte o negócio à família, lazer, praticidade ou rotina das férias, de um jeito específico para seu público.",
     );
   }
 
@@ -1158,58 +1158,58 @@ function buildHolidayMoments(
       fathersDay,
       "Dia dos Pais",
       isRetailBusiness || isFoodBusiness
-        ? "Antecipe com presente, experiencia ou programa especial para pais e filhos."
-        : "Antecipe com memoria, homenagem e um jeito real de o negocio participar da data.",
-      "No dia, use emocao, presenca e um CTA leve para compra, reserva ou conversa.",
-      "Depois da data, agradeca o movimento e mostre bastidores, clientes ou equipe celebrando.",
+        ? "Antecipe com presente, experiência ou programa especial para pais e filhos."
+        : "Antecipe com memória, homenagem e um jeito real de o negócio participar da data.",
+      "No dia, use emoção, presença e um CTA leve para compra, reserva ou conversa.",
+      "Depois da data, agradeça o movimento e mostre bastidores, clientes ou equipe celebrando.",
     );
   }
 
   if (month === 9) {
     addMoment(
       new Date(year, 8, 7),
-      "Independencia do Brasil",
+      "Independência do Brasil",
       "secondary",
       "dia",
-      "Use o feriado para humanizar a marca, mostrar orgulho do negocio local e reforcar identidade brasileira sem soar forcado.",
+      "Use o feriado para humanizar a marca, mostrar orgulho do negócio local e reforçar identidade brasileira sem soar forçado.",
     );
     addMoment(
       new Date(year, 8, 15),
       "Dia do Cliente",
       "secondary",
       "dia",
-      "Coloque o cliente no centro com agradecimento, beneficio, historia real ou condicao especial.",
+      "Coloque o cliente no centro com agradecimento, benefício, história real ou condição especial.",
     );
     addMoment(
       new Date(year, 8, 21),
-      "Dia da Arvore",
+      "Dia da Árvore",
       "secondary",
       "dia",
-      "Se fizer sentido para o nicho, conecte natureza, materia-prima, cuidado ou sustentabilidade de forma concreta.",
+      "Se fizer sentido para o nicho, conecte natureza, matéria-prima, cuidado ou sustentabilidade de forma concreta.",
     );
     addMoment(
       new Date(year, 8, 22),
-      "Inicio da Primavera",
+      "Início da Primavera",
       "secondary",
       "dia",
-      "Aproveite a virada de estacao para renovar repertorio, vitrine, servico ou linguagem visual do negocio.",
+      "Aproveite a virada de estação para renovar repertório, vitrine, serviço ou linguagem visual do negócio.",
     );
   }
 
   if (month === 10) {
     addMoment(
       new Date(year, 9, 12),
-      "Dia das Criancas",
+      "Dia das Crianças",
       "secondary",
       "dia",
-      "Se o nicho tocar familia, presente, passeio ou experiencia, conecte a data a algo divertido e util.",
+      "Se o nicho tocar família, presente, passeio ou experiência, conecte a data a algo divertido e útil.",
     );
     addMoment(
       new Date(year, 9, 31),
       "Halloween",
       "secondary",
       "dia",
-      "Use humor, fantasia ou suspense de forma leve e adaptada ao nicho. Tendencia sim, mas com cara de marca real.",
+      "Use humor, fantasia ou suspense de forma leve e adaptada ao nicho. Tendência sim, mas com cara de marca real.",
     );
   }
 
@@ -1219,21 +1219,21 @@ function buildHolidayMoments(
       "Finados",
       "secondary",
       "dia",
-      "Mantenha um tom respeitoso e sensivel. Evite promocao agressiva.",
+      "Mantenha um tom respeitoso e sensível. Evite promoção agressiva.",
     );
     addMoment(
       new Date(year, 10, 15),
-      "Proclamacao da Republica",
+      "Proclamação da República",
       "secondary",
       "dia",
       "Use o feriado para humanizar a marca, equipe e rotina de forma leve.",
     );
     addMoment(
       new Date(year, 10, 20),
-      "Dia da Consciencia Negra",
+      "Dia da Consciência Negra",
       "secondary",
       "dia",
-      "Aborde a data com respeito, repertorio e responsabilidade. Priorize representatividade, historia e contribuicao real.",
+      "Aborde a data com respeito, repertório e responsabilidade. Priorize representatividade, história e contribuição real.",
     );
   }
 
@@ -1243,14 +1243,14 @@ function buildHolidayMoments(
       "Ano Novo",
       "secondary",
       "dia",
-      "Comece o ano com gratidao, recomeço, metas e um convite natural para o cliente fazer parte desse novo ciclo.",
+      "Comece o ano com gratidão, recomeço, metas e um convite natural para o cliente fazer parte desse novo ciclo.",
     );
   }
 
   if (month === 2) {
     addMoment(
       new Date(year, 1, 14),
-      "Dia de Sao Valentim",
+      "Dia de São Valentim",
       "secondary",
       "dia",
       "Use o clima de relacionamento como gancho de engajamento, sem confundir com o Dia dos Namorados brasileiro.",
@@ -1263,7 +1263,7 @@ function buildHolidayMoments(
       "Dia do Comerciante",
       "secondary",
       "dia",
-      "Valorize o pequeno negocio, atendimento e rotina de quem vive o comercio na pratica.",
+      "Valorize o pequeno negócio, atendimento e rotina de quem vive o comércio na prática.",
     );
   }
 
@@ -1332,11 +1332,11 @@ function buildDayStrategies(
           : holidayMoment?.phase === "encerramento"
             ? `${holidayMoment.title}: o que ficou da data e como aproveitar esse movimento`
             : holidayMoment
-              ? `${holidayMoment.title}: o negocio como protagonista da conversa`
+              ? `${holidayMoment.title}: o negócio como protagonista da conversa`
               : themeCandidate,
       content_pillar:
         holidayMoment?.priority === "primary"
-          ? "Campanha sazonal conectada ao negocio"
+          ? "Campanha sazonal conectada ao negócio"
           : holidayMoment
             ? "Gancho de data comemorativa com contexto real"
             : strategyCandidate.content_pillar,
@@ -1433,8 +1433,8 @@ function ensureDayStrategyVariety(
 
 function getGoalLabel(goal: string) {
   const labels: Record<string, string> = {
-    visualizacao: "aumentar visualizacao",
-    identidade: "construir identidade com publico qualificado",
+    visualizacao: "aumentar visualização",
+    identidade: "construir identidade com público qualificado",
     vendas: "gerar mais vendas",
     seguidores: "ganhar seguidores qualificados",
     engajamento: "aumentar o engajamento",
@@ -1447,30 +1447,30 @@ function getGoalLabel(goal: string) {
 
 function getGoalStrategyGuidance(goal: string) {
   if (goal === "visualizacao") {
-    return "Priorize alcance, descoberta, ganchos fortes, curiosidade, ritmo rapido, temas amplos do nicho e potencial de compartilhamento. Aceite conteudos menos profundos quando isso aumentar a descoberta do perfil.";
+    return "Priorize alcance, descoberta, ganchos fortes, curiosidade, ritmo rápido, temas amplos do nicho e potencial de compartilhamento. Aceite conteúdos menos profundos quando isso aumentar a descoberta do perfil.";
   }
 
   if (goal === "identidade") {
-    return "Priorize posicionamento, autoridade, prova social, objecoes reais, diferenciacao do negocio, conexao com o nicho e conteudos feitos para atrair pessoas com intencao real de compra.";
+    return "Priorize posicionamento, autoridade, prova social, objeções reais, diferenciação do negócio, conexão com o nicho e conteúdos feitos para atrair pessoas com intenção real de compra.";
   }
 
-  return "Equilibre alcance com construcao de autoridade para o negocio.";
+  return "Equilibre alcance com construção de autoridade para o negócio.";
 }
 
 function getCommunicationStyleGuidance(style: string) {
   if (style === "humoristico") {
-    return "O tom precisa ser claramente humoristico, leve e espontaneo. Use comparacoes, ironia leve e cenas engraçadas sem perder a credibilidade do negocio.";
+    return "O tom precisa ser claramente humorístico, leve e espontâneo. Use comparações, ironia leve e cenas engraçadas sem perder a credibilidade do negócio.";
   }
 
   if (style === "educativo") {
-    return "O tom precisa ser educativo e didatico. Explique o tema com clareza, exemplos prontos e linguagem de especialista acessivel.";
+    return "O tom precisa ser educativo e didático. Explique o tema com clareza, exemplos prontos e linguagem de especialista acessível.";
   }
 
   if (style === "casual") {
-    return "O tom precisa soar humano, natural e proximo, como uma conversa direta com o cliente.";
+    return "O tom precisa soar humano, natural e próximo, como uma conversa direta com o cliente.";
   }
 
-  return `Mantenha o tom ${style} de forma consistente em todos os conteudos.`;
+  return `Mantenha o tom ${style} de forma consistente em todos os conteúdos.`;
 }
 
 function getCommunicationStyleGuidanceV2(style: string) {
@@ -1909,7 +1909,7 @@ function buildPlanForMonth(
     const dayPlan = dayStrategiesMap.get(dayNumber);
 
     if (!dayPlan) {
-      throw new Error(`Planejamento do dia ${dayNumber} nao encontrado`);
+      throw new Error(`Planejamento do dia ${dayNumber} não encontrado`);
     }
 
     const contentSequence = getContentSequenceForDay(
@@ -2006,7 +2006,7 @@ function extractJson(text: string) {
   const end = cleaned.lastIndexOf("}");
 
   if (start === -1 || end === -1) {
-    throw new Error("Resposta da IA sem JSON valido");
+    throw new Error("Resposta da IA sem JSON válido");
   }
 
   return JSON.parse(cleaned.slice(start, end + 1));
@@ -2115,7 +2115,7 @@ function buildHolidayTopic(
     return `${title}: o gancho certo para transformar a data em conversa e venda`;
   }
 
-  return `${title}: o negocio como protagonista dessa data`;
+  return `${title}: o negócio como protagonista dessa data`;
 }
 
 function buildTopicFromSeed(
@@ -2151,15 +2151,15 @@ function buildTopicFromSeed(
         return `Respondendo o que chegou sobre ${niche}`;
       case "H03":
       case "H15":
-        return `Por dentro da ${business.business_name}: como ${baseTheme.toLowerCase()} acontece na pratica`;
+        return `Por dentro da ${business.business_name}: como ${baseTheme.toLowerCase()} acontece na prática`;
       case "H16":
         return `O erro que eu cometi em ${baseTheme.toLowerCase()} e o que aprendi com isso`;
       case "H17":
         return `O que eu faria diferente hoje para melhorar ${baseTheme.toLowerCase()}`;
       case "H21":
-        return `Se voce trabalha com ${business.niche}, vai se identificar com isso`;
+        return `Se você trabalha com ${business.niche}, vai se identificar com isso`;
       case "F01":
-        return `${baseTheme}: qual caminho faz mais sentido para voce`;
+        return `${baseTheme}: qual caminho faz mais sentido para você`;
       case "F02":
         return `5 erros que sabotam ${baseTheme.toLowerCase()}`;
       case "F03":
@@ -2167,17 +2167,17 @@ function buildTopicFromSeed(
       case "F08":
         return `Mito ou verdade: o que quase todo mundo entende errado sobre ${baseTheme.toLowerCase()}`;
       case "F13":
-        return `O que ninguem te conta sobre ${baseTheme.toLowerCase()}`;
+        return `O que ninguém te conta sobre ${baseTheme.toLowerCase()}`;
       case "F15":
         return `O que esse cliente percebeu depois de ajustar ${baseTheme.toLowerCase()}`;
       case "R03":
-        return `A trend que faz sentido para ${business.niche} quando o assunto e ${baseTheme.toLowerCase()}`;
+        return `A trend que faz sentido para ${business.niche} quando o assunto é ${baseTheme.toLowerCase()}`;
       case "R08":
-        return `3 erros silenciosos em ${baseTheme.toLowerCase()} que quase ninguem percebe`;
+        return `3 erros silenciosos em ${baseTheme.toLowerCase()} que quase ninguém percebe`;
       case "R15":
         return `A verdade que pouca gente aceita sobre ${baseTheme.toLowerCase()}`;
       case "R17":
-        return `O dado que muda completamente sua visao sobre ${baseTheme.toLowerCase()}`;
+        return `O dado que muda completamente sua visão sobre ${baseTheme.toLowerCase()}`;
       case "R20":
         return `Tutorial express: como melhorar ${baseTheme.toLowerCase()} sem complicar`;
       default:
@@ -2202,9 +2202,9 @@ function buildTopicFromSeed(
       case "FEED_CARROSSEL":
         return `O guia mais claro para entender ${baseTheme.toLowerCase()}`;
       case "REELS_RAPIDO":
-        return `O ponto rapido que pode mudar ${baseTheme.toLowerCase()}`;
+        return `O ponto rápido que pode mudar ${baseTheme.toLowerCase()}`;
       case "REELS_EDUCATIVO":
-        return `O que voce precisa entender sobre ${baseTheme.toLowerCase()}`;
+        return `O que você precisa entender sobre ${baseTheme.toLowerCase()}`;
       default:
         break;
     }
@@ -2261,23 +2261,23 @@ function buildSummaryFromSeed(topic: string, seed: PlannedPostSeed) {
     case "H05":
       return `Abre uma caixinha conectada ao tema ${compactTopic.toLowerCase()}.`;
     case "H14":
-      return "Continua a conversa da caixinha anterior e responde as primeiras duvidas.";
+      return "Continua a conversa da caixinha anterior e responde as primeiras dúvidas.";
     case "H06":
     case "H07":
-      return "Lanca uma enquete simples para aquecer a interacao do dia.";
+      return "Lança uma enquete simples para aquecer a interação do dia.";
     case "H03":
     case "H15":
-      return "Mostra um bastidor real e aproxima o seguidor da rotina do negocio.";
+      return "Mostra um bastidor real e aproxima o seguidor da rotina do negócio.";
     case "F01":
       return "Compara dois caminhos do nicho e ajuda o seguidor a escolher melhor.";
     case "F02":
       return "Lista os erros mais comuns que atrapalham esse resultado.";
     case "F03":
-      return "Ensina o caminho pratico para aplicar esse tema com clareza.";
+      return "Ensina o caminho prático para aplicar esse tema com clareza.";
     case "R03":
-      return "Adapta uma trend ao nicho com um gancho forte e facil de gravar.";
+      return "Adapta uma trend ao nicho com um gancho forte e fácil de gravar.";
     case "R08":
-      return "Entrega uma lista rapida com erros que geram identificacao imediata.";
+      return "Entrega uma lista rápida com erros que geram identificação imediata.";
     case "R17":
       return "Abre com um dado forte e conecta isso ao contexto real do cliente.";
     default:
@@ -2285,7 +2285,7 @@ function buildSummaryFromSeed(topic: string, seed: PlannedPostSeed) {
   }
 
   if (seed.content_type === "Stories") {
-    return `Story rapido e natural para puxar conversa sobre ${compactTopic.toLowerCase()}.`;
+    return `Story rápido e natural para puxar conversa sobre ${compactTopic.toLowerCase()}.`;
   }
 
   if (seed.content_type === "Carrossel") {
@@ -2293,7 +2293,7 @@ function buildSummaryFromSeed(topic: string, seed: PlannedPostSeed) {
   }
 
   if (seed.content_type === "Post Estatico") {
-    return "Post estatico com foco em posicionamento e leitura rapida do tema.";
+    return "Post estático com foco em posicionamento e leitura rápida do tema.";
   }
 
   return `Reels direto ao ponto sobre ${compactTopic.toLowerCase()} com CTA no final.`;
@@ -2303,16 +2303,16 @@ function buildCtaFromSeed(business: BusinessProfile, seed: PlannedPostSeed) {
   switch (getPublicationType(seed)) {
     case "HISTORY":
       if (seed.style_id === "H14") {
-        return "Me manda mais duvidas e eu continuo respondendo por aqui.";
+        return "Me manda mais dúvidas e eu continuo respondendo por aqui.";
       }
 
       if (seed.style_id === "H04" || seed.style_id === "H05") {
-        return "Responde a caixinha agora que eu volto no proximo story.";
+        return "Responde a caixinha agora que eu volto no próximo story.";
       }
 
-      return "Me responde aqui e continua comigo no proximo story.";
+      return "Me responde aqui e continua comigo no próximo story.";
     case "REELS":
-      return `Salva este video e me chama no direct se quiser ajuda com ${business.niche}.`;
+      return `Salva este vídeo e me chama no direct se quiser ajuda com ${business.niche}.`;
     default:
       if (seed.subtype === "FEED_FOTO") {
         return `Se isso fez sentido, salva o post e chama a ${business.business_name}.`;
@@ -2335,14 +2335,14 @@ function buildCaptionFromSeed(
   }
 
   if (seed.subtype === "FEED_CARROSSEL") {
-    return `${topic}\n\nMuita gente tenta melhorar ${business.niche} sem entender o que realmente pesa na decisao de quem compra. Quando voce organiza a mensagem, corta o excesso e mostra o caminho certo, o conteudo para de parecer improvisado e passa a gerar confianca de verdade.\n\nEste carrossel foi pensado para ${audience} enxergar com mais clareza o que fazer agora. ${cta}`;
+    return `${topic}\n\nMuita gente tenta melhorar ${business.niche} sem entender o que realmente pesa na decisão de quem compra. Quando você organiza a mensagem, corta o excesso e mostra o caminho certo, o conteúdo para de parecer improvisado e passa a gerar confiança de verdade.\n\nEste carrossel foi pensado para ${audience} enxergar com mais clareza o que fazer agora. ${cta}`;
   }
 
   if (seed.subtype === "FEED_FOTO") {
-    return `${topic}\n\nUma imagem real, limpa e bem escolhida ajuda ${audience} a perceber valor em ${business.niche} antes mesmo do primeiro contato. Mostre contexto, cuidado e confianca. ${cta}`;
+    return `${topic}\n\nUma imagem real, limpa e bem escolhida ajuda ${audience} a perceber valor em ${business.niche} antes mesmo do primeiro contato. Mostre contexto, cuidado e confiança. ${cta}`;
   }
 
-  return `${topic}\n\nSe voce quer crescer em ${business.niche} com mais clareza, consistencia e conteudo que conversa com ${audience}, este video ja te mostra um caminho pratico para aplicar hoje. ${cta}`;
+  return `${topic}\n\nSe você quer crescer em ${business.niche} com mais clareza, consistência e conteúdo que conversa com ${audience}, este vídeo já te mostra um caminho prático para aplicar hoje. ${cta}`;
 }
 
 function buildSlidesFromSeed(
@@ -2373,7 +2373,7 @@ function buildSlidesFromSeed(
       numero: 3,
       tipo: "conteudo",
       texto_principal: "O que muda o jogo",
-      texto_secundario: `Organizar mensagem, prova e consistencia faz ${business.niche} parecer mais forte.`,
+      texto_secundario: `Organizar mensagem, prova e consistência faz ${business.niche} parecer mais forte.`,
     },
     {
       numero: 4,
@@ -2384,7 +2384,7 @@ function buildSlidesFromSeed(
     {
       numero: 5,
       tipo: "cta",
-      texto_principal: "Salva este conteudo",
+      texto_principal: "Salva este conteúdo",
       texto_secundario: `Depois me chama e eu te mostro como aplicar isso na ${business.business_name}.`,
     },
   ];
@@ -2396,7 +2396,7 @@ function buildFallbackScript(
   topic: string,
 ) {
   const audience = getShortAudience(business.target_audience);
-  const responsible = business.responsible_name?.trim() || "voce";
+  const responsible = business.responsible_name?.trim() || "você";
   const niche = getNicheReference(business);
   const hour = Number.parseInt(seed.time.split(":")[0] || "0", 10);
 
@@ -2439,41 +2439,41 @@ function buildFallbackScript(
   if (seed.is_viral_candidate) {
     return `CENA 1 - Gancho
 PASSO A PASSO:
-1. Abra a camera e grave na vertical.
-2. Nos 3 primeiros segundos, fale este gancho: Se voce acha que todo ${niche} entrega a mesma coisa, presta atencao nisso.
-3. Olhe direto para a camera e fale com energia, sem parecer decorado.
+1. Abra a câmera e grave na vertical.
+2. Nos 3 primeiros segundos, fale este gancho: Se você acha que todo ${niche} entrega a mesma coisa, presta atenção nisso.
+3. Olhe direto para a câmera e fale com energia, sem parecer decorado.
 
 CENA 2 - Desenvolvimento
 PASSO A PASSO:
-1. Em seguida fale: O que muda o jogo em ${niche} nao e detalhe bonito ou promessa pronta. E quando voce mostra processo, consistencia e resultado real de um jeito que a pessoa sente a diferenca.
-2. Mostre contraste, surpresa, transformacao ou um antes e depois real do seu contexto.
+1. Em seguida fale: O que muda o jogo em ${niche} não é detalhe bonito ou promessa pronta. É quando você mostra processo, consistência e resultado real de um jeito que a pessoa sente a diferença.
+2. Mostre contraste, surpresa, transformação ou um antes e depois real do seu contexto.
 3. Mantenha cortes curtos para aumentar impacto emocional.
 
 CTA FINAL
 PASSO A PASSO:
-1. Volte para a camera frontal.
-2. Grave falando: Se voce quer entender melhor como escolher ${niche} com mais seguranca, salva este video e me chama no direct.
-3. Edite com cortes rapidos, adicione legenda e escolha uma musica popular no momento em que voce esta gravando.`;
+1. Volte para a câmera frontal.
+2. Grave falando: Se você quer entender melhor como escolher ${niche} com mais segurança, salva este vídeo e me chama no direct.
+3. Edite com cortes rápidos, adicione legenda e escolha uma música popular no momento em que você está gravando.`;
   }
 
   if (seed.content_type === "Reels") {
     return `CENA 1 - Gancho
 PASSO A PASSO:
-1. Abra a camera e grave na vertical, em um lugar com boa luz.
-2. Nos 3 primeiros segundos, fale este gancho: Se voce quer tomar uma decisao melhor em ${niche}, presta atencao nisso.
+1. Abra a câmera e grave na vertical, em um lugar com boa luz.
+2. Nos 3 primeiros segundos, fale este gancho: Se você quer tomar uma decisão melhor em ${niche}, presta atenção nisso.
 3. Fale de forma natural, como se estivesse explicando isso para um cliente.
 
 CENA 2 - Desenvolvimento
 PASSO A PASSO:
 1. Mostre uma cena real do seu ambiente, atendimento, produto ou processo.
-2. Em seguida fale: Quando ${audience} entende o que observar em ${niche}, a decisao fica mais clara e segura.
-3. Use um corte rapido para manter o video dinamico.
+2. Em seguida fale: Quando ${audience} entende o que observar em ${niche}, a decisão fica mais clara e segura.
+3. Use um corte rápido para manter o vídeo dinâmico.
 
 CTA FINAL
 PASSO A PASSO:
-1. Volte para a camera.
-2. Grave falando: Salva este video e me chama no direct se quiser ajuda com ${niche}.
-3. Edite com cortes rapidos, adicione legenda e escolha uma musica popular no momento em que voce esta gravando.`;
+1. Volte para a câmera.
+2. Grave falando: Salva este vídeo e me chama no direct se quiser ajuda com ${niche}.
+3. Edite com cortes rápidos, adicione legenda e escolha uma música popular no momento em que você está gravando.`;
   }
 
   if (seed.content_type === "Stories") {
@@ -2482,31 +2482,31 @@ PASSO A PASSO:
 
   if (seed.content_type === "Live") {
     return `Antes da live
-1. Poste nos Stories avisando com a enquete "Voce vem?" 24h antes.
+1. Poste nos Stories avisando com a enquete "Você vem?" 24h antes.
 
 Abertura
-1. Diga seu nome e o nome do negocio.
-2. Fale: "Hoje eu vou falar sobre ${topic}. Fica comigo ate o final porque tem uma dica que pouca gente aplica."
+1. Diga seu nome e o nome do negócio.
+2. Fale: "Hoje eu vou falar sobre ${topic}. Fica comigo até o final porque tem uma dica que pouca gente aplica."
 
 Bloco 1
 1. Explique o contexto do tema e por que isso importa para ${audience}.
 
 Bloco 2
-1. Mostre na pratica o seu ambiente, produto ou processo real da ${business.business_name}.
+1. Mostre na prática o seu ambiente, produto ou processo real da ${business.business_name}.
 
 Bloco 3
-1. Responda perguntas do chat ao vivo e leia os comentarios em voz alta.
+1. Responda perguntas do chat ao vivo e leia os comentários em voz alta.
 
 Encerramento
-1. Fale: "Se voce quer saber mais sobre ${business.niche}, me chama no direct ou acessa o link da bio."`;
+1. Fale: "Se você quer saber mais sobre ${business.niche}, me chama no direct ou acessa o link da bio."`;
   }
 
-  return `Descricao visual: Foto do produto, ambiente ou equipe de ${business.business_name}. Iluminacao natural ou de estudio. Composicao limpa com espaco para texto sobreposto.
+  return `Descrição visual: Foto do produto, ambiente ou equipe de ${business.business_name}. Iluminação natural ou de estúdio. Composição limpa com espaço para texto sobreposto.
 Texto sobreposto na imagem: "${topic}"
 Legenda pronta:
 ${topic}.
 
-${audience} merece um ${business.niche} que realmente entrega resultado. Na ${business.business_name}, cada detalhe e pensado para voce sair satisfeito.
+${audience} merece um ${business.niche} que realmente entrega resultado. Na ${business.business_name}, cada detalhe é pensado para você sair satisfeito.
 
 Quer saber mais? Manda "quero" no direct ou acessa o link da bio.
 
@@ -2514,7 +2514,7 @@ CTA: Salva esse post pra lembrar depois.`;
 }
 
 function buildStoryQuestionTip() {
-  return "Se ninguem responder, voce mesmo pode fazer a pergunta e responder. Isso gera conteudo real e nao ha nada de errado nisso.";
+  return "Se ninguém responder, você mesmo pode fazer a pergunta e responder. Isso gera conteúdo real e não há nada de errado nisso.";
 }
 
 function getStoryAudienceReference(business: BusinessProfile) {
@@ -2538,10 +2538,10 @@ function buildCaixinhaQuestion(business: BusinessProfile) {
   const audience = getStoryAudienceReference(business);
 
   if (audience === "quem acompanha a gente") {
-    return `Qual e a sua maior dificuldade hoje com ${niche}?`;
+    return `Qual é a sua maior dificuldade hoje com ${niche}?`;
   }
 
-  return `Pensando em ${audience}, qual e a maior dificuldade hoje com ${niche}?`;
+  return `Pensando em ${audience}, qual é a maior dificuldade hoje com ${niche}?`;
 }
 
 function buildEnqueteQuestion(business: BusinessProfile) {
@@ -2549,7 +2549,7 @@ function buildEnqueteQuestion(business: BusinessProfile) {
   const audience = getStoryAudienceReference(business);
 
   if (audience === "quem acompanha a gente") {
-    return `Na hora de escolher ${niche}, o que pesa mais para voce hoje?`;
+    return `Na hora de escolher ${niche}, o que pesa mais para você hoje?`;
   }
 
   return `Para ${audience}, o que pesa mais na hora de escolher ${niche}?`;
@@ -2565,10 +2565,10 @@ function buildGreetingStoryFallback(
 
   return `STORY 1 - ${greeting}
 PASSO A PASSO:
-1. Abra a camera de Stories no primeiro horario disponivel do dia.
-2. Grave falando: ${greeting}. Hoje eu quero te mostrar um detalhe do dia que faz diferenca para quem busca ${niche} com mais seguranca.
-3. Olhe para a camera com naturalidade, sem ler, e mostre rapidamente o ambiente ao fundo.
-4. Feche dizendo que ao longo do dia voce vai mostrar exemplos reais, bastidores e detalhes praticos para quem acompanha a ${business.business_name}.`;
+1. Abra a câmera de Stories no primeiro horário disponível do dia.
+2. Grave falando: ${greeting}. Hoje eu quero te mostrar um detalhe do dia que faz diferença para quem busca ${niche} com mais segurança.
+3. Olhe para a câmera com naturalidade, sem ler, e mostre rapidamente o ambiente ao fundo.
+4. Feche dizendo que ao longo do dia você vai mostrar exemplos reais, bastidores e detalhes práticos para quem acompanha a ${business.business_name}.`;
 }
 
 function buildCaixinhaStoryFallback(
@@ -2581,25 +2581,25 @@ function buildCaixinhaStoryFallback(
 
   return `STORY 1 - Caixinha de perguntas
 PASSO A PASSO:
-1. Abra a camera de Stories e grave mostrando seu rosto.
+1. Abra a câmera de Stories e grave mostrando seu rosto.
 2. Grave falando: Eu sou ${responsible}, da ${business.business_name}, e hoje eu quero ouvir ${audience}.
 3. Adicione a caixinha com a pergunta: ${question}
 4. ${buildStoryQuestionTip()}
 
 STORY 2 - Aviso de resposta
 PASSO A PASSO:
-1. Grave outro video curto na camera frontal.
-2. Grave falando: Recebi varias respostas aqui, vou responder uma por uma. Fica ligado.
+1. Grave outro vídeo curto na câmera frontal.
+2. Grave falando: Recebi várias respostas aqui, vou responder uma por uma. Fica ligado.
 3. Mantenha a fala curta, humana e conectada ao Story 1.
 
 STORY 3 - Primeira resposta
 PASSO A PASSO:
-1. Abra a camera sem introducao. Voce ja esta no meio da conversa.
-2. Responda diretamente a primeira pergunta recebida na caixinha.
+1. Abra a câmera sem introdução. Você já está no meio da conversa.
+2. Responda diretamente à primeira pergunta recebida na caixinha.
 3. Seja objetivo e use um exemplo real do seu nicho.
-4. Nao repita que abriu a caixinha. So responda.
+4. Não repita que abriu a caixinha. Só responda.
 
-DICAS - Continuacao
+DICAS - Continuação
 PASSO A PASSO:
 1. Continue respondendo as demais perguntas, uma por uma.
 2. Seja natural, sem roteiro fixo.
@@ -2616,28 +2616,28 @@ function buildEnqueteStoryFallback(
 
   return `STORY 1 - Enquete
 PASSO A PASSO:
-1. Abra a camera de Stories e grave mostrando seu rosto.
+1. Abra a câmera de Stories e grave mostrando seu rosto.
 2. Grave falando: Eu sou ${responsible}, da ${business.business_name}, e hoje eu quero ouvir ${audience}.
 3. Adicione a enquete com a pergunta: ${question}
-4. Use as opcoes: Rapidez / Confianca.
+4. Use as opções: Rapidez / Confiança.
 5. ${buildStoryQuestionTip()}
 
 STORY 2 - Aviso de resposta
 PASSO A PASSO:
-1. Grave outro video curto na camera frontal.
-2. Grave falando: Recebi varias respostas aqui, vou responder uma por uma. Fica ligado.
+1. Grave outro vídeo curto na câmera frontal.
+2. Grave falando: Recebi várias respostas aqui, vou responder uma por uma. Fica ligado.
 3. Mantenha a fala curta e conectada ao Story 1.
 
 STORY 3 - Primeira resposta
 PASSO A PASSO:
-1. Abra a camera sem reabrir o assunto do zero.
+1. Abra a câmera sem reabrir o assunto do zero.
 2. Responda diretamente ao ponto que mais apareceu depois da enquete.
 3. Seja direto, use exemplos reais e fale sem parecer decorado.
 4. Mostre um detalhe do seu ambiente ou processo enquanto responde.
 
-DICAS - Continuacao
+DICAS - Continuação
 PASSO A PASSO:
-1. Continue respondendo as reacoes e duvidas que aparecerem, uma por uma.
+1. Continue respondendo as reações e dúvidas que aparecerem, uma por uma.
 2. Seja natural, sem roteiro fixo.
 3. Se receber poucas perguntas, aprofunde mais cada resposta.`;
 }
@@ -2645,12 +2645,12 @@ PASSO A PASSO:
 function buildCaixinhaResponseStoryFallback() {
   return `STORY 1 - Primeira resposta
 PASSO A PASSO:
-1. Abra a camera sem introducao. Voce ja esta no meio da conversa.
-2. Responda diretamente a primeira pergunta recebida na caixinha.
+1. Abra a câmera sem introdução. Você já está no meio da conversa.
+2. Responda diretamente à primeira pergunta recebida na caixinha.
 3. Seja objetivo e use um exemplo real do seu nicho.
-4. Nao repita que abriu a caixinha. So responda.
+4. Não repita que abriu a caixinha. Só responda.
 
-DICAS - Continuacao
+DICAS - Continuação
 PASSO A PASSO:
 1. Continue respondendo as demais perguntas, uma por uma.
 2. Seja natural, sem roteiro fixo.
@@ -2665,8 +2665,8 @@ function buildBastidorStoryFallback(
 
   return `STORY 1 - Bastidor
 PASSO A PASSO:
-1. Abra a camera e mostre um bastidor real da ${business.business_name}.
-2. Grave falando: Hoje eu quero te mostrar um bastidor que influencia muito a experiencia de quem busca ${niche}.
+1. Abra a câmera e mostre um bastidor real da ${business.business_name}.
+2. Grave falando: Hoje eu quero te mostrar um bastidor que influencia muito a experiência de quem busca ${niche}.
 3. Caminhe pelo ambiente ou mostre a tela, o produto ou o processo enquanto fala.
 4. Feche com uma pergunta simples para gerar conversa no direct.`;
 }
@@ -2677,11 +2677,11 @@ function buildTipStoryFallback(
 ) {
   const niche = getNicheReference(business);
 
-  return `STORY 1 - Dica rapida
+  return `STORY 1 - Dica rápida
 PASSO A PASSO:
-1. Abra a camera de Stories em um lugar com boa luz.
-2. Grave falando: Se voce quer tomar uma decisao melhor em ${niche}, presta atencao nesse detalhe.
-3. Entregue uma dica curta, especifica e aplicavel para quem acompanha a ${business.business_name}.
+1. Abra a câmera de Stories em um lugar com boa luz.
+2. Grave falando: Se você quer tomar uma decisão melhor em ${niche}, presta atenção nesse detalhe.
+3. Entregue uma dica curta, específica e aplicável para quem acompanha a ${business.business_name}.
 4. Feche com um CTA simples pedindo resposta ou compartilhamento no direct.`;
 }
 
@@ -2694,8 +2694,8 @@ function buildCarouselFallback(
 PASSO A PASSO:
 1. Crie esse slide no Canva.
 2. Escreva no slide: ${topic}
-3. Escreva no slide: Salva para nao esquecer
-4. Adicione no rodape: Passe para o lado
+3. Escreva no slide: Salva para não esquecer
+4. Adicione no rodapé: Passe para o lado
 
 SLIDE 2 - Contexto
 PASSO A PASSO:
@@ -2703,17 +2703,17 @@ PASSO A PASSO:
 2. Escreva no slide: O que quase todo mundo erra quando pensa em ${business.niche}.
 3. Escreva no slide: Isso faz ${audience.toLowerCase()} perder clareza e resultado.
 
-SLIDE 3 - Ajuste pratico
+SLIDE 3 - Ajuste prático
 PASSO A PASSO:
 1. Crie esse slide no Canva seguindo o mesmo estilo da capa.
-2. Escreva no slide: O primeiro ajuste e olhar para processo, consistencia e posicionamento.
-3. Escreva no slide: Sem isso, o resultado fica instavel.
+2. Escreva no slide: O primeiro ajuste é olhar para processo, consistência e posicionamento.
+3. Escreva no slide: Sem isso, o resultado fica instável.
 
-SLIDE 4 - Aplicacao real
+SLIDE 4 - Aplicação real
 PASSO A PASSO:
 1. Crie esse slide no Canva seguindo o mesmo estilo da capa.
-2. Escreva no slide: Na pratica, o melhor caminho e simplificar a mensagem e provar o valor.
-3. Escreva no slide: Isso aproxima voce de quem realmente quer comprar.
+2. Escreva no slide: Na prática, o melhor caminho é simplificar a mensagem e provar o valor.
+3. Escreva no slide: Isso aproxima você de quem realmente quer comprar.
 
 SLIDE 5 - CTA
 PASSO A PASSO:
@@ -2727,12 +2727,12 @@ function buildFeedPhotoFallback(
   topic: string,
   audience: string,
 ) {
-  const staticCaption = `Mostre contexto real, detalhe bem cuidado e um ponto que passe confianca. Isso ajuda ${audience.toLowerCase()} a perceber valor em ${business.niche} com mais seguranca. Salva este post e chama a ${business.business_name}.`;
+  const staticCaption = `Mostre contexto real, detalhe bem cuidado e um ponto que passe confiança. Isso ajuda ${audience.toLowerCase()} a perceber valor em ${business.niche} com mais segurança. Salva este post e chama a ${business.business_name}.`;
 
-  return `POST ESTATICO - Foto estrategica
+  return `POST ESTÁTICO - Foto estratégica
 PASSO A PASSO:
 1. Escolha uma foto real do seu ambiente, produto, equipe ou atendimento.
-2. Use uma imagem limpa, com boa luz, que mostre um contexto real do seu nicho e reforce confianca para quem esta vendo.
+2. Use uma imagem limpa, com boa luz, que mostre um contexto real do seu nicho e reforce confiança para quem está vendo.
 3. Publique com esta legenda:
 ${staticCaption}
 4. Feche a legenda com um CTA claro para salvar o post ou mandar mensagem.`;
@@ -2745,32 +2745,32 @@ function buildReelsFallback(
 ) {
   const hook =
     subtype === "REELS_RAPIDO"
-      ? `Se voce quer melhorar ${business.niche}, presta atencao nisso.`
+      ? `Se você quer melhorar ${business.niche}, presta atenção nisso.`
       : `Vou te mostrar o que realmente muda o resultado em ${business.niche}.`;
   const development =
     subtype === "REELS_RAPIDO"
-      ? `O erro mais comum e tratar ${business.niche} de forma generica. O que funciona mesmo e olhar para processo, clareza e repeticao.`
-      : `Quando alguem tenta crescer em ${business.niche} sem metodo, normalmente perde tempo, energia e oportunidade. O que faz diferenca e entender o contexto, ajustar a mensagem e executar com consistencia.`;
-  const closing = `Se isso fez sentido para voce, salva este video e me chama no direct para falar sobre ${business.niche}.`;
+      ? `O erro mais comum é tratar ${business.niche} de forma genérica. O que funciona mesmo é olhar para processo, clareza e repetição.`
+      : `Quando alguém tenta crescer em ${business.niche} sem método, normalmente perde tempo, energia e oportunidade. O que faz diferença é entender o contexto, ajustar a mensagem e executar com consistência.`;
+  const closing = `Se isso fez sentido para você, salva este vídeo e me chama no direct para falar sobre ${business.niche}.`;
 
   return `CENA 1 - Abertura
 PASSO A PASSO:
-1. Abra a camera e grave na vertical.
+1. Abra a câmera e grave na vertical.
 2. Nos 3 primeiros segundos, fale este gancho: ${hook}
-3. Olhe direto para a camera e fale como uma pessoa real.
+3. Olhe direto para a câmera e fale como uma pessoa real.
 
 CENA 2 - Desenvolvimento
 PASSO A PASSO:
 1. Em seguida fale: ${development}
 2. Mostre um detalhe real do seu processo, tela, ambiente ou atendimento enquanto explica.
-3. Mantenha cortes curtos e sem enrolacao.
+3. Mantenha cortes curtos e sem enrolação.
 
 CTA FINAL
 PASSO A PASSO:
 1. Feche dizendo: ${closing}
-2. Termine olhando para a camera, sem pressa e sem parecer script decorado.
-3. Na edicao: cortes rapidos, legenda e musica popular no momento da gravacao.
-4. Edite com cortes rapidos, adicione legenda e escolha uma musica popular no momento em que voce esta gravando.`;
+2. Termine olhando para a câmera, sem pressa e sem parecer script decorado.
+3. Na edição: cortes rápidos, legenda e música popular no momento da gravação.
+4. Edite com cortes rápidos, adicione legenda e escolha uma música popular no momento em que você está gravando.`;
 }
 
 function buildFallbackScriptV2(
@@ -2826,39 +2826,39 @@ function buildFallbackScriptV2(
   if (seed.is_viral_candidate) {
     return `CENA 1 - Gancho
 PASSO A PASSO:
-1. Abra a camera e grave na vertical.
-2. Nos 3 primeiros segundos, fale este gancho: Se voce acha que todo ${niche} entrega a mesma coisa, presta atencao nisso.
-3. Olhe direto para a camera e fale com energia, sem parecer decorado.
+1. Abra a câmera e grave na vertical.
+2. Nos 3 primeiros segundos, fale este gancho: Se você acha que todo ${niche} entrega a mesma coisa, presta atenção nisso.
+3. Olhe direto para a câmera e fale com energia, sem parecer decorado.
 
 CENA 2 - Desenvolvimento
 PASSO A PASSO:
-1. Em seguida fale: O que muda o jogo em ${niche} nao e detalhe bonito ou promessa pronta. E quando voce mostra processo, consistencia e resultado real de um jeito que a pessoa sente a diferenca.
-2. Mostre contraste, surpresa, transformacao ou um antes e depois real do seu contexto.
+1. Em seguida fale: O que muda o jogo em ${niche} não é detalhe bonito ou promessa pronta. É quando você mostra processo, consistência e resultado real de um jeito que a pessoa sente a diferença.
+2. Mostre contraste, surpresa, transformação ou um antes e depois real do seu contexto.
 3. Mantenha cortes curtos para aumentar impacto emocional.
 
 CTA FINAL
 PASSO A PASSO:
-1. Volte para a camera frontal.
-2. Grave falando: Se voce quer entender melhor como escolher ${niche} com mais seguranca, salva este video e me chama no direct.
-3. Feche olhando para a camera, sem pressa.
-4. Edite com cortes rapidos, adicione legenda e escolha uma musica popular no momento em que voce esta gravando.`;
+1. Volte para a câmera frontal.
+2. Grave falando: Se você quer entender melhor como escolher ${niche} com mais segurança, salva este vídeo e me chama no direct.
+3. Feche olhando para a câmera, sem pressa.
+4. Edite com cortes rápidos, adicione legenda e escolha uma música popular no momento em que você está gravando.`;
   }
 
   if (seed.content_type === "Reels") {
     const reelsHook = pillar.includes("bastidor")
-      ? `Vou te mostrar um detalhe de bastidor que faz diferenca em ${niche}.`
+      ? `Vou te mostrar um detalhe de bastidor que faz diferença em ${niche}.`
       : pillar.includes("erro")
-        ? `Tem um erro comum em ${niche} que muita gente so percebe tarde demais.`
-        : `Se voce quer tomar uma decisao melhor em ${niche}, presta atencao nisso.`;
+        ? `Tem um erro comum em ${niche} que muita gente só percebe tarde demais.`
+        : `Se você quer tomar uma decisão melhor em ${niche}, presta atenção nisso.`;
     const reelsDevelopment = pillar.includes("bastidor")
-      ? `1. Mostre uma cena real do bastidor da ${business.business_name}.\n2. Em seguida fale: ${audience} quase nunca ve esse momento, mas e aqui que a experiencia com ${niche} ganha consistencia.\n3. Use um corte rapido para deixar o video dinamico.`
+      ? `1. Mostre uma cena real do bastidor da ${business.business_name}.\n2. Em seguida fale: ${audience} quase nunca vê esse momento, mas é aqui que a experiência com ${niche} ganha consistência.\n3. Use um corte rápido para deixar o vídeo dinâmico.`
       : pillar.includes("erro")
-        ? `1. Mostre um exemplo simples do erro mais comum.\n2. Em seguida fale: ${audience} costuma errar nisso quando procura ${niche}, porque olha so para a superficie e ignora o que realmente pesa na decisao.\n3. Use um corte rapido para reforcar contraste entre erro e acerto.`
-        : `1. Mostre uma cena real do seu ambiente, atendimento, produto ou processo.\n2. Em seguida fale: Quando ${audience} entende o que observar em ${niche}, a decisao fica mais clara e segura.\n3. Use um corte rapido para manter o video dinamico.`;
+        ? `1. Mostre um exemplo simples do erro mais comum.\n2. Em seguida fale: ${audience} costuma errar nisso quando procura ${niche}, porque olha só para a superfície e ignora o que realmente pesa na decisão.\n3. Use um corte rápido para reforçar contraste entre erro e acerto.`
+        : `1. Mostre uma cena real do seu ambiente, atendimento, produto ou processo.\n2. Em seguida fale: Quando ${audience} entende o que observar em ${niche}, a decisão fica mais clara e segura.\n3. Use um corte rápido para manter o vídeo dinâmico.`;
 
     return `CENA 1 - Gancho
 PASSO A PASSO:
-1. Abra a camera e grave na vertical, em um lugar com boa luz.
+1. Abra a câmera e grave na vertical, em um lugar com boa luz.
 2. Nos 3 primeiros segundos, fale este gancho: ${reelsHook}
 3. Fale como se estivesse explicando isso para um cliente, sem parecer decorado.
 
@@ -2868,10 +2868,10 @@ ${reelsDevelopment}
 
 CTA FINAL
 PASSO A PASSO:
-1. Volte para a camera.
-2. Feche dizendo: Salva este video e me chama no direct se quiser ajuda com ${niche}.
+1. Volte para a câmera.
+2. Feche dizendo: Salva este vídeo e me chama no direct se quiser ajuda com ${niche}.
 3. Revise os cortes antes de publicar.
-4. Edite com cortes rapidos, adicione legenda e escolha uma musica popular no momento em que voce esta gravando.`;
+4. Edite com cortes rápidos, adicione legenda e escolha uma música popular no momento em que você está gravando.`;
   }
 
   if (seed.content_type === "Stories") {
@@ -2882,26 +2882,26 @@ PASSO A PASSO:
     if (useQuestionBox) {
       return `STORY 1 - Caixinha de perguntas
 PASSO A PASSO:
-1. Abra a camera de Stories e grave um video curto mostrando seu rosto e o ambiente.
+1. Abra a câmera de Stories e grave um vídeo curto mostrando seu rosto e o ambiente.
 2. Grave falando: Eu sou ${responsible}, da ${business.business_name}, e hoje quero ouvir ${storyAudience}.
-3. Olhe para a camera com naturalidade, sem ler.
+3. Olhe para a câmera com naturalidade, sem ler.
 4. Adicione a caixinha com a pergunta: ${buildCaixinhaQuestion(business)}
 5. ${buildStoryQuestionTip()}
 
 STORY 2 - Aviso de resposta
 PASSO A PASSO:
-1. Grave outro video curto na camera frontal.
-2. Grave falando: Recebi varias respostas aqui, vou responder uma por uma. Fica ligado.
+1. Grave outro vídeo curto na câmera frontal.
+2. Grave falando: Recebi várias respostas aqui, vou responder uma por uma. Fica ligado.
 3. Mantenha a fala curta, humana e conectada ao Story 1.
 
 STORY 3 - Primeira resposta
 PASSO A PASSO:
-1. Abra a camera sem introducao. Voce ja esta no meio da conversa.
-2. Responda diretamente a primeira pergunta recebida na caixinha.
+1. Abra a câmera sem introdução. Você já está no meio da conversa.
+2. Responda diretamente à primeira pergunta recebida na caixinha.
 3. Seja direto, use exemplos reais e fale como se estivesse conversando com um cliente.
-4. Nao repita que abriu a caixinha. So responda.
+4. Não repita que abriu a caixinha. Só responda.
 
-DICAS - Continuacao
+DICAS - Continuação
 PASSO A PASSO:
 1. Continue respondendo as perguntas recebidas, uma por uma.
 2. Seja natural, sem roteiro fixo.
@@ -2910,27 +2910,27 @@ PASSO A PASSO:
 
     return `STORY 1 - Enquete
 PASSO A PASSO:
-1. Abra a camera de Stories e grave um video curto mostrando seu rosto e o ambiente.
+1. Abra a câmera de Stories e grave um vídeo curto mostrando seu rosto e o ambiente.
 2. Grave falando: Eu sou ${responsible}, da ${business.business_name}, e hoje quero ouvir ${storyAudience}.
-3. Olhe para a camera com naturalidade, sem ler.
+3. Olhe para a câmera com naturalidade, sem ler.
 4. Adicione a enquete com a pergunta: ${buildEnqueteQuestion(business)}
-5. Use as opcoes: Rapidez / Confianca.
+5. Use as opções: Rapidez / Confiança.
 6. ${buildStoryQuestionTip()}
 
 STORY 2 - Aviso de resposta
 PASSO A PASSO:
-1. Grave outro video curto na camera frontal.
-2. Grave falando: Recebi varias respostas aqui, vou responder uma por uma. Fica ligado.
+1. Grave outro vídeo curto na câmera frontal.
+2. Grave falando: Recebi várias respostas aqui, vou responder uma por uma. Fica ligado.
 3. Mantenha a fala curta e conectada ao Story 1.
 
 STORY 3 - Primeira resposta
 PASSO A PASSO:
-1. Abra a camera sem reabrir o assunto do zero.
+1. Abra a câmera sem reabrir o assunto do zero.
 2. Responda diretamente ao ponto que mais apareceu depois da enquete.
 3. Seja direto, use exemplos reais e fale de forma natural.
 4. Mostre um detalhe do seu ambiente ou processo enquanto responde.
 
-DICAS - Continuacao
+DICAS - Continuação
 PASSO A PASSO:
 1. Continue respondendo as perguntas recebidas, uma por uma.
 2. Seja natural, sem roteiro fixo.
@@ -2940,46 +2940,46 @@ PASSO A PASSO:
   if (seed.content_type === "Carrossel") {
     const slideTwoLines = pillar.includes("comparativo")
       ? [
-          `2. Escreva no slide: Compare duas opcoes olhando para clareza, processo e resultado.`,
-          `3. Escreva no slide: O erro mais comum e decidir rapido demais e ignorar os sinais de consistencia.`,
-          `4. Escreva no slide: O melhor caminho e avaliar o que realmente faz sentido para ${audience}.`,
+          `2. Escreva no slide: Compare duas opções olhando para clareza, processo e resultado.`,
+          `3. Escreva no slide: O erro mais comum é decidir rápido demais e ignorar os sinais de consistência.`,
+          `4. Escreva no slide: O melhor caminho é avaliar o que realmente faz sentido para ${audience}.`,
         ]
       : [
-          `2. Escreva no slide: O que mais pesa na escolha e entender o que realmente faz sentido para ${audience}.`,
-          `3. Escreva no slide: O erro mais comum e decidir so pelo preco e ignorar o que muda o resultado.`,
-          `4. Escreva no slide: O que faz diferenca mesmo e avaliar como ${niche} entrega confianca e resultado.`,
+          `2. Escreva no slide: O que mais pesa na escolha é entender o que realmente faz sentido para ${audience}.`,
+          `3. Escreva no slide: O erro mais comum é decidir só pelo preço e ignorar o que muda o resultado.`,
+          `4. Escreva no slide: O que faz diferença mesmo é avaliar como ${niche} entrega confiança e resultado.`,
         ];
 
     return `SLIDE 1 - Capa
 PASSO A PASSO:
 1. Crie esse slide no Canva.
-2. Titulo principal: "${topic}"
-3. Subtitulo menor: "Salva para nao esquecer"
-4. Adicione no rodape: "Passe para o lado"
+2. Título principal: "${topic}"
+3. Subtítulo menor: "Salva para não esquecer"
+4. Adicione no rodapé: "Passe para o lado"
 
-SLIDE 2 - Conteudo
+SLIDE 2 - Conteúdo
 PASSO A PASSO:
 1. Crie esse slide no Canva seguindo o mesmo estilo da capa.
 ${slideTwoLines.join("\n")}
 
-SLIDE 3 - Ajuste pratico
+SLIDE 3 - Ajuste prático
 PASSO A PASSO:
 1. Crie esse slide no Canva seguindo o mesmo estilo da capa.
-2. Escreva no slide: O ajuste mais importante e simplificar a mensagem e mostrar valor real.
-3. Escreva no slide: Isso ajuda ${audience} a decidir com mais seguranca.
+2. Escreva no slide: O ajuste mais importante é simplificar a mensagem e mostrar valor real.
+3. Escreva no slide: Isso ajuda ${audience} a decidir com mais segurança.
 
-SLIDE 4 - Aplicacao real
+SLIDE 4 - Aplicação real
 PASSO A PASSO:
 1. Crie esse slide no Canva seguindo o mesmo estilo da capa.
-2. Escreva no slide: Mostre um exemplo real, um detalhe do processo ou uma comparacao clara.
-3. Escreva no slide: Quanto mais concreto, mais facil fica entender seu diferencial.
+2. Escreva no slide: Mostre um exemplo real, um detalhe do processo ou uma comparação clara.
+3. Escreva no slide: Quanto mais concreto, mais fácil fica entender seu diferencial.
 
 SLIDE 5 - CTA
 PASSO A PASSO:
 1. Crie esse slide no Canva seguindo o mesmo estilo da capa.
 2. Escreva no slide: Quer aplicar isso no seu caso?
 3. Escreva no slide: Salva este post e fala com a ${business.business_name}.
-4. Revise se o texto esta curto, direto e facil de ler.`;
+4. Revise se o texto está curto, direto e fácil de ler.`;
   }
 
   return buildFallbackScript(business, seed, topic);
@@ -3043,97 +3043,97 @@ function _buildWeekPrompt(
     .join("\n\n");
 
   const strategyPrompt = `
-Voce e um estrategista de conteudo criando uma estrategia mensal completa para:
+Você é um estrategista de conteúdo criando uma estratégia mensal completa para:
 
-NEGOCIO: ${business.business_name}
+NEGÓCIO: ${business.business_name}
 NICHO: ${business.niche}
-PUBLICO-ALVO: ${business.target_audience}
+PÚBLICO-ALVO: ${business.target_audience}
 OBJETIVO: ${business.main_goal}
-ESTILO DE COMUNICACAO: ${business.communication_style}
+ESTILO DE COMUNICAÇÃO: ${business.communication_style}
 VELOCIDADE: ${business.growth_speed}
-DESCRICAO: ${business.brand_description}
-CORES DA MARCA: ${business.brand_colors?.join(", ") || "nao definidas"}
-ORIENTACAO DE OBJETIVO: ${getGoalStrategyGuidance(business.main_goal)}
-ORIENTACAO DE ESTILO: ${getCommunicationStyleGuidance(business.communication_style)}
+DESCRIÇÃO: ${business.brand_description}
+CORES DA MARCA: ${business.brand_colors?.join(", ") || "não definidas"}
+ORIENTAÇÃO DE OBJETIVO: ${getGoalStrategyGuidance(business.main_goal)}
+ORIENTAÇÃO DE ESTILO: ${getCommunicationStyleGuidance(business.communication_style)}
 
-Crie conteudos apenas para os dias e slots desta semana ${weekIndex + 1} de ${MONTH_NAMES[month - 1]} de ${year}. O mes tem ${daysInMonth} dias.
+Crie conteúdos apenas para os dias e slots desta semana ${weekIndex + 1} de ${MONTH_NAMES[month - 1]} de ${year}. O mês tem ${daysInMonth} dias.
 
-REGRAS OBRIGATORIAS DE QUALIDADE:
+REGRAS OBRIGATÓRIAS DE QUALIDADE:
 
-1. CONTEUDO ESPECIFICO: Todo conteudo deve ser 100% especifico para o nicho "${business.niche}". NUNCA use exemplos genericos.
+1. CONTEÚDO ESPECÍFICO: Todo conteúdo deve ser 100% específico para o nicho "${business.niche}". NUNCA use exemplos genéricos.
 
-2. TITULOS CHAMATIVOS: Cada topic deve parar o scroll. Use numeros, perguntas, contraste, curiosidade ou situacao real.
+2. TÍTULOS CHAMATIVOS: Cada topic deve parar o scroll. Use números, perguntas, contraste, curiosidade ou situação real.
 
 3. REGRAS GERAIS DE ESCRITA:
-   - Nunca use asteriscos em nenhuma parte do conteudo
-   - O texto precisa soar natural, humano e direto, como o responsavel do negocio falando de verdade
-   - Cada cliente tem sua propria estrategia. Evite modelos engessados e repetitivos
-   - Nunca sugira gravacao na hora do almoco. Almoco pode ser horario de publicacao, nao de gravacao
+   - Nunca use asteriscos em nenhuma parte do conteúdo
+   - O texto precisa soar natural, humano e direto, como o responsável do negócio falando de verdade
+   - Cada cliente tem sua própria estratégia. Evite modelos engessados e repetitivos
+   - Nunca sugira gravação na hora do almoço. Almoço pode ser horário de publicação, não de gravação
 
-4. ESTRUTURA OBRIGATORIA DOS FORMATOS:
+4. ESTRUTURA OBRIGATÓRIA DOS FORMATOS:
    - Stories, Carrossel e Reels devem seguir esta estrutura:
-     1. Titulo da etapa
+     1. Título da etapa
      2. PASSO A PASSO
      3. Dentro dos passos, inclua o roteiro no momento certo usando frases como: Grave falando:
-     4. Nao crie uma area separada chamada roteiro
-     5. Cada passo deve ser curto, claro e executavel
+     4. Não crie uma área separada chamada roteiro
+     5. Cada passo deve ser curto, claro e executável
    - Reels: use CENA 1, CENA 2, CENA 3 e CTA FINAL
    - Carrossel: use SLIDE 1, SLIDE 2 e SLIDE 3
    - Stories: use STORY 1, STORY 2, STORY 3 e STORY 4 quando fizer sentido
 
-5. LOGICA OBRIGATORIA DOS STORIES:
-   - Se o Story 1 for enquete SIM/NAO, o Story 2 precisa responder essa enquete como continuacao natural
+5. LÓGICA OBRIGATÓRIA DOS STORIES:
+   - Se o Story 1 for enquete SIM/NÃO, o Story 2 precisa responder essa enquete como continuação natural
    - Se o Story 1 for caixinha de perguntas, os stories seguintes devem responder as perguntas recebidas
    - Em todo Story com enquete ou caixinha, finalize com a dica:
-     "Se ninguem responder, voce mesmo pode fazer a pergunta e responder - isso gera conteudo real e nao ha nada de errado nisso."
-   - Priorize video do responsavel. Evite foto como base principal do story
+     "Se ninguém responder, você mesmo pode fazer a pergunta e responder - isso gera conteúdo real e não há nada de errado nisso."
+   - Priorize vídeo do responsável. Evite foto como base principal do story
 
 6. ROTEIRO EMBUTIDO POR FORMATO:
    - Reels: escreva a fala exata dentro do passo correspondente, usando "Grave falando: ..."
    - Stories: escreva a fala exata dentro do passo correspondente, usando "Grave falando: ..."
    - Carrossel: escreva o texto exato de cada slide dentro do passo correspondente, usando "Escreva no slide: ..."
-   - Post Estatico: texto exato da legenda (200-300 caracteres) pronto pra copiar e colar.
+   - Post Estático: texto exato da legenda (200-300 caracteres) pronto pra copiar e colar.
      Descreva a imagem ideal para este post.
-   - Live: abertura, 3 blocos de conteudo e encerramento com CTA
+   - Live: abertura, 3 blocos de conteúdo e encerramento com CTA
 
 7. RESPEITE O PLANEJAMENTO DE VOLUME:
-   - Se a velocidade for moderado, mantenha a logica de Stories diarios, feed diario e Reels em alguns dias da semana.
-   - Se a velocidade for rapido, mantenha a logica de muitos Stories por dia, feed diario, Reels diarios, Lives estrategicas e Reels viral no fim de semana.
+   - Se a velocidade for moderado, mantenha a lógica de Stories diários, feed diário e Reels em alguns dias da semana.
+   - Se a velocidade for rapido, mantenha a lógica de muitos Stories por dia, feed diário, Reels diários, Lives estratégicas e Reels viral no fim de semana.
 
-8. VISUAL_PROMPT: Para cada post gere um prompt em ingles, especifico para busca de imagem de fundo. Cite luz, ambiente, composicao e paleta.
+8. VISUAL_PROMPT: Para cada post gere um prompt em inglês, específico para busca de imagem de fundo. Cite luz, ambiente, composição e paleta.
 
-9. VARIEDADE OBRIGATORIA:
+9. VARIEDADE OBRIGATÓRIA:
    - Reels educativos e de valor
    - Reels de bastidor ou prova
    - Stories com enquete, resposta, bastidor ou CTA
    - Posts com prova social ou oferta quando fizer sentido
-   - Carrossel com no maximo 3 slides
-   - Conteudo de oferta em no maximo 20% dos posts
+   - Carrossel com no máximo 3 slides
+   - Conteúdo de oferta em no máximo 20% dos posts
 
-   - Cada dia precisa parecer uma estrategia nova, com tema_base, formato_prioritario e abordagem proprios
+   - Cada dia precisa parecer uma estratégia nova, com tema_base, formato_prioritario e abordagem próprios
    - Nunca repita o mesmo tema em dias consecutivos
    - Nunca repita o mesmo formato_prioritario em dias consecutivos
-   - Use tema_base e pilar como fonte principal de variacao de cada dia
+   - Use tema_base e pilar como fonte principal de variação de cada dia
 
 10. REELS VIRAL:
    - Se viral_candidate for true, marque is_viral true
-   - Esse Reels precisa ser diferente dos demais, com potencial de compartilhamento, polemica leve, surpresa, transformacao ou curiosidade forte
+   - Esse Reels precisa ser diferente dos demais, com potencial de compartilhamento, polêmica leve, surpresa, transformação ou curiosidade forte
    - Se viral_candidate for false, is_viral deve ser false
 
-11. HASHTAGS ESPECIFICAS:
+11. HASHTAGS ESPECÍFICAS:
    - Use hashtags do nicho do cliente
-   - Nao use hashtags genericas demais como principal
-   - Retorne em string unica separada por espacos
+   - Não use hashtags genéricas demais como principal
+   - Retorne em string única separada por espaços
 
 12. ESTRUTURA:
    - Mantenha exatamente os day_number e slot_index fornecidos
-   - Nao invente slots extras
-   - O tipo de conteudo ja esta definido no planejamento e nao deve ser trocado
+   - Não invente slots extras
+   - O tipo de conteúdo já está definido no planejamento e não deve ser trocado
 
 PLANEJAMENTO FIXO DESTA SEMANA:
 ${schedule}
 
-Retorne APENAS JSON valido, sem markdown, neste formato:
+Retorne APENAS JSON válido, sem markdown, neste formato:
 {
   "days": [
     {
@@ -3187,7 +3187,7 @@ OBJETIVO: ${business.main_goal}
 ESTILO DE COMUNICAÇÃO: ${business.communication_style}
 VELOCIDADE: ${business.growth_speed}
 DESCRIÇÃO: ${business.brand_description}
-CORES DA MARCA: ${business.brand_colors?.join(", ") || "nao definidas"}
+CORES DA MARCA: ${business.brand_colors?.join(", ") || "não definidas"}
 ORIENTAÇÃO DE OBJETIVO: ${getGoalStrategyGuidance(business.main_goal)}
 ORIENTAÇÃO DE ESTILO: ${getCommunicationStyleGuidanceV2(business.communication_style)}
 
@@ -3218,13 +3218,13 @@ REGRAS OBRIGATÓRIAS DE QUALIDADE:
      5. Cada passo deve ser curto, claro e executável
    - Reels: use CENA 1, CENA 2, CENA 3 e CTA FINAL
    - Carrossel: use SLIDE 1, SLIDE 2 e SLIDE 3, nessa ordem, sem pular
-   - Stories: use STORY 1, STORY 2, STORY 3 e DICAS - Continuacao, nessa ordem
+   - Stories: use STORY 1, STORY 2, STORY 3 e DICAS - Continuação, nessa ordem
 
 5. LÓGICA OBRIGATÓRIA DOS STORIES:
    - STORY 1: lance uma caixinha de perguntas ou uma enquete
-   - STORY 2: grave um aviso curto dizendo que vai responder no proximo story. Exemplo: Recebi varias respostas aqui, vou responder uma por uma. Fica ligado.
-   - STORY 3: instrua o criador a responder a primeira pergunta recebida de forma natural, direta e detalhada
-   - DICAS - Continuacao: instrua o criador a continuar respondendo as perguntas seguintes, uma por uma, sem roteiro fixo
+   - STORY 2: grave um aviso curto dizendo que vai responder no próximo story. Exemplo: Recebi várias respostas aqui, vou responder uma por uma. Fica ligado.
+   - STORY 3: instrua o criador a responder à primeira pergunta recebida de forma natural, direta e detalhada
+   - DICAS - Continuação: instrua o criador a continuar respondendo as perguntas seguintes, uma por uma, sem roteiro fixo
    - A partir do STORY 3, nunca escreva roteiro palavra por palavra. Apenas instrua o criador sobre como responder
    - Em todo Story com enquete ou caixinha, finalize com a dica exata:
      "Se ninguém responder, você mesmo pode fazer a pergunta e responder. Isso gera conteúdo real e não há nada de errado nisso."
@@ -3232,7 +3232,7 @@ REGRAS OBRIGATÓRIAS DE QUALIDADE:
 
 6. ROTEIRO EMBUTIDO POR FORMATO:
    - Reels: escreva a fala exata dentro do passo correspondente, usando "Grave falando: ...". Feche com a dica exata: "Edite com cortes rápidos, adicione legenda e escolha uma música popular no momento em que você está gravando."
-   - Stories: escreva o roteiro apenas em STORY 1 e STORY 2. No STORY 3, instrua assim: Responda a primeira pergunta recebida na caixinha. Seja direto, use exemplos reais. Em DICAS - Continuacao, instrua assim: Continue respondendo as perguntas recebidas, uma por uma. Seja natural, sem roteiro fixo. Se receber poucas perguntas, aprofunde mais cada resposta.
+   - Stories: escreva o roteiro apenas em STORY 1 e STORY 2. No STORY 3, instrua assim: Responda à primeira pergunta recebida na caixinha. Seja direto, use exemplos reais. Em DICAS - Continuação, instrua assim: Continue respondendo as perguntas recebidas, uma por uma. Seja natural, sem roteiro fixo. Se receber poucas perguntas, aprofunde mais cada resposta.
    - Carrossel: escreva o texto exato de cada slide dentro do passo correspondente, usando "Escreva no slide: ...". No SLIDE 1 inclua obrigatoriamente a frase "Passe para o lado" no rodapé
    - Post Estático: texto exato da legenda, pronto para copiar e colar. Descreva a imagem ideal para este post
    - Live: abertura, 3 blocos de conteúdo e encerramento com CTA
@@ -3241,7 +3241,7 @@ REGRAS OBRIGATÓRIAS DE QUALIDADE:
    - Se a velocidade for moderado, mantenha a lógica de Stories diários, feed diário e Reels em alguns dias da semana
    - Se a velocidade for rapido, mantenha a lógica de muitos Stories por dia, feed diário, Reels diários, Lives estratégicas e Reels viral no fim de semana
 
-8. VISUAL_PROMPT: Para cada post gere um prompt em ingles, especifico para busca de imagem de fundo. Cite luz, ambiente, composicao e paleta.
+8. VISUAL_PROMPT: Para cada post gere um prompt em inglês, específico para busca de imagem de fundo. Cite luz, ambiente, composição e paleta.
 
 9. VARIEDADE OBRIGATÓRIA:
    - Reels educativos e de valor
@@ -3305,12 +3305,12 @@ function buildWeekPromptV3(
     .map((day) => {
       const phaseLabel =
         day.holiday_phase === "anticipacao"
-          ? "antecipacao"
+          ? "antecipação"
           : day.holiday_phase === "encerramento"
             ? "encerramento"
             : "no dia";
 
-      return `Dia ${day.day_number} | ${day.holiday_title} | fase ${phaseLabel} | prioridade ${day.holiday_priority || "secondary"} | orientacao ${day.holiday_guidance || "Conecte a data ao negocio com naturalidade."}`;
+      return `Dia ${day.day_number} | ${day.holiday_title} | fase ${phaseLabel} | prioridade ${day.holiday_priority || "secondary"} | orientacao ${day.holiday_guidance || "Conecte a data ao negócio com naturalidade."}`;
     })
     .join("\n");
   const schedule = weekDays
@@ -3327,9 +3327,9 @@ function buildWeekPromptV3(
     .join("\n\n");
 
   return `
-Voce e o estrategista de conteudo do sistema Cresce. Gere o calendario editorial semanal que alimenta o calendario mensal do Instagram.
+Você é o estrategista de conteúdo do sistema Cresce. Gere o calendário editorial semanal que alimenta o calendário mensal do Instagram.
 
-DADOS DO USUARIO:
+DADOS DO USUÁRIO:
 - nome: ${business.business_name}
 - nicho: ${business.niche}
 - publico_alvo: ${business.target_audience}
@@ -3340,64 +3340,64 @@ DADOS DO USUARIO:
 - semana_atual: ${weekIndex + 1}
 - dias_do_mes: ${daysInMonth}
 - o_que_o_cliente_quer_conquistar: ${business.brand_description}
-- diferenciais_da_marca: ${business.unique_value || "nao informado"}
-- concorrentes_ou_referencias: ${business.competitors || "nao informado"}
+- diferenciais_da_marca: ${business.unique_value || "não informado"}
+- concorrentes_ou_referencias: ${business.competitors || "não informado"}
 
-BANCO DE ESTILOS DISPONIVEIS:
+BANCO DE ESTILOS DISPONÍVEIS:
 ${getStyleBankPrompt()}
 
 DATAS ESPECIAIS DESTA SEMANA:
 ${specialDates || "Nenhuma data especial nesta semana."}
 
-REGRAS INEGOCIAVEIS:
-1. Use exatamente os slots e horarios do planejamento fixo.
-2. Nunca troque o tipo do slot nem o estilo_id ja planejado.
+REGRAS INEGOCIÁVEIS:
+1. Use exatamente os slots e horários do planejamento fixo.
+2. Nunca troque o tipo do slot nem o estilo_id já planejado.
 3. Nunca repita o mesmo tema em dias consecutivos.
 4. Nunca repita o mesmo CTA no mesmo dia.
 5. Nunca use asteriscos.
 6. Nunca use aspas para destacar palavras.
-7. Escreva em portugues do Brasil com acentuacao correta.
+7. Escreva em português do Brasil com acentuação correta.
 8. Nunca use emojis.
 9. Nunca crie Lives.
-10. Nunca sugira gravacao no horario de almoco. Almoco pode ser horario de publicacao.
-11. Se houver dica_plataforma no slot, respeite essa orientacao no conteudo.
-12. Nunca use o nome do tema_base literalmente dentro da fala do responsavel no roteiro. Transforme o tema em contexto real de conversa, como alguem real falando, e nunca como um template.
-13. Nunca gere conteudo generico. A data comemorativa e so o gancho. O negocio, o nicho, os produtos, os servicos e os diferenciais da marca precisam ser o protagonista do conteudo.
-14. Se existir data_especial no dia, adapte o conteudo ao nicho do cliente. Nunca escreva parabens generico, mensagem pronta ou texto que serviria para qualquer empresa.
-15. Em datas especiais, o gancho emocional vem primeiro e a oferta vem depois, de forma organica.
-16. Se a data especial for feriado nacional, voce pode humanizar equipe, bastidores, rotina e descanso da marca.
-17. Em datas primarias, trate antecipacao, dia e encerramento como capitulos diferentes da mesma campanha, evitando repetir angulo ou CTA.
-18. Nunca repita o mesmo formato no mesmo dia sem proposito. Se um story anterior abriu enquete ou caixinha, o proximo story deve responder, aprofundar ou mostrar resultado.
-19. Cada post do dia deve cumprir uma funcao diferente na jornada do seguidor: manha para ativacao, curiosidade ou conexao emocional; meio-dia para aprofundamento, resposta ou bastidor; tarde ou noite para conversao, reflexao ou CTA forte.
-20. O objetivo declarado pelo usuario e o motor principal do calendario. Cada conteudo precisa ajudar esse objetivo de forma clara.
-21. Antes de definir cada post, valide mentalmente: isso serve ao objetivo, esta especifico, faz sentido na sequencia do dia e pode gerar resultado real?
+10. Nunca sugira gravação no horário de almoço. Almoço pode ser horário de publicação.
+11. Se houver dica_plataforma no slot, respeite essa orientação no conteúdo.
+12. Nunca use o nome do tema_base literalmente dentro da fala do responsável no roteiro. Transforme o tema em contexto real de conversa, como alguém real falando, e nunca como um template.
+13. Nunca gere conteúdo genérico. A data comemorativa é só o gancho. O negócio, o nicho, os produtos, os serviços e os diferenciais da marca precisam ser o protagonista do conteúdo.
+14. Se existir data_especial no dia, adapte o conteúdo ao nicho do cliente. Nunca escreva parabéns genérico, mensagem pronta ou texto que serviria para qualquer empresa.
+15. Em datas especiais, o gancho emocional vem primeiro e a oferta vem depois, de forma orgânica.
+16. Se a data especial for feriado nacional, você pode humanizar equipe, bastidores, rotina e descanso da marca.
+17. Em datas primárias, trate antecipação, dia e encerramento como capítulos diferentes da mesma campanha, evitando repetir ângulo ou CTA.
+18. Nunca repita o mesmo formato no mesmo dia sem propósito. Se um story anterior abriu enquete ou caixinha, o próximo story deve responder, aprofundar ou mostrar resultado.
+19. Cada post do dia deve cumprir uma função diferente na jornada do seguidor: manhã para ativação, curiosidade ou conexão emocional; meio-dia para aprofundamento, resposta ou bastidor; tarde ou noite para conversão, reflexão ou CTA forte.
+20. O objetivo declarado pelo usuário é o motor principal do calendário. Cada conteúdo precisa ajudar esse objetivo de forma clara.
+21. Antes de definir cada post, valide mentalmente: isso serve ao objetivo, está específico, faz sentido na sequência do dia e pode gerar resultado real?
 
-REGRAS DE ESTILO E CONEXAO:
-1. Cada slot ja vem com um estilo_id obrigatorio. O conteudo precisa seguir fielmente o estilo descrito no banco.
-2. Nenhum estilo pode parecer generico. O titulo precisa comunicar o assunto real e o angulo do dia.
-3. Quando um slot vier com estilo_id H04 ou H05, o proximo HISTORY do mesmo dia com estilo_id H14 deve ser continuacao direta daquela caixinha.
+REGRAS DE ESTILO E CONEXÃO:
+1. Cada slot já vem com um estilo_id obrigatório. O conteúdo precisa seguir fielmente o estilo descrito no banco.
+2. Nenhum estilo pode parecer genérico. O título precisa comunicar o assunto real e o ângulo do dia.
+3. Quando um slot vier com estilo_id H04 ou H05, o próximo HISTORY do mesmo dia com estilo_id H14 deve ser continuação direta daquela caixinha.
 4. Se existir conectado_com_slot_index, use o campo conectado_com no JSON final apontando para o id do post relacionado no planejamento.
-5. O H14 nunca pode parecer um story novo. Ele deve soar como continuidade imediata da conversa e comecar direto na resposta, sem dizer que abriu uma caixinha.
+5. O H14 nunca pode parecer um story novo. Ele deve soar como continuidade imediata da conversa e começar direto na resposta, sem dizer que abriu uma caixinha.
 
 REGRAS DOS STORIES:
-1. Se slot_index 0 acontecer antes das 10h, o primeiro Story do dia deve ser sempre um bom dia natural, com o rosto do responsavel, comentando o contexto do dia e convidando a acompanhar os proximos stories. Nao use caixinha nem enquete nesse momento.
-2. H04 e H05 devem seguir esta ordem interna: STORY 1 abre a caixinha, STORY 2 avisa que vai responder no proximo story, STORY 3 orienta a responder a primeira pergunta, DICAS - Continuacao orienta a seguir respondendo.
+1. Se slot_index 0 acontecer antes das 10h, o primeiro Story do dia deve ser sempre um bom dia natural, com o rosto do responsável, comentando o contexto do dia e convidando a acompanhar os próximos stories. Não use caixinha nem enquete nesse momento.
+2. H04 e H05 devem seguir esta ordem interna: STORY 1 abre a caixinha, STORY 2 avisa que vai responder no próximo story, STORY 3 orienta a responder à primeira pergunta, DICAS - Continuação orienta a seguir respondendo.
 3. O slot seguinte a H04 ou H05 deve ser H14 e continuar a conversa da caixinha aberta antes.
-4. H06 e H07 devem abrir uma enquete e seguir a mesma logica de continuidade no proprio script.
-5. A partir do STORY 3, nao escreva roteiro palavra por palavra. Apenas instrua o criador sobre como responder com naturalidade.
+4. H06 e H07 devem abrir uma enquete e seguir a mesma lógica de continuidade no próprio script.
+5. A partir do STORY 3, não escreva roteiro palavra por palavra. Apenas instrua o criador sobre como responder com naturalidade.
 6. Em todo story com caixinha ou enquete, inclua esta dica exata no final:
-Se ninguem responder, voce mesmo pode fazer a pergunta e responder. Isso gera conteudo real e nao ha nada de errado nisso.
-7. A pergunta da caixinha (H04, H05) ou da enquete (H06, H07) deve ser curta, coloquial e facil de responder. Nunca use o nome do tema como pergunta. A pergunta deve ser algo que o publico-alvo desse nicho responderia de verdade. Exemplos do formato correto: Voce ja tentou X? Qual e sua maior dificuldade com Y? Ja aconteceu isso com voce? Voce prefere A ou B? Adapte sempre ao nicho e ao publico-alvo do cliente.
-8. O H14 nunca comeca com eu abri uma caixinha. Ele comeca direto respondendo a primeira pergunta recebida, como se a conversa ja estivesse em andamento.
+Se ninguém responder, você mesmo pode fazer a pergunta e responder. Isso gera conteúdo real e não há nada de errado nisso.
+7. A pergunta da caixinha (H04, H05) ou da enquete (H06, H07) deve ser curta, coloquial e fácil de responder. Nunca use o nome do tema como pergunta. A pergunta deve ser algo que o público-alvo desse nicho responderia de verdade. Exemplos do formato correto: Você já tentou X? Qual é sua maior dificuldade com Y? Já aconteceu isso com você? Você prefere A ou B? Adapte sempre ao nicho e ao público-alvo do cliente.
+8. O H14 nunca começa com eu abri uma caixinha. Ele começa direto respondendo à primeira pergunta recebida, como se a conversa já estivesse em andamento.
 
 REGRAS DOS REELS:
 1. O roteiro deve ficar dentro do passo a passo.
-2. Estrutura obrigatoria:
+2. Estrutura obrigatória:
 CENA 1
 PASSO A PASSO:
-1. Abra a camera e grave na vertical.
+1. Abra a câmera e grave na vertical.
 2. Nos 3 primeiros segundos, fale este gancho: [gancho]
-3. Olhe direto para a camera.
+3. Olhe direto para a câmera.
 
 CENA 2
 PASSO A PASSO:
@@ -3408,22 +3408,22 @@ PASSO A PASSO:
 CTA FINAL
 PASSO A PASSO:
 1. Feche dizendo: [cta]
-2. Na edicao: cortes rapidos, legenda e musica popular no momento da gravacao.
-3. Feche com a dica exata: Edite com cortes rapidos, adicione legenda e escolha uma musica popular no momento em que voce esta gravando.
-4. O gancho dos 3 primeiros segundos deve ser especifico para o nicho e o publico-alvo do cliente.
-5. Se is_viral_candidate for true, aumente impacto emocional, contraste, surpresa ou transformacao no roteiro, sem perder conexao com o nicho do cliente.
+2. Na edição: cortes rápidos, legenda e música popular no momento da gravação.
+3. Feche com a dica exata: Edite com cortes rápidos, adicione legenda e escolha uma música popular no momento em que você está gravando.
+4. O gancho dos 3 primeiros segundos deve ser específico para o nicho e o público-alvo do cliente.
+5. Se is_viral_candidate for true, aumente impacto emocional, contraste, surpresa ou transformação no roteiro, sem perder conexão com o nicho do cliente.
 
 REGRAS DO FEED:
-1. FEED_CARROSSEL deve ter de 3 a 5 slides, em ordem, sem pular numero.
-2. No slide 1 inclua uma capa com titulo forte e Passe para o lado no rodape.
-3. Do slide 2 em diante, entregue conteudo direto, especifico para o nicho e facil de aplicar.
-4. O ultimo slide deve ter CTA claro e direto.
-5. FEED_FOTO precisa entregar legenda pronta para copiar e colar, com 150 a 250 caracteres, CTA no final e descricao da imagem ideal baseada no nicho do cliente.
+1. FEED_CARROSSEL deve ter de 3 a 5 slides, em ordem, sem pular número.
+2. No slide 1 inclua uma capa com título forte e Passe para o lado no rodapé.
+3. Do slide 2 em diante, entregue conteúdo direto, específico para o nicho e fácil de aplicar.
+4. O último slide deve ter CTA claro e direto.
+5. FEED_FOTO precisa entregar legenda pronta para copiar e colar, com 150 a 250 caracteres, CTA no final e descrição da imagem ideal baseada no nicho do cliente.
 
 PLANEJAMENTO FIXO DESTA SEMANA:
 ${schedule}
 
-Retorne APENAS JSON valido, sem markdown, neste formato:
+Retorne APENAS JSON válido, sem markdown, neste formato:
 {
   "days": [
     {
@@ -3546,7 +3546,7 @@ async function generateWeekWithAI(
   weekDays: PlannedDay[],
 ) {
   if (!process.env.GROQ_API_KEY) {
-    throw new Error("GROQ_API_KEY nao configurada");
+    throw new Error("GROQ_API_KEY não configurada");
   }
 
   const prompt = buildWeekPromptV3(
@@ -3831,12 +3831,12 @@ function buildStrategyMetadata(
     new Date(year, month, 0).getDate(),
   );
   const seasonalSummary = holidayMoments.length
-    ? ` Inclui ${holidayMoments.length} ganchos sazonais relevantes no mes.`
+    ? ` Inclui ${holidayMoments.length} ganchos sazonais relevantes no mês.`
     : "";
 
   return {
-    title: `${MONTH_NAMES[month - 1]} de Conteudo para ${business.business_name}`,
-    summary: `Planejamento personalizado para ${plannedDays} dias ativos, focado em ${getGoalLabel(business.main_goal)} com conteudos especificos para ${business.niche}.${seasonalSummary}`,
+    title: `${MONTH_NAMES[month - 1]} de Conteúdo para ${business.business_name}`,
+    summary: `Planejamento personalizado para ${plannedDays} dias ativos, focado em ${getGoalLabel(business.main_goal)} com conteúdos específicos para ${business.niche}.${seasonalSummary}`,
     month,
     year,
   };
@@ -3879,7 +3879,7 @@ export async function POST(req: Request) {
 
     if (!month || !year) {
       return new Response(
-        JSON.stringify({ error: "Mes e ano sao obrigatorios" }),
+        JSON.stringify({ error: "Mês e ano são obrigatórios" }),
         {
           status: 400,
           headers: { "Content-Type": "application/json" },
@@ -3910,15 +3910,15 @@ export async function POST(req: Request) {
       business_name:
         (typeof body.nome === "string" && body.nome.trim()) ||
         business.business_name ||
-        "Negocio",
+        "Negócio",
       niche:
         (typeof body.nicho === "string" && body.nicho.trim()) ||
         business.niche ||
-        "negocio local",
+        "negócio local",
       target_audience:
         (typeof body.publico_alvo === "string" && body.publico_alvo.trim()) ||
         business.target_audience ||
-        "clientes da regiao",
+        "clientes da região",
       main_goal:
         (typeof body.objetivo_principal === "string" &&
           body.objetivo_principal.trim()) ||
@@ -3931,7 +3931,7 @@ export async function POST(req: Request) {
         "casual",
       growth_speed: (business.growth_speed || "moderado") as GrowthSpeed,
       brand_description:
-        business.brand_description || "conquistar mais resultado com conteudo",
+        business.brand_description || "conquistar mais resultado com conteúdo",
       responsible_name: business.responsible_name,
       instagram_handle: business.instagram_handle,
       brand_colors: business.brand_colors,
@@ -4051,11 +4051,11 @@ export async function POST(req: Request) {
       },
     );
   } catch (error: any) {
-    console.error("Erro ao gerar estrategia:", error);
+    console.error("Erro ao gerar estratégia:", error);
 
     return new Response(
       JSON.stringify({
-        error: error.message || "Erro ao gerar estrategia",
+        error: error.message || "Erro ao gerar estratégia",
       }),
       {
         status: 500,

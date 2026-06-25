@@ -27,7 +27,7 @@ export async function GET(
   const job = await getVideoJobById(jobId, user.id);
 
   if (!job) {
-    return Response.json({ error: "Arquivo nao encontrado." }, { status: 404 });
+    return Response.json({ error: "Arquivo não encontrado." }, { status: 404 });
   }
 
   const fileBuffer = await readFile(job.outputPath);

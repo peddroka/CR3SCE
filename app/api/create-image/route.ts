@@ -100,7 +100,7 @@ async function getRecentGenerationCount(
     .gte("created_at", oneHourAgo);
 
   if (error) {
-    console.error("Erro ao contar geracoes de imagem:", error);
+    console.error("Erro ao contar gerações de imagem:", error);
     return 0;
   }
 
@@ -116,7 +116,7 @@ async function registerGeneration(
   });
 
   if (error) {
-    console.error("Erro ao registrar geracao de imagem:", error);
+    console.error("Erro ao registrar geração de imagem:", error);
   }
 }
 
@@ -145,7 +145,7 @@ export async function GET() {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ error: "Nao autenticado" }, { status: 401 });
+      return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
     }
 
     const count = await getRecentGenerationCount(supabase, user.id);
@@ -156,9 +156,9 @@ export async function GET() {
       limit: GENERATION_LIMIT,
     });
   } catch (error) {
-    console.error("Erro ao consultar limite de geracoes:", error);
+    console.error("Erro ao consultar limite de gerações:", error);
     return NextResponse.json(
-      { error: "Nao foi possivel consultar o limite agora." },
+      { error: "Não foi possível consultar o limite agora." },
       { status: 500 },
     );
   }
@@ -172,14 +172,14 @@ export async function POST(req: NextRequest) {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ error: "Nao autenticado" }, { status: 401 });
+      return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
     }
 
     const currentCount = await getRecentGenerationCount(supabase, user.id);
     if (currentCount >= GENERATION_LIMIT) {
       return NextResponse.json(
         {
-          error: "Limite de 10 geracoes por hora atingido. Tente novamente mais tarde.",
+          error: "Limite de 10 gerações por hora atingido. Tente novamente mais tarde.",
         },
         { status: 429 },
       );
@@ -193,7 +193,7 @@ export async function POST(req: NextRequest) {
       normalizeOptionalString(body.selectedBgUrl) ??
       normalizeOptionalString(body.selectedBg);
     const selectedBgLabel =
-      normalizeOptionalString(body.selectedBgLabel) ?? "fundo automatico";
+      normalizeOptionalString(body.selectedBgLabel) ?? "fundo automático";
     const selectedElementUrl =
       normalizeOptionalString(body.selectedElementUrl) ??
       normalizeOptionalString(body.selectedElement);
@@ -207,7 +207,7 @@ export async function POST(req: NextRequest) {
 
     if (!visualPrompt) {
       return NextResponse.json(
-        { error: "Prompt visual nao informado." },
+        { error: "Prompt visual não informado." },
         { status: 400 },
       );
     }
@@ -215,7 +215,7 @@ export async function POST(req: NextRequest) {
     const business = await getBusinessContext(supabase, user.id);
     if (!business) {
       return NextResponse.json(
-        { error: "Negocio nao encontrado para este usuario." },
+        { error: "Negócio não encontrado para este usuário." },
         { status: 404 },
       );
     }
@@ -223,11 +223,11 @@ export async function POST(req: NextRequest) {
     const postTheme = extractPostTheme(providedTitle, visualPrompt, business);
     const styleLabel = getStyleLabel(requestedStyle);
     const backgroundLabel =
-      selectedBgLabel && selectedBgLabel !== "fundo automatico"
+      selectedBgLabel && selectedBgLabel !== "fundo automático"
         ? selectedBgLabel
         : selectedBgUrl
           ? selectedBgLabel
-          : "fundo automatico com base no tema";
+          : "fundo automático com base no tema";
     const elementLabel = selectedElementUrl
       ? selectedElementLabel
       : "sem elemento extra";

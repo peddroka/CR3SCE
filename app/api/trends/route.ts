@@ -110,7 +110,7 @@ function extractJson(text: string) {
   const end = cleaned.lastIndexOf("}");
 
   if (start === -1 || end === -1) {
-    throw new Error("Resposta da IA sem JSON valido");
+    throw new Error("Resposta da IA sem JSON válido");
   }
 
   return JSON.parse(cleaned.slice(start, end + 1));
@@ -183,12 +183,12 @@ function sanitizeIdea(rawIdea: Partial<TrendIdea>): TrendIdea {
   return {
     content_type: cleanText(rawIdea.content_type || "Reels") || "Reels",
     trend_name: cleanText(rawIdea.trend_name || "Trend atual adaptada"),
-    audio_used: cleanText(rawIdea.audio_used || "Use o audio em alta mais proximo do padrao descrito"),
+    audio_used: cleanText(rawIdea.audio_used || "Use o áudio em alta mais próximo do padrão descrito"),
     on_screen_text: cleanText(rawIdea.on_screen_text || "Use uma frase curta e direta na tela"),
     creator_action: cleanText(rawIdea.creator_action || "Grave em primeira pessoa, com gestos naturais e cortes simples"),
     how_it_works: cleanText(rawIdea.how_it_works || "Adapte a estrutura da trend ao seu nicho, mantendo o ritmo e a ideia central"),
     adapted_script: cleanText(rawIdea.adapted_script || "Mostre o seu contexto real e fale de forma natural, como se estivesse conversando com um cliente"),
-    recording_instructions: cleanText(rawIdea.recording_instructions || "Grave na vertical, com boa luz, texto curto na tela e cortes rapidos"),
+    recording_instructions: cleanText(rawIdea.recording_instructions || "Grave na vertical, com boa luz, texto curto na tela e cortes rápidos"),
   };
 }
 
@@ -349,7 +349,7 @@ async function buildTrendResearch() {
     query: "known-source",
     source: "known-source",
     title: extractHostname(url),
-    snippet: "Fonte recorrente sobre trends de video curto",
+    snippet: "Fonte recorrente sobre trends de vídeo curto",
     url,
   }));
 
@@ -384,14 +384,14 @@ function buildResearchPrompt(
   const searchDigest = searchResults
     .map(
       (result, index) =>
-        `${index + 1}. consulta: ${result.query}\nfonte: ${result.source}\ntitulo: ${result.title}\nresumo: ${result.snippet}\nlink: ${result.url}`,
+        `${index + 1}. consulta: ${result.query}\nfonte: ${result.source}\ntítulo: ${result.title}\nresumo: ${result.snippet}\nlink: ${result.url}`,
     )
     .join("\n\n");
 
   const pageDigest = openedPages
     .map(
       (page, index) =>
-        `FONTE ${index + 1}\nurl: ${page.url}\ntitulo: ${page.title}\nconteudo: ${page.text}`,
+        `FONTE ${index + 1}\nurl: ${page.url}\ntítulo: ${page.title}\nconteúdo: ${page.text}`,
     )
     .join("\n\n");
 
@@ -438,12 +438,12 @@ Responda APENAS com JSON válido neste formato:
     {
       "content_type": "Reels",
       "trend_name": "nome da trend",
-      "audio_used": "audio ou tipo de audio usado",
+      "audio_used": "áudio ou tipo de áudio usado",
       "on_screen_text": "texto principal na tela",
-      "creator_action": "acao que o criador executa",
-      "how_it_works": "explicacao clara de como a trend funciona",
+      "creator_action": "ação que o criador executa",
+      "how_it_works": "explicação clara de como a trend funciona",
       "adapted_script": "roteiro adaptado para o cliente",
-      "recording_instructions": "instrucao pratica de gravacao"
+      "recording_instructions": "instrução prática de gravação"
     }
   ]
 }
@@ -453,21 +453,21 @@ Responda APENAS com JSON válido neste formato:
 export async function POST(req: Request) {
   try {
     if (!process.env.GROQ_API_KEY) {
-      return new Response(JSON.stringify({ error: "GROQ_API_KEY nao configurada" }), {
+      return new Response(JSON.stringify({ error: "GROQ_API_KEY não configurada" }), {
         status: 500,
         headers: { "Content-Type": "application/json" },
       });
     }
 
     const { niche, business_name } = await req.json();
-    const safeNiche = cleanText(niche || "negocio local");
-    const safeBusinessName = cleanText(business_name || "seu negocio");
+    const safeNiche = cleanText(niche || "negócio local");
+    const safeBusinessName = cleanText(business_name || "seu negócio");
     const research = await buildTrendResearch();
 
     if (research.searchResults.length === 0 || research.openedPages.length === 0) {
       return new Response(
         JSON.stringify({
-          error: "Nao foi possivel carregar trends atuais agora. Tente novamente em instantes.",
+          error: "Não foi possível carregar trends atuais agora. Tente novamente em instantes.",
         }),
         {
           status: 503,
@@ -498,7 +498,7 @@ export async function POST(req: Request) {
     if (ideas.length !== 3) {
       return new Response(
         JSON.stringify({
-          error: "Nao foi possivel montar 3 trends validas agora. Tente novamente.",
+          error: "Não foi possível montar 3 trends válidas agora. Tente novamente.",
         }),
         {
           status: 502,
@@ -519,7 +519,7 @@ export async function POST(req: Request) {
   } catch (error: any) {
     return new Response(
       JSON.stringify({
-        error: error.message || "Erro ao carregar tendencias",
+        error: error.message || "Erro ao carregar tendências",
       }),
       {
         status: 500,

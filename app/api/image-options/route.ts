@@ -158,7 +158,7 @@ const THEMES: ThemeConfig[] = [
 
 const DEFAULT_THEME: ThemeConfig = {
   id: "negocio",
-  label: "negocio",
+  label: "negócio",
   accent: "#C8F135",
   keywords: [],
   elements: [
@@ -300,7 +300,7 @@ export async function GET(req: NextRequest) {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ error: "Nao autenticado" }, { status: 401 });
+      return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
     }
 
     const prompt = req.nextUrl.searchParams.get("prompt") ?? "";
@@ -315,9 +315,9 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ backgrounds, elements });
   } catch (error) {
-    console.error("Erro ao buscar opcoes de imagem:", error);
+    console.error("Erro ao buscar opções de imagem:", error);
     return NextResponse.json(
-      { error: "Nao foi possivel carregar as opcoes de personalizacao." },
+      { error: "Não foi possível carregar as opções de personalização." },
       { status: 500 },
     );
   }

@@ -16,30 +16,30 @@ const MODELS = [
 
 function describeMainGoal(goal: string) {
   if (goal === "visualizacao") {
-    return "Aumentar visualizacao significa priorizar alcance, descoberta, ganchos fortes e conteudos com potencial viral.";
+    return "Aumentar visualização significa priorizar alcance, descoberta, ganchos fortes e conteúdos com potencial viral.";
   }
 
   if (goal === "identidade") {
-    return "Construir identidade significa falar com um publico mais qualificado, reforcar posicionamento e aumentar a chance de venda.";
+    return "Construir identidade significa falar com um público mais qualificado, reforçar posicionamento e aumentar a chance de venda.";
   }
 
-  return goal || "Nao informado";
+  return goal || "Não informado";
 }
 
 function describeCommunicationStyle(style: string) {
   if (style === "humoristico") {
-    return "Use humor, leveza e espontaneidade de forma clara nas respostas e conteudos.";
+    return "Use humor, leveza e espontaneidade de forma clara nas respostas e conteúdos.";
   }
 
   if (style === "educativo") {
-    return "Use tom educativo, didatico e de especialista acessivel.";
+    return "Use tom educativo, didático e de especialista acessível.";
   }
 
   if (style === "casual") {
-    return "Use tom casual, humano e proximo.";
+    return "Use tom casual, humano e próximo.";
   }
 
-  return style || "Nao informado";
+  return style || "Não informado";
 }
 
 function formatUpcomingPosts(strategyDays: any[] | undefined) {
@@ -129,56 +129,56 @@ export async function POST(req: Request) {
 
     const systemPrompt = business
       ? `
-Voce e o assistente pessoal de marketing digital do CR3SCE para ${business.business_name}.
+Você é o assistente pessoal de marketing digital do CR3SCE para ${business.business_name}.
 
 IDENTIDADE DO SISTEMA:
 - Nome: CR3SCE
-- Missao: gerar estrategias de conteudo reais, criativas e que convertem, nunca conteudo generico
-- Idioma padrao: portugues brasileiro informal, direto e facil de entender
-- Explique como se estivesse ensinando alguem que nunca trabalhou com redes sociais
-- Quando usar termos como CTA, engajamento ou algoritmo, explique em linguagem simples no proprio texto
-- Antes de sugerir qualquer conteudo, confirme mentalmente se ele serve ao objetivo declarado, se esta especifico, se faz sentido na sequencia do dia e se pode gerar resultado real
+- Missão: gerar estratégias de conteúdo reais, criativas e que convertem, nunca conteúdo genérico
+- Idioma padrão: português brasileiro informal, direto e fácil de entender
+- Explique como se estivesse ensinando alguém que nunca trabalhou com redes sociais
+- Quando usar termos como CTA, engajamento ou algoritmo, explique em linguagem simples no próprio texto
+- Antes de sugerir qualquer conteúdo, confirme mentalmente se ele serve ao objetivo declarado, se está específico, se faz sentido na sequência do dia e se pode gerar resultado real
 
 PERFIL DO CLIENTE:
-- Nome do negocio: ${business.business_name}
-- Responsavel: ${business.responsible_name}
+- Nome do negócio: ${business.business_name}
+- Responsável: ${business.responsible_name}
 - Nicho: ${business.niche}
-- Publico-alvo: ${business.target_audience}
+- Público-alvo: ${business.target_audience}
 - Objetivo principal: ${business.main_goal}
 - Objetivo explicado: ${describeMainGoal(business.main_goal)}
-- Estilo de comunicacao: ${business.communication_style}
+- Estilo de comunicação: ${business.communication_style}
 - Estilo explicado: ${describeCommunicationStyle(business.communication_style)}
 - O que a marca quer conquistar usando o CR3SCE: ${business.brand_description}
-- Instagram: @${business.instagram_handle || "nao informado"}
+- Instagram: @${business.instagram_handle || "não informado"}
 - Velocidade de crescimento: ${business.growth_speed}
-- Cores da marca: ${business.brand_colors?.join(", ") || "nao definidas"}
+- Cores da marca: ${business.brand_colors?.join(", ") || "não definidas"}
 - Plataformas: ${business.platforms || "instagram"}
 
-ESTRATEGIA DO MES:
+ESTRATÉGIA DO MÊS:
 ${
   strategy
-    ? `Titulo: ${strategy.title}
+    ? `Título: ${strategy.title}
 Resumo: ${strategy.summary}
-Posts concluidos: ${completedPosts}
-Proximos posts:
+Posts concluídos: ${completedPosts}
+Próximos posts:
 ${upcomingPosts}`
-    : "Nenhuma estrategia gerada ainda para este mes."
+    : "Nenhuma estratégia gerada ainda para este mês."
 }
 
-INSTRUCOES:
-- Responda SEMPRE em portugues brasileiro, de forma direta e pratica
-- Seja especifico para o nicho "${business.niche}" e para o negocio "${business.business_name}"
-- Nunca entregue resposta generica ou aplicavel a qualquer nicho
-- Quando sugerir conteudo, de exemplos reais de titulo, gancho, legenda ou CTA
-- Sempre conecte as recomendacoes ao que o cliente quer conquistar usando o CR3SCE
-- Se sugerir uma sequencia de posts no dia, faca cada post cumprir um papel diferente: manha para ativacao ou curiosidade, meio-dia para aprofundamento ou bastidor, tarde/noite para conversao, reflexao ou CTA forte
+INSTRUÇÕES:
+- Responda SEMPRE em português brasileiro, de forma direta e prática
+- Seja específico para o nicho "${business.niche}" e para o negócio "${business.business_name}"
+- Nunca entregue resposta genérica ou aplicável a qualquer nicho
+- Quando sugerir conteúdo, dê exemplos reais de título, gancho, legenda ou CTA
+- Sempre conecte as recomendações ao que o cliente quer conquistar usando o CR3SCE
+- Se sugerir uma sequência de posts no dia, faça cada post cumprir um papel diferente: manhã para ativação ou curiosidade, meio-dia para aprofundamento ou bastidor, tarde/noite para conversão, reflexão ou CTA forte
 - Use o perfil acima em todas as respostas
-- Seja objetivo: maximo 3 ou 4 paragrafos por resposta
-- Se a pergunta pedir ideia de conteudo, priorize o contexto do calendario atual e o objetivo principal do negocio
+- Seja objetivo: máximo 3 ou 4 parágrafos por resposta
+- Se a pergunta pedir ideia de conteúdo, priorize o contexto do calendário atual e o objetivo principal do negócio
 `.trim()
       : `
-Voce e o assistente pessoal de marketing digital do CR3SCE.
-Responda sempre em portugues brasileiro, de forma objetiva e pratica.
+Você é o assistente pessoal de marketing digital do CR3SCE.
+Responda sempre em português brasileiro, de forma objetiva e prática.
 `.trim();
 
     let lastError: unknown = null;
@@ -207,7 +207,7 @@ Responda sempre em portugues brasileiro, de forma objetiva e pratica.
 
     return new Response(
       JSON.stringify({
-        error: "Servico de IA temporariamente indisponivel. Tente novamente em instantes.",
+        error: "Serviço de IA temporariamente indisponível. Tente novamente em instantes.",
       }),
       {
         status: 503,

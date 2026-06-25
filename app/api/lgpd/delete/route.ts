@@ -17,7 +17,7 @@ export async function POST(request: Request) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.json({ error: "Nao autenticado" }, { status: 401 });
+    return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   }
 
   let reason: string | null = null;
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     // body opcional
   }
 
-  // upsert para garantir idempotencia caso o usuario clique duas vezes
+  // upsert para garantir idempotência caso o usuário clique duas vezes
   const { data, error } = await supabase
     .from("data_deletion_requests")
     .upsert(
@@ -51,7 +51,7 @@ export async function POST(request: Request) {
   if (error) {
     console.error("[lgpd/delete] failed", error);
     return NextResponse.json(
-      { error: "Falha ao registrar solicitacao" },
+      { error: "Falha ao registrar solicitação" },
       { status: 500 },
     );
   }
@@ -78,7 +78,7 @@ export async function DELETE(request: Request) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.json({ error: "Nao autenticado" }, { status: 401 });
+    return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   }
 
   const { data, error } = await supabase
@@ -113,7 +113,7 @@ export async function GET() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.json({ error: "Nao autenticado" }, { status: 401 });
+    return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   }
 
   const { data, error } = await supabase
