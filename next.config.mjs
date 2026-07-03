@@ -2,6 +2,8 @@
 const nextConfig = {
   compress: true,
   devIndicators: false,
+  // Binários nativos usados pelo editor de vídeo — não podem ser bundlados
+  serverExternalPackages: ["ffmpeg-static", "@ffprobe-installer/ffprobe"],
   experimental: {
     optimizePackageImports: [
       "lucide-react",

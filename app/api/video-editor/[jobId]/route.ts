@@ -1,7 +1,11 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { createClient } from "@/lib/supabase/server";
-import { cleanupExpiredVideoJobs, getVideoJobById } from "@/lib/video-editor";
+import {
+  cleanupExpiredVideoJobs,
+  getVideoJobById,
+  getVideoJobSignedUrl,
+} from "@/lib/video-editor";
 
 export const runtime = "nodejs";
 
@@ -30,21 +34,46 @@ export async function GET(
     return Response.json({ error: "Arquivo não encontrado." }, { status: 404 });
   }
 
-  const fileBuffer = await readFile(job.outputPath);
   const url = new URL(req.url);
-  const headers = new Headers({
-    "Content-Type": job.outputMimeType || "application/octet-stream",
-    "Cache-Control": "private, max-age=3600",
-  });
+  const wantsDownload = url.searchParams.get("download") === "1";
 
-  if (url.searchParams.get("download") === "1") {
-    headers.set("Content-Disposition", getContentDisposition(job.downloadName));
-  } else {
-    headers.set(
-      "Content-Disposition",
-      `inline; filename="${path.basename(job.outputPath)}"`,
-    );
+  // 1) Arquivo local disponível (dev/servidor persistente): serve direto
+  if (job.outputPath) {
+    try {
+      const fileBuffer = await readFile(job.outputPath);
+      const headers = new Headers({
+        "Content-Type": job.outputMimeType || "application/octet-stream",
+        "Cache-Control": "private, max-age=3600",
+      });
+
+      if (wantsDownload) {
+        headers.set(
+          "Content-Disposition",
+          getContentDisposition(job.downloadName),
+        );
+      } else {
+        headers.set(
+          "Content-Disposition",
+          `inline; filename="${path.basename(job.outputPath)}"`,
+        );
+      }
+
+      return new Response(fileBuffer, { headers });
+    } catch {
+      // Disco efêmero (produção) — cai para o Storage abaixo
+    }
   }
 
-  return new Response(fileBuffer, { headers });
+  // 2) Produção: redireciona para URL assinada do Supabase Storage
+  if (job.storageKey) {
+    const signedUrl = await getVideoJobSignedUrl(
+      job.storageKey,
+      wantsDownload ? job.downloadName : undefined,
+    );
+    if (signedUrl) {
+      return Response.redirect(signedUrl, 302);
+    }
+  }
+
+  return Response.json({ error: "Arquivo não encontrado." }, { status: 404 });
 }

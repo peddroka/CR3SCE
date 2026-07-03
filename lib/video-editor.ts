@@ -1,22 +1,61 @@
 import { promises as fs } from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 import { spawn } from "node:child_process";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
-const VIDEO_EDITOR_ROOT = path.join(process.cwd(), "tmp", "video-editor");
+// Em serverless (Vercel) só /tmp é gravável; localmente usamos tmp/ do projeto.
+const IS_SERVERLESS = !!process.env.VERCEL || !!process.env.AWS_LAMBDA_FUNCTION_NAME;
 
-// Caminhos absolutos para ferramentas externas (fallback para PATH)
-const FFMPEG_PATH =
-  process.env.FFMPEG_PATH ||
-  "C:\\Users\\User\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-8.1-full_build\\bin\\ffmpeg.exe";
-const FFPROBE_PATH =
-  process.env.FFPROBE_PATH ||
-  "C:\\Users\\User\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-8.1-full_build\\bin\\ffprobe.exe";
-const WHISPER_PATH =
-  process.env.WHISPER_PATH ||
-  "C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\whisper.exe";
-const INDEX_PATH = path.join(VIDEO_EDITOR_ROOT, "index.json");
+function getVideoEditorRoot() {
+  return IS_SERVERLESS
+    ? path.join(os.tmpdir(), "video-editor")
+    : path.join(process.cwd(), "tmp", "video-editor");
+}
+
+// Resolução de binários: env → pacote npm (funciona local e na Vercel) → PATH.
+function resolveFfmpegPath(): string {
+  if (process.env.FFMPEG_PATH) return process.env.FFMPEG_PATH;
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const staticPath = require("ffmpeg-static") as string | null;
+    if (staticPath) return staticPath;
+  } catch {}
+  return "ffmpeg";
+}
+
+function resolveFfprobePath(): string {
+  if (process.env.FFPROBE_PATH) return process.env.FFPROBE_PATH;
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const installer = require("@ffprobe-installer/ffprobe") as { path?: string };
+    if (installer?.path) return installer.path;
+  } catch {}
+  return "ffprobe";
+}
+
+const FFMPEG_PATH = resolveFfmpegPath();
+const FFPROBE_PATH = resolveFfprobePath();
+const WHISPER_PATH = process.env.WHISPER_PATH || "whisper";
 const BRAZIL_TIMEZONE = "America/Sao_Paulo";
+
+const STORAGE_BUCKET = "video-editor";
+
+// Client admin do Supabase (service role) para Storage + tabela de jobs.
+// Retorna null quando as envs não existem (ex.: testes unitários).
+function getAdminClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) return null;
+  try {
+    return createSupabaseClient(url, key, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+  } catch {
+    return null;
+  }
+}
 
 export type VideoOperationType =
   | "transcribe"
@@ -32,7 +71,8 @@ export type VideoOperationType =
   | "music"
   | "mute"
   | "fade"
-  | "highlights";
+  | "highlights"
+  | "trend_style";
 
 export interface VideoOperation {
   type: VideoOperationType;
@@ -46,6 +86,8 @@ export interface VideoOperation {
   musicVolume?: number;
   /** Original audio volume 0..1 (only for "music" op) */
   originalVolume?: number;
+  /** Highlights: só corta se o vídeo for longo (usado pelo Modo Trend) */
+  onlyIfLong?: boolean;
 }
 
 export interface VideoJobRecord {
@@ -61,6 +103,8 @@ export interface VideoJobRecord {
   outputPath: string;
   outputMimeType: string;
   downloadName: string;
+  /** Chave do arquivo no Supabase Storage (persistência para produção) */
+  storageKey?: string;
 }
 
 interface VideoEditorIndex {
@@ -76,13 +120,21 @@ function getDayKey(date = new Date()) {
   }).format(date);
 }
 
+function getIndexPath() {
+  return path.join(getVideoEditorRoot(), "index.json");
+}
+
 async function ensureStorage() {
-  await fs.mkdir(VIDEO_EDITOR_ROOT, { recursive: true });
+  await fs.mkdir(getVideoEditorRoot(), { recursive: true });
 
   try {
-    await fs.access(INDEX_PATH);
+    await fs.access(getIndexPath());
   } catch {
-    await fs.writeFile(INDEX_PATH, JSON.stringify({ jobs: [] }, null, 2), "utf8");
+    await fs.writeFile(
+      getIndexPath(),
+      JSON.stringify({ jobs: [] }, null, 2),
+      "utf8",
+    );
   }
 }
 
@@ -90,7 +142,7 @@ async function readIndex(): Promise<VideoEditorIndex> {
   await ensureStorage();
 
   try {
-    const raw = await fs.readFile(INDEX_PATH, "utf8");
+    const raw = await fs.readFile(getIndexPath(), "utf8");
     const parsed = JSON.parse(raw) as VideoEditorIndex;
 
     return {
@@ -103,7 +155,7 @@ async function readIndex(): Promise<VideoEditorIndex> {
 
 async function writeIndex(index: VideoEditorIndex) {
   await ensureStorage();
-  await fs.writeFile(INDEX_PATH, JSON.stringify(index, null, 2), "utf8");
+  await fs.writeFile(getIndexPath(), JSON.stringify(index, null, 2), "utf8");
 }
 
 export async function cleanupExpiredVideoJobs() {
@@ -124,16 +176,61 @@ export async function cleanupExpiredVideoJobs() {
   if (activeJobs.length !== index.jobs.length) {
     await writeIndex({ jobs: activeJobs });
   }
+
+  // Limpeza remota (Storage + banco), best-effort
+  const admin = getAdminClient();
+  if (!admin) return;
+  try {
+    const { data: expired } = await admin
+      .from("video_editor_jobs")
+      .select("id, output_path")
+      .lt("expires_at", new Date(now).toISOString())
+      .limit(50);
+    if (expired && expired.length > 0) {
+      await admin.storage
+        .from(STORAGE_BUCKET)
+        .remove(expired.map((row) => row.output_path))
+        .catch(() => undefined);
+      await admin
+        .from("video_editor_jobs")
+        .delete()
+        .in(
+          "id",
+          expired.map((row) => row.id),
+        );
+    }
+  } catch {
+    // silencioso: limpeza remota não pode quebrar o fluxo principal
+  }
 }
 
 export async function getVideoEditorQuota(userId: string) {
   await cleanupExpiredVideoJobs();
-  const index = await readIndex();
   const today = getDayKey();
+  let used = 0;
 
-  const used = index.jobs.filter((job) => {
-    return job.userId === userId && getDayKey(new Date(job.createdAt)) === today;
-  }).length;
+  // Em produção (serverless) o disco é efêmero — a cota vem do banco.
+  const admin = IS_SERVERLESS ? getAdminClient() : null;
+  if (admin) {
+    const { data } = await admin
+      .from("video_editor_jobs")
+      .select("id, created_at")
+      .eq("user_id", userId)
+      .gte(
+        "created_at",
+        new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString(),
+      );
+    used = (data ?? []).filter(
+      (row) => getDayKey(new Date(row.created_at)) === today,
+    ).length;
+  } else {
+    const index = await readIndex();
+    used = index.jobs.filter((job) => {
+      return (
+        job.userId === userId && getDayKey(new Date(job.createdAt)) === today
+      );
+    }).length;
+  }
 
   return {
     used,
@@ -141,6 +238,54 @@ export async function getVideoEditorQuota(userId: string) {
     remaining: Math.max(0, 5 - used),
     reached: used >= 5,
   };
+}
+
+/**
+ * Persiste o resultado no Supabase (Storage + tabela video_editor_jobs).
+ * Em produção isso é o que garante download/preview entre invocações.
+ */
+async function persistJobRemote(record: VideoJobRecord): Promise<string | null> {
+  const admin = getAdminClient();
+  if (!admin) return null;
+
+  try {
+    const buffer = await fs.readFile(record.outputPath);
+    const storageKey = `${record.userId}/${record.id}${path.extname(record.outputPath) || ".mp4"}`;
+
+    const { error: uploadError } = await admin.storage
+      .from(STORAGE_BUCKET)
+      .upload(storageKey, buffer, {
+        contentType: record.outputMimeType,
+        upsert: true,
+      });
+    if (uploadError) {
+      console.warn("[video-editor] upload storage falhou:", uploadError.message);
+      return null;
+    }
+
+    const { error: insertError } = await admin.from("video_editor_jobs").insert({
+      id: record.id,
+      user_id: record.userId,
+      instruction: record.instruction,
+      summary: record.summary,
+      original_filename: record.originalFilename,
+      output_path: storageKey,
+      output_mime_type: record.outputMimeType,
+      warnings: record.warnings,
+      operations: record.operations,
+      created_at: record.createdAt,
+      expires_at: record.expiresAt,
+    });
+    if (insertError) {
+      console.warn("[video-editor] insert job falhou:", insertError.message);
+      return null;
+    }
+
+    return storageKey;
+  } catch (err) {
+    console.warn("[video-editor] persistência remota falhou:", err);
+    return null;
+  }
 }
 
 export async function saveVideoJob(
@@ -161,7 +306,7 @@ export async function saveVideoJob(
   const safeBaseName = (path.basename(file.name || "video", ext) || "video")
     .replace(/[^a-zA-Z0-9-_]/g, "-")
     .slice(0, 40);
-  const jobDir = path.join(VIDEO_EDITOR_ROOT, userId, id);
+  const jobDir = path.join(getVideoEditorRoot(), userId, id);
 
   await fs.mkdir(jobDir, { recursive: true });
 
@@ -220,6 +365,17 @@ export async function saveVideoJob(
     downloadName: `${safeBaseName}-editado${processed.outputExtension}`,
   };
 
+  // Persistência remota (Storage + banco) — essencial em produção,
+  // onde o disco não sobrevive entre requisições.
+  const storageKey = await persistJobRemote(record);
+  if (storageKey) {
+    record.storageKey = storageKey;
+  } else if (IS_SERVERLESS) {
+    record.warnings.push(
+      "Não foi possível salvar o vídeo no armazenamento permanente. O download pode falhar.",
+    );
+  }
+
   const index = await readIndex();
   index.jobs.push(record);
   await writeIndex(index);
@@ -230,7 +386,58 @@ export async function saveVideoJob(
 export async function getVideoJobById(id: string, userId: string) {
   await cleanupExpiredVideoJobs();
   const index = await readIndex();
-  return index.jobs.find((job) => job.id === id && job.userId === userId) ?? null;
+  const local =
+    index.jobs.find((job) => job.id === id && job.userId === userId) ?? null;
+  if (local) return local;
+
+  // Produção: registro vem do banco, arquivo do Storage.
+  const admin = getAdminClient();
+  if (!admin) return null;
+
+  const { data } = await admin
+    .from("video_editor_jobs")
+    .select("*")
+    .eq("id", id)
+    .eq("user_id", userId)
+    .maybeSingle();
+  if (!data) return null;
+  if (new Date(data.expires_at).getTime() <= Date.now()) return null;
+
+  const ext = path.extname(data.output_path) || ".mp4";
+  const safeBaseName = (
+    path.basename(data.original_filename || "video", path.extname(data.original_filename || "")) || "video"
+  )
+    .replace(/[^a-zA-Z0-9-_]/g, "-")
+    .slice(0, 40);
+
+  const record: VideoJobRecord = {
+    id: data.id,
+    userId: data.user_id,
+    createdAt: data.created_at,
+    expiresAt: data.expires_at,
+    originalFilename: data.original_filename,
+    instruction: data.instruction,
+    summary: data.summary || "",
+    operations: (data.operations as VideoOperation[]) || [],
+    warnings: (data.warnings as string[]) || [],
+    outputPath: "",
+    outputMimeType: data.output_mime_type,
+    downloadName: `${safeBaseName}-editado${ext}`,
+    storageKey: data.output_path,
+  };
+  return record;
+}
+
+/** URL assinada (1h) para servir o vídeo direto do Supabase Storage. */
+export async function getVideoJobSignedUrl(storageKey: string, download?: string) {
+  const admin = getAdminClient();
+  if (!admin) return null;
+
+  const { data, error } = await admin.storage
+    .from(STORAGE_BUCKET)
+    .createSignedUrl(storageKey, 60 * 60, download ? { download } : undefined);
+  if (error || !data?.signedUrl) return null;
+  return data.signedUrl;
 }
 
 async function runCommand(command: string, args: string[]) {
@@ -337,6 +544,102 @@ async function probeVideo(inputPath: string): Promise<VideoMeta | null> {
   }
 }
 
+function secondsToSrtTime(totalSeconds: number) {
+  const ms = Math.max(0, Math.round(totalSeconds * 1000));
+  const h = Math.floor(ms / 3600000);
+  const m = Math.floor((ms % 3600000) / 60000);
+  const s = Math.floor((ms % 60000) / 1000);
+  const rest = ms % 1000;
+  const pad = (n: number, w = 2) => String(n).padStart(w, "0");
+  return `${pad(h)}:${pad(m)}:${pad(s)},${pad(rest, 3)}`;
+}
+
+/**
+ * Transcreve com a API Whisper do Groq (whisper-large-v3-turbo) e gera SRT.
+ * Funciona tanto localmente quanto em produção — só precisa da GROQ_API_KEY.
+ */
+async function transcribeWithGroq(
+  inputPath: string,
+  outputDir: string,
+): Promise<{ srtPath: string | null; error?: string }> {
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) return { srtPath: null, error: "GROQ_API_KEY ausente" };
+
+  // Extrai o áudio comprimido (mono 16kHz) para enviar pouco payload
+  const audioPath = path.join(outputDir, "audio-transcribe.mp3");
+  const extract = await runCommand(FFMPEG_PATH, [
+    "-y",
+    "-i",
+    inputPath,
+    "-vn",
+    "-ac",
+    "1",
+    "-ar",
+    "16000",
+    "-b:a",
+    "48k",
+    audioPath,
+  ]);
+  if (extract.code !== 0) {
+    return { srtPath: null, error: "falha ao extrair áudio" };
+  }
+
+  try {
+    const audioBuffer = await fs.readFile(audioPath);
+    const form = new FormData();
+    form.append(
+      "file",
+      new Blob([new Uint8Array(audioBuffer)], { type: "audio/mpeg" }),
+      "audio.mp3",
+    );
+    form.append("model", "whisper-large-v3-turbo");
+    form.append("language", "pt");
+    form.append("response_format", "verbose_json");
+
+    const res = await fetch(
+      "https://api.groq.com/openai/v1/audio/transcriptions",
+      {
+        method: "POST",
+        headers: { Authorization: `Bearer ${apiKey}` },
+        body: form,
+      },
+    );
+    if (!res.ok) {
+      const detail = await res.text().catch(() => "");
+      return {
+        srtPath: null,
+        error: `Groq HTTP ${res.status}: ${detail.slice(0, 120)}`,
+      };
+    }
+
+    const json = (await res.json()) as {
+      segments?: Array<{ start: number; end: number; text: string }>;
+    };
+    const segments = json.segments || [];
+    if (segments.length === 0) {
+      return { srtPath: null, error: "transcrição vazia" };
+    }
+
+    const srt = segments
+      .map((seg, i) => {
+        const text = (seg.text || "").trim();
+        return `${i + 1}\n${secondsToSrtTime(seg.start)} --> ${secondsToSrtTime(seg.end)}\n${text}\n`;
+      })
+      .join("\n");
+
+    const srtPath = path.join(outputDir, "groq-transcript.srt");
+    await fs.writeFile(srtPath, srt, "utf8");
+    return { srtPath };
+  } catch (err) {
+    return {
+      srtPath: null,
+      error: err instanceof Error ? err.message : String(err),
+    };
+  } finally {
+    await fs.rm(audioPath, { force: true }).catch(() => undefined);
+  }
+}
+
 async function processVideo({
   inputPath,
   outputDir,
@@ -381,11 +684,12 @@ async function processVideo({
   let srtPath: string | null = null;
 
   if (needsSubtitles) {
-    if (!whisperAvailable) {
-      mutableWarnings.push(
-        "Legendas automáticas ainda dependem do Whisper instalado no servidor.",
-      );
-    } else {
+    // 1ª opção: API Whisper do Groq (rápida, sem dependência instalada — funciona em produção)
+    const groqResult = await transcribeWithGroq(inputPath, outputDir);
+    if (groqResult.srtPath) {
+      srtPath = groqResult.srtPath;
+    } else if (whisperAvailable) {
+      // 2ª opção: Whisper local instalado no servidor
       const whisperResult = await runCommand(WHISPER_PATH, [
         inputPath,
         "--model",
@@ -418,6 +722,10 @@ async function processVideo({
           );
         }
       }
+    } else {
+      mutableWarnings.push(
+        `Legendas automáticas indisponíveis (${groqResult.error || "sem transcritor"}). Configure a GROQ_API_KEY.`,
+      );
     }
   }
 
@@ -433,13 +741,26 @@ async function processVideo({
   // 2.5) Highlights: detect interesting moments and pre-cut the input.
   // This replaces inputPath with a pre-trimmed file containing only the best segments.
   let pipelineInputPath = inputPath;
-  const highlightsOp = operations.find((o) => o.type === "highlights");
+  let highlightsOp = operations.find((o) => o.type === "highlights");
+  const trendOp = operations.find((o) => o.type === "trend_style");
+
+  // "Se necessário": no Modo Trend o corte só acontece em vídeos longos.
+  if (highlightsOp?.onlyIfLong && meta.duration > 0 && meta.duration <= 45) {
+    mutableWarnings.push(
+      `Vídeo já está curto (${meta.duration.toFixed(0)}s) — corte de melhores momentos não foi necessário.`,
+    );
+    highlightsOp = undefined;
+  }
 
   if (highlightsOp && meta.hasAudio && meta.duration > 3) {
     try {
       const { findBestMoments } = await import("./silence-detect");
+      // Trend: mira na duração ideal de Reels/TikTok (~15-60s)
+      const maxTotal = highlightsOp.onlyIfLong
+        ? Math.min(60, Math.max(30, meta.duration * 0.6))
+        : Math.min(60, Math.max(10, meta.duration * 0.5));
       const { segments } = await findBestMoments(inputPath, meta.duration, {
-        maxTotalDuration: Math.min(60, Math.max(10, meta.duration * 0.5)),
+        maxTotalDuration: maxTotal,
         minSegmentDuration: 0.8,
         silenceMinDuration: 0.4,
       });
@@ -545,7 +866,13 @@ async function processVideo({
   // Build video filters
   const videoFilters: string[] = [];
 
-  if (enhanceOp) {
+  if (trendOp) {
+    // Look "trend": cor mais viva e nitidez de celular topo de linha
+    videoFilters.push(
+      "eq=contrast=1.12:brightness=0.02:saturation=1.22",
+      "unsharp=5:5:0.9:3:3:0.4",
+    );
+  } else if (enhanceOp) {
     videoFilters.push(
       "eq=contrast=1.08:brightness=0.03:saturation=1.08",
       "unsharp=5:5:0.8:3:3:0.4",
@@ -591,8 +918,12 @@ async function processVideo({
   // Subtitles burn-in (must come last to be on top)
   if (srtPath) {
     const escapedSrtPath = srtPath.replace(/\\/g, "/").replace(/:/g, "\\:");
+    // Modo Trend: legenda grande, bold, elevada — estilo caption de Reels/TikTok
+    const subtitleStyle = trendOp
+      ? "FontName=Arial,FontSize=26,Bold=1,PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,Outline=3,Shadow=1,MarginV=48,Alignment=2"
+      : "FontSize=22,PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,Outline=2";
     videoFilters.push(
-      `subtitles='${escapedSrtPath}':force_style='FontSize=22,PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,Outline=2'`,
+      `subtitles='${escapedSrtPath}':force_style='${subtitleStyle}'`,
     );
   }
 
@@ -617,7 +948,9 @@ async function processVideo({
       filterComplexParts.push(`[0:a]${aFiltersOriginal.join(",")}[a0]`);
       filterComplexParts.push(`[1:a]volume=${musicVolume}[a1]`);
       filterComplexParts.push(
-        `[a0][a1]amix=inputs=2:duration=first:dropout_transition=2[aout]`,
+        trendOp
+          ? `[a0][a1]amix=inputs=2:duration=first:dropout_transition=2,loudnorm=I=-14:TP=-1.5:LRA=11[aout]`
+          : `[a0][a1]amix=inputs=2:duration=first:dropout_transition=2[aout]`,
       );
     } else {
       // No source audio (or muted) — use only the music track, looped to match video
@@ -646,6 +979,9 @@ async function processVideo({
     if (speedFactor !== 1) aFilters.push(`atempo=${speedFactor}`);
     if (muteOp) {
       aFilters.push("volume=0");
+    } else if (trendOp && meta.hasAudio) {
+      // Loudness padrão de Reels/TikTok — fala alta e consistente
+      aFilters.push("loudnorm=I=-14:TP=-1.5:LRA=11");
     }
     if (aFilters.length > 0) {
       ffmpegArgs.push("-af", aFilters.join(","));

@@ -7,6 +7,7 @@ import {
   saveVideoJob,
   type VideoOperation,
 } from "@/lib/video-editor";
+import { parseInstruction, mergeOperations } from "@/lib/instruction-parser";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -27,123 +28,13 @@ function fallbackInterpretInstruction(
   hasMusic: boolean,
   brandName: string,
 ) {
-  const text = instruction.toLowerCase();
-  const operations: VideoOperation[] = [];
-  const warnings: string[] = [];
-
-  if (text.includes("legenda") || text.includes("subtitle") || text.includes("caption")) {
-    operations.push(
-      { type: "transcribe", label: "Transcrever áudio" },
-      { type: "burn_subtitles", label: "Queimar legendas" },
-    );
-  }
-
-  if (
-    text.includes("melhor") ||
-    text.includes("qualidade") ||
-    text.includes("brilho") ||
-    text.includes("contraste") ||
-    text.includes("nitidez")
-  ) {
-    operations.push({ type: "enhance", label: "Melhorar imagem" });
-  }
-
-  if (text.includes("vinheta") || text.includes("intro") || text.includes("abertura")) {
-    operations.push({
-      type: "intro",
-      label: "Vinheta de entrada animada",
-      brandName,
-      tagline: "Conteúdo que cresce",
-    });
-  }
-  if (text.includes("outro") || text.includes("encerramento") || text.includes("final")) {
-    operations.push({
-      type: "outro",
-      label: "Vinheta de saída animada",
-      brandName,
-      tagline: `Siga @${brandName.toLowerCase()}`,
-    });
-  }
-
-  if (text.includes("vertical") || text.includes("reels") || text.includes("9:16") || text.includes("tiktok")) {
-    operations.push({ type: "aspect_vertical", label: "Estilo Reels (9:16)" });
-  }
-  if (text.includes("quadrad") || text.includes("1:1") || text.includes("feed")) {
-    operations.push({ type: "aspect_square", label: "Formato quadrado (1:1)" });
-  }
-
-  const speedMatch = text.match(/(?:acelera|rapid|velocidade)\D*(\d(?:[.,]\d+)?)/);
-  if (speedMatch) {
-    const factor = Number(speedMatch[1].replace(",", "."));
-    if (factor > 1 && factor <= 3) {
-      operations.push({ type: "speed", label: `Acelerar ${factor}x`, speedFactor: factor });
-    }
-  } else if (text.includes("acelera") || text.includes("mais rapid") || text.includes("mais ráp")) {
-    operations.push({ type: "speed", label: "Acelerar 1.5x", speedFactor: 1.5 });
-  }
-
-  if (text.includes("mute") || text.includes("sem som") || text.includes("silenc") || text.includes("remove o audio") || text.includes("remover audio")) {
-    operations.push({ type: "mute", label: "Remover áudio original" });
-  }
-
-  if (text.includes("fade") || text.includes("transição suave") || text.includes("transicao suave")) {
-    operations.push({ type: "fade", label: "Fade in/out nas pontas" });
-  }
-
-  if (
-    text.includes("melhores momentos") ||
-    text.includes("melhor momento") ||
-    text.includes("highlight") ||
-    text.includes("destaque") ||
-    text.includes("partes boas") ||
-    text.includes("compilad")
-  ) {
-    operations.push({
-      type: "highlights",
-      label: "Detectar e cortar melhores momentos",
-    });
-  }
-
-  const trimMatch =
-    text.match(/cort\w*[^0-9]*(\d+)\s*[s]?\s*(?:até|ate|a)\s*(\d+)/i) ||
-    text.match(/de\s+(\d+)\s*(?:s|seg)?\s+(?:até|ate|a)\s+(\d+)/i);
-
-  if (trimMatch) {
-    const start = Number(trimMatch[1]);
-    const end = Number(trimMatch[2]);
-    if (!Number.isNaN(start) && !Number.isNaN(end) && end > start) {
-      operations.push({
-        type: "trim",
-        label: `Cortar de ${start}s até ${end}s`,
-        startSecond: start,
-        endSecond: end,
-      });
-    }
-  } else {
-    const endOnly = text.match(/(?:cort\w*|primeiros?)[^0-9]*(\d+)\s*(?:s|seg)/i);
-    if (endOnly) {
-      const end = Number(endOnly[1]);
-      if (!Number.isNaN(end) && end > 0) {
-        operations.push({
-          type: "trim",
-          label: `Cortar do início até ${end}s`,
-          startSecond: 0,
-          endSecond: end,
-        });
-      }
-    }
-  }
-
-  // If user uploaded music + said anything mixable
-  if (hasMusic) {
-    const wantsMute = operations.some((op) => op.type === "mute");
-    operations.push({
-      type: "music",
-      label: "Adicionar trilha sonora",
-      musicVolume: text.includes("alta") ? 0.6 : 0.3,
-      originalVolume: wantsMute ? 0 : 0.85,
-    });
-  }
+  // Delega para o parser puro e testado em lib/instruction-parser
+  // (inclui o pacote de edição estilo trend).
+  const { operations, warnings } = parseInstruction(
+    instruction,
+    hasMusic,
+    brandName,
+  );
 
   return {
     summary: operations.length
@@ -184,7 +75,8 @@ Tipos de operações disponíveis:
 - "music": misturar trilha sonora (só se ${hasMusic ? "TRUE" : "FALSE"} — usuário enviou música). Aceita musicVolume (0..1, padrão 0.3) e originalVolume (0..1, padrão 0.85)
 - "mute": silenciar áudio original
 - "fade": fade in/out nas pontas
-- "highlights": detectar automaticamente os melhores momentos (cortes inteligentes baseados em fala/áudio). Use quando o usuário pedir "melhores momentos", "highlight", "destaques", "partes boas", "compilado" ou similar
+- "highlights": detectar automaticamente os melhores momentos (cortes inteligentes baseados em fala/áudio). Use quando o usuário pedir "melhores momentos", "highlight", "destaques", "partes boas", "compilado" ou similar. Aceita onlyIfLong (boolean: só corta se o vídeo for longo)
+- "trend_style": edição moderna estilo trend de Reels/TikTok (cor vibrante, legendas grandes em negrito, áudio nivelado). Use quando o usuário pedir "trend", "viral", "edição moderna", "estilo tiktok/reels"
 
 Formato de resposta:
 {
@@ -201,6 +93,7 @@ Regras:
 - Se pedir outro/final/encerramento, use outro com brandName="${brandName}"
 - Se ${hasMusic ? "o usuário ENVIOU música" : "música NÃO foi enviada"}, ${hasMusic ? "adicione type:music" : "NÃO adicione type:music"}
 - Se mencionar Reels, TikTok, vertical → aspect_vertical
+- Se pedir "trend", "viral" ou "edição moderna" → monte o pacote: trend_style + aspect_vertical + transcribe + burn_subtitles + highlights com onlyIfLong=true (sem duplicar o que o pedido já cobre)
 - Nunca use markdown na resposta. Apenas JSON puro.
 
 Pedido: ${instruction}`;
@@ -234,31 +127,6 @@ Pedido: ${instruction}`;
   } catch {
     return fallbackInterpretInstruction(instruction, hasMusic, brandName);
   }
-}
-
-/**
- * Merge two operation lists, preferring presets but adding IA-only ops not in presets.
- */
-function mergeOperations(
-  presets: VideoOperation[],
-  aiOps: VideoOperation[],
-): VideoOperation[] {
-  const merged = [...presets];
-  const presetTypes = new Set(presets.map((op) => op.type));
-
-  for (const op of aiOps) {
-    // Skip if same type already in presets (presets win)
-    if (presetTypes.has(op.type)) continue;
-    // Treat intro_outro as both intro+outro
-    if (op.type === "intro_outro") {
-      if (!presetTypes.has("intro")) merged.push({ ...op, type: "intro", label: "Vinheta de entrada (IA)" });
-      if (!presetTypes.has("outro")) merged.push({ ...op, type: "outro", label: "Vinheta de saída (IA)" });
-      continue;
-    }
-    merged.push(op);
-  }
-
-  return merged;
 }
 
 export async function GET() {

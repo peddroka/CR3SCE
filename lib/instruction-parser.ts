@@ -163,6 +163,40 @@ export function parseInstruction(
     }
   }
 
+  // Modo Trend: edição moderna estilo Reels/TikTok em um pacote só
+  if (
+    text.includes("trend") ||
+    text.includes("viral") ||
+    text.includes("moderna") ||
+    text.includes("moderno") ||
+    text.includes("estilo tiktok") ||
+    text.includes("estilo reels")
+  ) {
+    const has = (type: VideoOperation["type"]) =>
+      operations.some((op) => op.type === type);
+
+    operations.push({
+      type: "trend_style",
+      label: "Edição estilo trend (Reels/TikTok)",
+    });
+    if (!has("aspect_vertical") && !has("aspect_square")) {
+      operations.push({ type: "aspect_vertical", label: "Estilo Reels (9:16)" });
+    }
+    if (!has("burn_subtitles")) {
+      operations.push(
+        { type: "transcribe", label: "Transcrever áudio" },
+        { type: "burn_subtitles", label: "Legendas estilo TikTok" },
+      );
+    }
+    if (!has("highlights")) {
+      operations.push({
+        type: "highlights",
+        label: "Cortar melhores momentos (se necessário)",
+        onlyIfLong: true,
+      });
+    }
+  }
+
   if (hasMusic) {
     const wantsMute = operations.some((op) => op.type === "mute");
     operations.push({

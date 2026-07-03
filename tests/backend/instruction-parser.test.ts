@@ -6,6 +6,51 @@ import {
 import type { VideoOperation } from "@/lib/video-editor";
 
 describe("parseInstruction", () => {
+  describe("trend mode", () => {
+    it("detects 'trend' and adds the full bundle", () => {
+      const { operations } = parseInstruction(
+        "faz uma edição estilo trend",
+        false,
+      );
+      const types = operations.map((o) => o.type);
+      expect(types).toContain("trend_style");
+      expect(types).toContain("aspect_vertical");
+      expect(types).toContain("transcribe");
+      expect(types).toContain("burn_subtitles");
+      expect(types).toContain("highlights");
+    });
+
+    it("marks trend highlights as onlyIfLong", () => {
+      const { operations } = parseInstruction("edição viral moderna", false);
+      const hl = operations.find((o) => o.type === "highlights");
+      expect(hl?.onlyIfLong).toBe(true);
+    });
+
+    it("does not duplicate vertical when instruction already asks for reels", () => {
+      const { operations } = parseInstruction(
+        "formato reels com edição trend",
+        false,
+      );
+      const verticals = operations.filter((o) => o.type === "aspect_vertical");
+      expect(verticals).toHaveLength(1);
+    });
+
+    it("keeps explicit highlights (without onlyIfLong) when user asks for them", () => {
+      const { operations } = parseInstruction(
+        "corta os melhores momentos e deixa estilo trend",
+        false,
+      );
+      const highlights = operations.filter((o) => o.type === "highlights");
+      expect(highlights).toHaveLength(1);
+      expect(highlights[0].onlyIfLong).toBeUndefined();
+    });
+
+    it("does not trigger trend for unrelated text", () => {
+      const { operations } = parseInstruction("apenas corta de 5 a 10", false);
+      expect(operations.map((o) => o.type)).not.toContain("trend_style");
+    });
+  });
+
   describe("captions", () => {
     it("detects 'legenda' and adds transcribe + burn_subtitles", () => {
       const { operations } = parseInstruction(

@@ -11,6 +11,7 @@ import {
   Download,
   FastForward,
   Film,
+  Flame,
   ImageIcon,
   Loader2,
   Music,
@@ -45,6 +46,7 @@ const PROCESSING_STEPS = [
 ];
 
 type PresetKey =
+  | "trend"
   | "captions"
   | "trim"
   | "intro"
@@ -67,6 +69,14 @@ interface PresetDef {
 }
 
 const PRESETS: PresetDef[] = [
+  {
+    key: "trend",
+    icon: Flame,
+    title: "Modo Trend",
+    description:
+      "Pacote Reels/TikTok: 9:16 + legendas grandes + cor viva + corta os melhores momentos se o vídeo for longo",
+    badge: "🔥 NOVO",
+  },
   {
     key: "highlights",
     icon: Wand,
@@ -343,6 +353,30 @@ export function VideoEditorClient({
 
   function buildOperations() {
     const ops: Array<Record<string, unknown>> = [];
+    const trendOn = activePresets.has("trend");
+
+    if (trendOn) {
+      // Pacote trend — cada peça só entra se o usuário não configurou aquele
+      // aspecto manualmente (as escolhas dele sempre vencem).
+      ops.push({
+        type: "trend_style",
+        label: "Edição estilo trend (Reels/TikTok)",
+      });
+      if (!activePresets.has("vertical") && !activePresets.has("square")) {
+        ops.push({ type: "aspect_vertical", label: "Estilo Reels (9:16)" });
+      }
+      if (!activePresets.has("captions")) {
+        ops.push({ type: "transcribe", label: "Transcrever áudio" });
+        ops.push({ type: "burn_subtitles", label: "Legendas estilo TikTok" });
+      }
+      if (!activePresets.has("highlights")) {
+        ops.push({
+          type: "highlights",
+          label: "Cortar melhores momentos (se necessário)",
+          onlyIfLong: true,
+        });
+      }
+    }
 
     if (activePresets.has("highlights")) {
       ops.push({
