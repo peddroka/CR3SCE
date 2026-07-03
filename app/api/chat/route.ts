@@ -11,7 +11,6 @@ const groq = createGroq({
 const MODELS = [
   "llama-3.3-70b-versatile",
   "llama-3.1-8b-instant",
-  "gemma2-9b-it",
 ];
 
 function describeMainGoal(goal: string) {
@@ -37,6 +36,10 @@ function describeCommunicationStyle(style: string) {
 
   if (style === "casual") {
     return "Use tom casual, humano e próximo.";
+  }
+
+  if (style === "refinado") {
+    return "Use tom minimalista, refinado e premium, estilo enterprise: frases curtas, precisas e elegantes, sem gírias nem exageros.";
   }
 
   return style || "Não informado";

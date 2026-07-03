@@ -1470,6 +1470,10 @@ function getCommunicationStyleGuidance(style: string) {
     return "O tom precisa soar humano, natural e próximo, como uma conversa direta com o cliente.";
   }
 
+  if (style === "refinado") {
+    return "O tom precisa ser minimalista, refinado e premium, estilo enterprise. Frases curtas e precisas, vocabulário sóbrio e elegante, zero gírias, zero exageros e nada de excesso de emojis. Transmita exclusividade e autoridade discreta.";
+  }
+
   return `Mantenha o tom ${style} de forma consistente em todos os conteúdos.`;
 }
 
@@ -1484,6 +1488,10 @@ function getCommunicationStyleGuidanceV2(style: string) {
 
   if (style === "casual") {
     return "O tom precisa soar humano, natural e próximo, como uma conversa direta com o cliente.";
+  }
+
+  if (style === "refinado") {
+    return "O tom precisa ser minimalista, refinado e premium, estilo enterprise. Frases curtas e precisas, vocabulário sóbrio e elegante, zero gírias, zero exageros e nada de excesso de emojis. Transmita exclusividade e autoridade discreta.";
   }
 
   return `Mantenha o tom ${style} de forma consistente em todos os conteúdos.`;

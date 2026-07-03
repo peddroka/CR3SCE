@@ -35,6 +35,15 @@ INSTRUÇÕES IMPORTANTES:
    - Advocacia: produção de conteúdo educativo, webinar jurídico, LinkedIn ads
 6. Crie entre 3 e 5 níveis dependendo do orçamento (mais orçamento = mais níveis)
 
+QUALIDADE DAS RECOMENDAÇÕES (obrigatório):
+7. NOMEIE o item ou ação exata, nunca a categoria. Errado: "equipamento de iluminação". Certo: "Ring light 26cm com tripé" ou "Microfone de lapela sem fio".
+8. Use PREÇOS REALISTAS de mercado brasileiro em 2026 (pesquisáveis em marketplace). Nada de faixas absurdas ou redondas demais.
+9. Na descrição de cada opção, siga o formato: o que fazer/comprar + como usar na prática + impacto esperado com número (ex.: "grave 3 Reels/semana com áudio limpo; vídeos com bom áudio retêm até 2x mais").
+10. Ordene os níveis por RETORNO: nível 1 = o investimento com maior impacto imediato pelo menor custo para ${business.business_name}; níveis seguintes = crescimento composto sobre o anterior.
+11. As duas opções de cada nível devem ser caminhos DIFERENTES de verdade (ex.: uma de equipamento/produção, outra de alcance/parceria) — não duas variações da mesma coisa.
+12. Considere os ${current_followers} seguidores atuais: recomendações compatíveis com o estágio (perfil pequeno não precisa de estúdio; perfil médio pode investir em tráfego/parcerias).
+13. O "reward" de cada nível deve ser um resultado MENSURÁVEL (ex.: "fotos com qualidade profissional no feed + aumento perceptível de salvamentos"), nunca vago tipo "mais engajamento".
+
 Responda APENAS com JSON válido, sem markdown:
 {
   "levels": [

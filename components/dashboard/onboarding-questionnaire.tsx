@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { InputSuggestions } from "@/components/dashboard/input-suggestions";
 import {
   Card,
   CardContent,
@@ -94,7 +95,50 @@ const COMMUNICATION_STYLE_OPTIONS = [
     description:
       "Tom natural e próximo. A IA vai escrever como uma conversa direta com o cliente.",
   },
+  {
+    value: "refinado",
+    label: "Minimalista / Refinado",
+    description:
+      "Tom sóbrio, elegante e premium, estilo enterprise. A IA vai priorizar frases curtas, precisão e sofisticação, sem gírias nem exageros.",
+  },
 ] as const;
+
+const PLATFORM_OPTIONS = [
+  {
+    value: "instagram",
+    label: "Instagram",
+    description: "Feed, Stories e Reels — o foco principal do CR3SCE.",
+  },
+  {
+    value: "tiktok",
+    label: "TikTok",
+    description: "Vídeos curtos e virais, com foco em descoberta e tendências.",
+  },
+  {
+    value: "kwai",
+    label: "Kwai",
+    description: "Vídeos curtos com forte alcance popular e engajamento rápido.",
+  },
+] as const;
+
+const STEP_META = [
+  { label: "Negócio" },
+  { label: "Estratégia" },
+  { label: "Estilo" },
+  { label: "Perfil" },
+] as const;
+
+const FIELD_LABELS: Record<string, string> = {
+  business_name: "Nome do negócio",
+  responsible_name: "Seu nome",
+  niche: "Nicho",
+  target_audience: "Público-alvo",
+  main_goal: "O que você quer conquistar",
+  growth_speed: "Velocidade de crescimento",
+  communication_style: "Estilo de comunicação",
+  brand_description: "Descrição da marca",
+  instagram_type: "Tipo de perfil do Instagram",
+};
 
 function getDraftKey(userId?: string | null) {
   return userId ? `${DRAFT_KEY_PREFIX}_${userId}` : `${DRAFT_KEY_PREFIX}_guest`;
@@ -250,7 +294,8 @@ export function OnboardingQuestionnaire() {
     setBioImagePreviews((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const validateStep = (stepNumber: number): boolean => {
+  // Retorna os rótulos dos campos obrigatórios que faltam (vazio = passo ok).
+  const validateStep = (stepNumber: number): string[] => {
     const errors: Record<string, boolean> = {};
 
     if (stepNumber === 1) {
@@ -269,7 +314,7 @@ export function OnboardingQuestionnaire() {
     }
 
     setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
+    return Object.keys(errors).map((field) => FIELD_LABELS[field] || field);
   };
 
   const startListening = () => {
@@ -365,8 +410,13 @@ export function OnboardingQuestionnaire() {
   };
 
   const handleNext = async () => {
-    if (!validateStep(step)) {
-      setError("Preencha todos os campos obrigatórios");
+    const missing = validateStep(step);
+    if (missing.length > 0) {
+      setError(
+        missing.length === 1
+          ? `Falta preencher: ${missing[0]}`
+          : `Faltam preencher: ${missing.join(", ")}`,
+      );
       return;
     }
 
@@ -377,8 +427,13 @@ export function OnboardingQuestionnaire() {
   };
 
   const handleSubmit = async () => {
-    if (!validateStep(step)) {
-      setError("Preencha todos os campos obrigatórios");
+    const missing = validateStep(step);
+    if (missing.length > 0) {
+      setError(
+        missing.length === 1
+          ? `Falta preencher: ${missing[0]}`
+          : `Faltam preencher: ${missing.join(", ")}`,
+      );
       return;
     }
 
@@ -499,7 +554,32 @@ export function OnboardingQuestionnaire() {
         window.location.href = "/dashboard";
       }, 1200);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Erro ao salvar dados.");
+      const raw = err instanceof Error ? err.message : String(err);
+      console.error("[onboarding] erro ao salvar:", err);
+
+      const lower = raw.toLowerCase();
+      let friendly =
+        "Não conseguimos salvar seus dados agora. Tente novamente em instantes.";
+      if (
+        lower.includes("schema cache") ||
+        (lower.includes("column") && lower.includes("find"))
+      ) {
+        friendly =
+          "O banco de dados está desatualizado (faltam colunas). Aplique a migration scripts/013_fix_onboarding_columns.sql no Supabase e tente de novo.";
+      } else if (
+        lower.includes("row-level security") ||
+        lower.includes("policy") ||
+        lower.includes("permission")
+      ) {
+        friendly =
+          "Permissão negada ao salvar. Saia e entre na conta novamente antes de tentar outra vez.";
+      } else if (lower.includes("não autenticado") || lower.includes("jwt")) {
+        friendly = "Sua sessão expirou. Faça login novamente para continuar.";
+      } else if (lower.includes("fetch") || lower.includes("network")) {
+        friendly = "Falha de conexão. Verifique sua internet e tente de novo.";
+      }
+
+      setError(friendly);
       setIsLoading(false);
     }
   };
@@ -714,25 +794,55 @@ export function OnboardingQuestionnaire() {
               {step === 1 && "Vamos decolar!"}
               {step === 2 && "Defina sua estratégia"}
               {step === 3 && "Seu objetivo no CR3SCE"}
-              {step === 4 && "Seu perfil do Instagram"}
+              {step === 4 &&
+                (formData.platforms === "instagram"
+                  ? "Seu perfil do Instagram"
+                  : "Seu perfil do Instagram (opcional)")}
             </CardTitle>
             <CardDescription className="mt-0.5 text-xs text-muted-foreground sm:text-sm">
-              Passo {step} de {TOTAL_STEPS}
+              Passo {step} de {TOTAL_STEPS} — {STEP_META[step - 1].label}
             </CardDescription>
-            <div className="mt-3 flex gap-1">
-              {Array.from({ length: TOTAL_STEPS }, (_, i) => (
-                <motion.div
-                  key={i}
-                  className="h-1 flex-1 overflow-hidden rounded-full bg-secondary"
-                >
-                  <motion.div
-                    className="h-full bg-primary"
-                    initial={{ width: "0%" }}
-                    animate={{ width: i < step ? "100%" : "0%" }}
-                    transition={{ duration: 0.5, delay: i * 0.1 }}
-                  />
-                </motion.div>
-              ))}
+            <div className="mt-3 flex gap-1.5">
+              {STEP_META.map((meta, i) => {
+                const done = i + 1 < step;
+                const current = i + 1 === step;
+                return (
+                  <button
+                    key={meta.label}
+                    type="button"
+                    disabled={!done}
+                    title={done ? `Voltar para ${meta.label}` : meta.label}
+                    onClick={() => {
+                      if (!done) return;
+                      setStep(i + 1);
+                      setError(null);
+                      setAiSuggestion(null);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
+                    className={`flex flex-1 flex-col items-center gap-1 ${
+                      done ? "cursor-pointer" : "cursor-default"
+                    }`}
+                  >
+                    <span
+                      className={`h-1 w-full rounded-full transition-colors duration-300 ${
+                        done || current ? "bg-[#C8F135]" : "bg-secondary"
+                      } ${current ? "opacity-100" : done ? "opacity-60" : ""}`}
+                    />
+                    <span
+                      className={`text-[10px] leading-none transition-colors ${
+                        current
+                          ? "font-semibold text-[#C8F135]"
+                          : done
+                            ? "text-muted-foreground hover:text-foreground"
+                            : "text-muted-foreground/50"
+                      }`}
+                    >
+                      {done ? "✓ " : ""}
+                      {meta.label}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </CardHeader>
 
@@ -926,13 +1036,28 @@ export function OnboardingQuestionnaire() {
 
                     <div className="space-y-1.5">
                       <Label className="text-sm font-medium">Plataforma</Label>
-                      <div className="rounded-xl border border-border bg-white/5 px-4 py-3">
-                        <p className="text-sm font-semibold text-white">
-                          Instagram
-                        </p>
-                        <p className="mt-1 text-xs text-[#888]">
-                          Por enquanto esta etapa fica fixa no Instagram para manter a estratégia mais consistente.
-                        </p>
+                      <div className="grid gap-3 sm:grid-cols-3">
+                        {PLATFORM_OPTIONS.map((option) => (
+                          <button
+                            key={option.value}
+                            type="button"
+                            onClick={() =>
+                              updateField("platforms", option.value)
+                            }
+                            className={`rounded-xl border-2 p-4 text-left transition-all ${
+                              formData.platforms === option.value
+                                ? "border-[#C8F135] bg-[#C8F135]/10"
+                                : "border-border bg-white/5 hover:border-[#C8F135]/40"
+                            }`}
+                          >
+                            <p className="text-sm font-semibold text-white">
+                              {option.label}
+                            </p>
+                            <p className="mt-1 text-xs leading-relaxed text-[#888]">
+                              {option.description}
+                            </p>
+                          </button>
+                        ))}
                       </div>
                     </div>
 
@@ -981,7 +1106,7 @@ export function OnboardingQuestionnaire() {
                       <Label className="text-sm font-medium">
                         Estilo de comunicação *
                       </Label>
-                      <div className="grid gap-3 sm:grid-cols-3">
+                      <div className="grid gap-3 sm:grid-cols-2">
                         {COMMUNICATION_STYLE_OPTIONS.map((option) => (
                           <button
                             key={option.value}
@@ -1075,6 +1200,19 @@ export function OnboardingQuestionnaire() {
                         Dica: ative o microfone e fale. Quanto mais você
                         explicar, melhor o CR3SCE vai trabalhar pra você.
                       </p>
+                      <InputSuggestions
+                        field="brand_description"
+                        context={{
+                          negocio: formData.business_name,
+                          nicho: formData.niche,
+                          publico: formData.target_audience,
+                          estilo: formData.communication_style,
+                          objetivo: formData.main_goal,
+                        }}
+                        onPick={(text) =>
+                          updateField("brand_description", text)
+                        }
+                      />
                       {hasError("brand_description") && (
                         <p className="text-xs text-destructive">
                           Campo obrigatório
@@ -1087,6 +1225,18 @@ export function OnboardingQuestionnaire() {
 
                 {step === 4 && (
                   <>
+                    {formData.platforms !== "instagram" && (
+                      <div className="rounded-xl border border-border bg-white/5 p-3">
+                        <p className="text-xs leading-relaxed text-[#888]">
+                          Como você escolheu{" "}
+                          <span className="font-semibold text-white">
+                            {formData.platforms === "tiktok" ? "TikTok" : "Kwai"}
+                          </span>
+                          , esta etapa é opcional — preencha só se também tiver
+                          Instagram. Você pode finalizar direto.
+                        </p>
+                      </div>
+                    )}
                     <div className="rounded-xl border border-[#C8F135]/20 bg-[#C8F135]/5 p-4">
                       <p className="mb-1 text-sm font-medium text-[#C8F135]">
                         Por que pedimos isso?
