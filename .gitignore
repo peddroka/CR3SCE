@@ -10,3 +10,6 @@ node_modules/
 tmp/
 .env*.local
 .DS_Store
+# Logs e caches de build locais
+*.log
+tsconfig.tsbuildinfo
