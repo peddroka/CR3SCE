@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
+import { InputSuggestions } from "@/components/dashboard/input-suggestions";
 import { cn } from "@/lib/utils";
 
 type Step = "initial" | "customizing" | "generating" | "result" | "error";
@@ -388,6 +389,13 @@ export function ImageCreatorClient({
                       }}
                       rows={6}
                       className="min-h-[180px] rounded-2xl border-white/10 bg-white/5 text-sm text-white shadow-none focus-visible:ring-[#C8F135]/30"
+                    />
+                    <InputSuggestions
+                      field="image_prompt"
+                      onPick={(text) => {
+                        setDisplayPrompt(text);
+                        setPrompt(text);
+                      }}
                     />
                   </div>
 

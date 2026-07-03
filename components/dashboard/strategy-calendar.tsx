@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -561,6 +562,28 @@ function formatMonthList(months: MonthRef[]) {
     .join(" e ");
 }
 
+// Mapeia o tipo de conteúdo do calendário para o formato do Criar Post.
+function contentTypeToFormat(
+  contentType: string,
+): "single" | "carousel" | "reel" {
+  const t = (contentType || "").toLowerCase();
+  if (t.includes("reel")) return "reel";
+  if (t.includes("carrossel") || t.includes("carousel")) return "carousel";
+  return "single";
+}
+
+// Monta o contexto (observações) a partir dos detalhes que o calendário já tem.
+function buildCalendarNotes(post: Post): string {
+  const parts = [
+    `Publicação planejada no calendário (${post.content_type}${
+      post.time ? `, ${post.time}` : ""
+    }).`,
+  ];
+  if (post.script) parts.push(`Roteiro previsto: ${post.script.slice(0, 400)}`);
+  if (post.cta) parts.push(`CTA sugerido: ${post.cta}`);
+  return parts.join(" ").slice(0, 500);
+}
+
 export function StrategyCalendar({
   strategy,
   businessCreatedAt,
@@ -574,6 +597,7 @@ export function StrategyCalendar({
   businessObjective?: string | null;
   businessTone?: string | null;
 }) {
+  const router = useRouter();
   const [selectedDay, setSelectedDay] = useState<StrategyDay | null>(null);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [updatingPost, setUpdatingPost] = useState<string | null>(null);
@@ -1374,12 +1398,18 @@ export function StrategyCalendar({
                     whileTap={{ scale: 0.95 }}
                     className={cn(
                       "aspect-square rounded-lg border-2 flex flex-col items-center justify-center relative overflow-hidden transition-all",
-                      isComplete && "border-[#C8F135]/70",
-                      isPartial && "border-[#C8F135]/30",
+                      isComplete &&
+                        "border-[#C8F135] shadow-[0_0_10px_rgba(200,241,53,0.35)]",
+                      isPartial && "border-[#C8F135]/40",
                       !isComplete &&
                         !isPartial &&
                         "border-white/15 bg-white/5 hover:border-white/30",
                     )}
+                    title={
+                      isComplete
+                        ? `Dia ${dayNum}: todo o conteúdo concluído (${completedCount}/${totalCount})`
+                        : `Dia ${dayNum}: ${completedCount} de ${totalCount} conteúdos concluídos`
+                    }
                   >
                     <div
                       className="absolute bottom-0 left-0 right-0 transition-all duration-700"
@@ -1404,9 +1434,49 @@ export function StrategyCalendar({
                     >
                       {dayNum}
                     </span>
+
+                    {isComplete ? (
+                      <CheckCircle2
+                        className="relative z-10 mt-0.5 size-3.5 shrink-0"
+                        style={{ color: "#111" }}
+                        aria-label="Conteúdo do dia concluído"
+                      />
+                    ) : (
+                      <span
+                        className="relative z-10 mt-0.5 text-[9px] font-semibold leading-none"
+                        style={{
+                          color:
+                            fillPercent >= 60
+                              ? "rgba(17,17,17,0.75)"
+                              : isPartial
+                                ? "#C8F135"
+                                : "rgba(255,255,255,0.45)",
+                        }}
+                      >
+                        {completedCount}/{totalCount}
+                      </span>
+                    )}
                   </motion.button>
                 );
               })}
+            </div>
+
+            {/* Legenda de conclusão */}
+            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-white/10 pt-3 text-[11px] text-muted-foreground">
+              <span className="flex items-center gap-1.5">
+                <span className="flex size-4 items-center justify-center rounded-sm bg-[#C8F135]">
+                  <CheckCircle2 className="size-3 text-[#111]" />
+                </span>
+                Dia concluído
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="size-4 rounded-sm border border-[#C8F135]/50 bg-[rgba(200,241,53,0.25)]" />
+                Parcial (ex.: 1/3)
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="size-4 rounded-sm border border-white/20 bg-white/5" />
+                Pendente
+              </span>
             </div>
           </CardContent>
         </Card>
@@ -1533,6 +1603,32 @@ export function StrategyCalendar({
                           <p className="text-sm text-muted-foreground line-clamp-2">
                             {post.script.substring(0, 100)}...
                           </p>
+
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              try {
+                                window.sessionStorage.setItem(
+                                  "cr3sce_post_seed",
+                                  JSON.stringify({
+                                    topic: post.topic,
+                                    format: contentTypeToFormat(
+                                      post.content_type,
+                                    ),
+                                    notes: buildCalendarNotes(post),
+                                    auto: true,
+                                  }),
+                                );
+                              } catch {}
+                              router.push("/dashboard/criar-post");
+                            }}
+                            className="mt-3 gap-1.5 rounded-full border-[#C8F135]/40 bg-[#C8F135]/10 text-xs font-semibold text-[#C8F135] hover:bg-[#C8F135]/20 hover:text-[#C8F135]"
+                          >
+                            <Sparkles className="size-3.5" />
+                            Gerar publicação
+                          </Button>
                         </div>
 
                         <ChevronRight className="size-5 text-muted-foreground shrink-0" />

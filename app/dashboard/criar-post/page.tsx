@@ -36,6 +36,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { AIDisclosureNotice } from "@/components/lgpd/ai-disclosure-notice";
 import { PostPreview, type PostPreviewData } from "@/components/dashboard/post-preview";
+import { InputSuggestions } from "@/components/dashboard/input-suggestions";
 import { createClient, getUserSafely } from "@/lib/supabase/client";
 
 type PostFormat = "single" | "carousel" | "reel";
@@ -85,6 +86,21 @@ type GeneratedPost = {
   vibe_summary: string;
 };
 
+type SavedPost = {
+  id: string;
+  topic: string;
+  format: PostFormat;
+  objective?: PostObjective | null;
+  post: GeneratedPost;
+  created_at: string;
+};
+
+const FORMAT_LABELS: Record<PostFormat, string> = {
+  single: "Post único",
+  carousel: "Carrossel",
+  reel: "Reel",
+};
+
 const FORMAT_OPTIONS: { value: PostFormat; label: string; description: string }[] = [
   {
     value: "single",
@@ -125,6 +141,30 @@ export default function CriarPostPage() {
   const [instagramHandle, setInstagramHandle] = useState<string | undefined>();
   const [downloading, setDownloading] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
+  const [seededFromCalendar, setSeededFromCalendar] = useState(false);
+  const [history, setHistory] = useState<SavedPost[]>([]);
+
+  // Últimos feeds gerados, salvos na conta do usuário (máx. 6)
+  async function loadHistory() {
+    try {
+      const res = await fetch("/api/create-post");
+      const data = await res.json();
+      if (res.ok && data.ok) setHistory(data.posts || []);
+    } catch {}
+  }
+
+  useEffect(() => {
+    void loadHistory();
+  }, []);
+
+  function openSavedPost(item: SavedPost) {
+    setResult(item.post);
+    setTopic(item.topic);
+    setFormat(item.post?.format || item.format || "single");
+    if (item.objective) setObjective(item.objective);
+    setSlideIndex(0);
+    setError(null);
+  }
 
   // Pega o handle do Instagram do business pra exibir no preview
   useEffect(() => {
@@ -143,13 +183,71 @@ export default function CriarPostPage() {
     })();
   }, []);
 
+  // Puxa os detalhes vindos do calendário (via sessionStorage) e, se pedido,
+  // já gera a publicação automaticamente.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    let seed: {
+      topic?: string;
+      format?: PostFormat;
+      objective?: PostObjective;
+      tone?: string;
+      notes?: string;
+      auto?: boolean;
+    } | null = null;
+    try {
+      const raw = window.sessionStorage.getItem("cr3sce_post_seed");
+      if (!raw) return;
+      window.sessionStorage.removeItem("cr3sce_post_seed");
+      seed = JSON.parse(raw);
+    } catch {
+      return;
+    }
+    if (!seed) return;
+
+    const seededTopic = (seed.topic || "").slice(0, 600);
+    const seededNotes = (seed.notes || "").slice(0, 500);
+    if (seededTopic) setTopic(seededTopic);
+    if (seed.format) setFormat(seed.format);
+    if (seed.objective) setObjective(seed.objective);
+    if (seed.tone) setTone(seed.tone);
+    if (seededNotes) setExtraNotes(seededNotes);
+    setSeededFromCalendar(true);
+
+    if (seed.auto && seededTopic) {
+      void handleGenerate({
+        topic: seededTopic,
+        format: seed.format,
+        objective: seed.objective,
+        tone: seed.tone,
+        extraNotes: seededNotes,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const totalSlides =
     result?.format === "carousel"
       ? 1 + (result.carousel_slides?.length ?? 0)
       : 1;
 
-  async function handleGenerate() {
-    if (!topic.trim()) {
+  async function handleGenerate(override?: {
+    topic?: string;
+    format?: PostFormat;
+    objective?: PostObjective;
+    tone?: string;
+    extraNotes?: string;
+  }) {
+    const payload = {
+      topic: (override?.topic ?? topic).trim(),
+      format: override?.format ?? format,
+      objective: override?.objective ?? objective,
+      tone: ((override?.tone ?? tone) || "").trim() || undefined,
+      extraNotes:
+        ((override?.extraNotes ?? extraNotes) || "").trim() || undefined,
+    };
+
+    if (!payload.topic) {
       toast.error("Escreva um tema antes de gerar.");
       return;
     }
@@ -161,13 +259,7 @@ export default function CriarPostPage() {
       const res = await fetch("/api/create-post", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          topic: topic.trim(),
-          format,
-          objective,
-          tone: tone.trim() || undefined,
-          extraNotes: extraNotes.trim() || undefined,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
@@ -181,6 +273,7 @@ export default function CriarPostPage() {
       setResult(data.post);
       setSlideIndex(0);
       toast.success("Post gerado! Confira abaixo.");
+      void loadHistory();
     } catch (err) {
       console.error(err);
       setError("Erro de rede ao gerar o post.");
@@ -256,6 +349,15 @@ export default function CriarPostPage() {
 
       <Card className="border-border/60">
         <CardContent className="flex flex-col gap-5 p-6">
+          {seededFromCalendar && (
+            <div className="flex items-center gap-2 rounded-lg border border-[rgba(200,241,53,0.3)] bg-[rgba(200,241,53,0.08)] px-3 py-2 text-xs text-lime">
+              <Sparkles className="size-3.5 shrink-0" />
+              <span>
+                Detalhes puxados do seu calendário — ajuste o que quiser e gere
+                outro modelo.
+              </span>
+            </div>
+          )}
           <div className="space-y-2">
             <Label htmlFor="topic">Tema ou ideia do post</Label>
             <Textarea
@@ -269,6 +371,11 @@ export default function CriarPostPage() {
             <p className="text-right text-xs text-muted-foreground">
               {topic.length}/600
             </p>
+            <InputSuggestions
+              field="post_topic"
+              context={{ formato: format, objetivo: objective, tom: tone }}
+              onPick={(text) => setTopic(text)}
+            />
           </div>
 
           <div className="grid gap-4 md:grid-cols-3">
@@ -324,6 +431,11 @@ export default function CriarPostPage() {
                 onChange={(e) => setTone(e.target.value)}
                 placeholder="Ex: irreverente, didático, provocador"
               />
+              <InputSuggestions
+                field="post_tone"
+                context={{ tema: topic, objetivo: objective }}
+                onPick={(text) => setTone(text)}
+              />
             </div>
           </div>
 
@@ -336,6 +448,11 @@ export default function CriarPostPage() {
               placeholder="Coisas que NÃO podem aparecer, referências, links, contexto específico..."
               className="min-h-[64px] resize-none"
               maxLength={500}
+            />
+            <InputSuggestions
+              field="post_notes"
+              context={{ tema: topic, formato: format, objetivo: objective }}
+              onPick={(text) => setExtraNotes(text)}
             />
           </div>
 
@@ -350,7 +467,7 @@ export default function CriarPostPage() {
               Usa o perfil do seu negócio + tendências de design 2026.
             </p>
             <Button
-              onClick={handleGenerate}
+              onClick={() => handleGenerate()}
               disabled={loading || !topic.trim()}
               className="h-11 gap-2 bg-lime text-base font-semibold text-[#111] hover:bg-[#a8d020]"
             >
@@ -362,13 +479,55 @@ export default function CriarPostPage() {
               ) : (
                 <>
                   <Sparkles className="size-4" />
-                  {result ? "Gerar outro" : "Gerar post"}
+                  {result ? "Gerar outro modelo" : "Gerar publicação"}
                 </>
               )}
             </Button>
           </div>
         </CardContent>
       </Card>
+
+      {history.length > 0 && (
+        <Card className="border-border/60">
+          <CardContent className="flex flex-col gap-3 p-6">
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="flex items-center gap-2 text-base font-semibold text-foreground">
+                <Clock className="size-4 text-lime" /> Últimos feeds criados
+              </h2>
+              <span className="text-xs text-muted-foreground">
+                {history.length}/6 salvos na sua conta
+              </span>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {history.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => openSavedPost(item)}
+                  className="flex flex-col gap-2 rounded-xl border border-border bg-card/40 p-4 text-left transition-all hover:border-lime/50 hover:bg-lime/5"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="rounded-full border border-lime/30 bg-lime/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-lime">
+                      {FORMAT_LABELS[item.post?.format || item.format] ||
+                        "Post"}
+                    </span>
+                    <span className="text-[11px] text-muted-foreground">
+                      {new Date(item.created_at).toLocaleDateString("pt-BR", {
+                        day: "2-digit",
+                        month: "short",
+                      })}
+                    </span>
+                  </div>
+                  <p className="line-clamp-2 text-sm font-medium text-foreground">
+                    {item.topic}
+                  </p>
+                  <span className="text-xs text-lime">Abrir feed →</span>
+                </button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <AnimatePresence>
         {loading && (
@@ -438,11 +597,11 @@ export default function CriarPostPage() {
                 <Copy className="size-4" /> Copiar tudo
               </Button>
               <Button
-                onClick={handleGenerate}
+                onClick={() => handleGenerate()}
                 disabled={loading}
                 className="gap-2 bg-lime text-[#111] hover:bg-[#a8d020]"
               >
-                <RefreshCw className="size-4" /> Gerar outra versão
+                <RefreshCw className="size-4" /> Gerar outro modelo
               </Button>
             </div>
           </motion.div>

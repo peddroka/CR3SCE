@@ -14,7 +14,6 @@ const groq = createGroq({
 const MODELS = [
   "llama-3.3-70b-versatile",
   "llama-3.1-8b-instant",
-  "gemma2-9b-it",
 ];
 
 type PostFormat = "single" | "carousel" | "reel";
@@ -238,6 +237,74 @@ function extractJson(raw: string): string {
   return raw;
 }
 
+const HISTORY_LIMIT = 6;
+
+// Guarda o post gerado na conta do usuário e mantém só os 6 mais recentes.
+async function persistGeneratedPost(args: {
+  supabase: Awaited<ReturnType<typeof createClient>>;
+  userId: string;
+  topic: string;
+  format: PostFormat;
+  objective: PostObjective;
+  post: unknown;
+}) {
+  const { supabase, userId, topic, format, objective, post } = args;
+  try {
+    const { error: insertError } = await supabase
+      .from("generated_posts")
+      .insert({ user_id: userId, topic, format, objective, post });
+    if (insertError) {
+      console.warn("[create-post] falha ao salvar histórico:", insertError.message);
+      return;
+    }
+
+    const { data: extras } = await supabase
+      .from("generated_posts")
+      .select("id")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false })
+      .range(HISTORY_LIMIT, HISTORY_LIMIT + 24);
+    if (extras && extras.length > 0) {
+      await supabase
+        .from("generated_posts")
+        .delete()
+        .in(
+          "id",
+          extras.map((row) => row.id),
+        );
+    }
+  } catch (err) {
+    console.warn("[create-post] erro inesperado ao salvar histórico:", err);
+  }
+}
+
+// Lista os últimos feeds gerados pelo usuário (máximo 6).
+export async function GET() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+  }
+
+  const { data, error } = await supabase
+    .from("generated_posts")
+    .select("id, topic, format, objective, post, created_at")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+    .limit(HISTORY_LIMIT);
+
+  if (error) {
+    // Tabela pode ainda não existir — devolve lista vazia sem quebrar a tela.
+    console.warn("[create-post] falha ao listar histórico:", error.message);
+    return NextResponse.json({ ok: true, posts: [] });
+  }
+
+  return NextResponse.json({ ok: true, posts: data ?? [] });
+}
+
 export async function POST(request: Request) {
   if (!process.env.GROQ_API_KEY) {
     return NextResponse.json(
@@ -326,6 +393,15 @@ export async function POST(request: Request) {
           entityType: "post_generation",
           metadata: { model: modelId, format, objective, topicChars: topic.length },
           request,
+        });
+
+        await persistGeneratedPost({
+          supabase,
+          userId: user.id,
+          topic,
+          format,
+          objective,
+          post: parsed,
         });
 
         return NextResponse.json({ ok: true, post: parsed, model: modelId });
