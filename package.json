@@ -15,8 +15,8 @@
     "ci": "npm run lint && npm run typecheck && npm run test && npm run build"
   },
   "dependencies": {
-    "@ai-sdk/groq": "^3.0.31",
-    "@ai-sdk/react": "^3.0.136",
+    "@ai-sdk/groq": "^3.0.47",
+    "@ai-sdk/react": "^3.0.221",
     "@ffprobe-installer/ffprobe": "^2.1.2",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-accordion": "1.2.12",
@@ -51,7 +51,7 @@
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.98.0",
     "@vercel/analytics": "1.6.1",
-    "ai": "^6.0.134",
+    "ai": "^6.0.219",
     "autoprefixer": "^10.4.20",
     "canvas-confetti": "^1.9.4",
     "class-variance-authority": "^0.7.1",
